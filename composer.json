@@ -1,0 +1,41 @@
+{
+    "name": "spatie/dns-info",
+    "description": "A easy to handle class that can get all sort of dns related info for a given domain name",
+    "keywords": [
+        "spatie",
+        "dns-info"
+    ],
+    "homepage": "https://github.com/spatie/dns-info",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Harish Toshniwal",
+            "email": "harish@spatie.be",
+            "homepage": "https://spatie.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "symfony/process": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spatie\\DnsInfo\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spatie\\DnsInfo\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
