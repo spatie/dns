@@ -1,11 +1,11 @@
 <?php
 
-namespace Spatie\DnsInfo\Test;
+namespace Spatie\Dns\Test;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\DnsInfo\DnsInfo;
+use Spatie\Dns\Dns;
 
-class DnsInfoTest extends TestCase
+class DnsTest extends TestCase
 {
     protected $dns;
 
@@ -13,7 +13,7 @@ class DnsInfoTest extends TestCase
     {
         parent::setUp();
 
-        $this->dns = new DnsInfo('spatie.be');
+        $this->dns = new Dns('spatie.be');
     }
 
     /** @test */
@@ -28,17 +28,17 @@ class DnsInfoTest extends TestCase
      */
     public function it_throws_an_exception_if_an_empty_string_is_passed()
     {
-        $dns = new DnsInfo('');
+        $dns = new Dns('');
     }
 
     /** @test */
     public function it_sanatizes_the_given_domain_name()
     {
-        $dns = new DnsInfo('https://spatie.be');
+        $dns = new Dns('https://spatie.be');
 
         $this->assertEquals('spatie.be', $dns->getDomain());
 
-        $dns = new DnsInfo('http://spatie.be/');
+        $dns = new Dns('http://spatie.be/');
 
         $this->assertEquals('spatie.be', $dns->getDomain());
     }

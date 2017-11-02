@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\DnsInfo;
+namespace Spatie\Dns;
 
 use Exception;
-use Spatie\DnsInfo\Helpers\Helper;
+use Spatie\Dns\Helpers\Helper;
 use Symfony\Component\Process\Process;
 
-class DnsInfo
+class Dns
 {
     /**
      * The domain name to get DNS records for.
@@ -19,7 +19,7 @@ class DnsInfo
     protected $recordTypes = ['A', 'AAAA', 'NS', 'SOA', 'MX', 'TXT', 'DNSKEY'];
 
     /**
-     * Create a new DnsInfo Instance.
+     * Create a new Dns Instance.
      */
     public function __construct(string $domain)
     {

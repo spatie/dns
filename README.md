@@ -15,13 +15,13 @@ A easy to handle and drop in class that can get all sort of dns related info for
 You can install the package via composer:
 
 ```bash
-composer require spatie/dns-info
+composer require spatie/dns
 ```
 
 ## Usage
 
 ``` php
-$dns = new Spatie\DnsInfo('spatie.be');
+$dns = new Spatie\Dns('spatie.be');
 echo $dns->getARecords();
 echo $dns->getAAAARecords();
 echo $dns->getNSRecords();

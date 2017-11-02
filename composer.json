@@ -1,11 +1,11 @@
 {
-    "name": "spatie/dns-info",
+    "name": "spatie/dns",
     "description": "A easy to handle class that can get all sort of dns related info for a given domain name",
     "keywords": [
         "spatie",
-        "dns-info"
+        "dns"
     ],
-    "homepage": "https://github.com/spatie/dns-info",
+    "homepage": "https://github.com/spatie/dns",
     "license": "MIT",
     "authors": [
         {
@@ -24,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\DnsInfo\\": "src"
+            "Spatie\\Dns\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\DnsInfo\\Test\\": "tests"
+            "Spatie\\Dns\\Test\\": "tests"
         }
     },
     "scripts": {

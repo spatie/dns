@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\DnsInfo\Helpers;
+namespace Spatie\Dns\Helpers;
 
 class Helper
 {
