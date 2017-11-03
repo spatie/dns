@@ -1,6 +1,6 @@
 {
     "name": "spatie/dns",
-    "description": "A easy to handle class that can get all sort of dns related info for a given domain name",
+    "description": "Retrieve DNS records",
     "keywords": [
         "spatie",
         "dns"
