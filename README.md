@@ -14,9 +14,9 @@ This package contains a class that can fetch DNS records.
 ```php
 $dns = new Spatie\Dns('spatie.be');
 
-$stringWithRecords = $dns->getRecords('A'); // getting all A records
+$dns->getRecords(); // returns all available dns records
 
-$stringWithRecords = $dns->getRecords(); // getting all available dns records
+$dns->getRecords('A'); // returns only A records
 ```
 
 ## Installation
