@@ -29,6 +29,11 @@ class Dns
         $this->domain = $this->sanitizeDomainName($domain);
     }
 
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
     public function getRecords(...$types): string
     {
         $types = $this->determineTypes($types);

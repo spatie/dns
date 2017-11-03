@@ -81,6 +81,14 @@ class DnsTest extends TestCase
         $this->dns->getRecords('xyz');
     }
 
+    /** @test */
+    public function it_can_get_a_sanitized_version_of_the_domain_name()
+    {
+        $this->assertEquals('spatie.be', (new Dns('https://spatie.be'))->getDomain());
+        $this->assertEquals('spatie.be', (new Dns('https://spatie.be/page'))->getDomain());
+        $this->assertEquals('spatie.be', (new Dns('https://SPATIE.be'))->getDomain());
+    }
+
     protected function assertSeeRecordTypes($records, $type)
     {
         $types = (array) $type;
