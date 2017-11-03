@@ -8,7 +8,7 @@ class InvalidArgument extends InvalidArgumentException
 {
     public static function domainIsMissing()
     {
-        return new static("A domain name is required");
+        return new static('A domain name is required');
     }
 
     public static function filterIsNotAValidRecordType($filter, $validRecordTypes)

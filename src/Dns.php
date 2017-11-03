@@ -3,8 +3,8 @@
 namespace Spatie\Dns;
 
 use Exception;
-use Spatie\Dns\Exceptions\InvalidArgument;
 use Symfony\Component\Process\Process;
+use Spatie\Dns\Exceptions\InvalidArgument;
 
 class Dns
 {
@@ -17,7 +17,7 @@ class Dns
         'SOA',
         'MX',
         'TXT',
-        'DNSKEY'
+        'DNSKEY',
     ];
 
     public function __construct(string $domain)
@@ -29,7 +29,7 @@ class Dns
         $this->domain = $this->sanitizeDomainName($domain);
     }
 
-    public function getRecords(... $types): string
+    public function getRecords(...$types): string
     {
         $types = $this->determineTypes($types);
 
@@ -37,7 +37,7 @@ class Dns
             ? $types
             : $this->recordTypes;
 
-        $dnsRecords  = array_map(function($type) {
+        $dnsRecords = array_map(function ($type) {
             return $this->getRecordsOfType($type);
         }, $types);
 
@@ -55,7 +55,7 @@ class Dns
         }, $types);
 
         foreach ($types as $type) {
-            if (!in_array($type, $this->recordTypes)) {
+            if (! in_array($type, $this->recordTypes)) {
                 throw InvalidArgument::filterIsNotAValidRecordType($type, $this->recordTypes);
             }
         }
@@ -74,13 +74,13 @@ class Dns
 
     protected function getRecordsOfType(string $type): string
     {
-        $command = 'dig +nocmd ' . escapeshellarg($this->domain) . " {$type} +multiline +noall +answer";
+        $command = 'dig +nocmd '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
 
         $process = new Process($command);
 
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new Exception('Dns records could not be fetched');
         }
 
