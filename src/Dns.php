@@ -50,9 +50,7 @@ class Dns
             ? $types[0]
             : $types;
 
-        $types = array_map(function (string $type) {
-            return strtoupper($type);
-        }, $types);
+        $types = array_map('strtoupper', $types);
 
         foreach ($types as $type) {
             if (! in_array($type, $this->recordTypes)) {
