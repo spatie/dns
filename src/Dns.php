@@ -22,7 +22,7 @@ class Dns
 
     public function __construct(string $domain)
     {
-        if ($domain === '') {
+        if (empty($domain)) {
             throw InvalidArgument::domainIsMissing();
         }
 
