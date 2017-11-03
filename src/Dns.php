@@ -37,9 +37,7 @@ class Dns
             ? $types
             : $this->recordTypes;
 
-        $dnsRecords = array_map(function ($type) {
-            return $this->getRecordsOfType($type);
-        }, $types);
+        $dnsRecords = array_map([$this, 'getRecordsOfType'], $types);
 
         return implode('', array_filter($dnsRecords));
     }
