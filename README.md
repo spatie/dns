@@ -1,5 +1,3 @@
-> This package is still in development, a stable release will be tagged soon.
-
 # Retrieve DNS records
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
