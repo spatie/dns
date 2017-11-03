@@ -2,13 +2,13 @@
 
 namespace Spatie\Dns\Test;
 
-use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Dns;
+use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Exceptions\InvalidArgument;
 
 class DnsTest extends TestCase
 {
-    /** @var \Spatie\Dns\Dns  */
+    /** @var \Spatie\Dns\Dns */
     protected $dns;
 
     protected function setUp()
@@ -61,7 +61,6 @@ class DnsTest extends TestCase
         $this->assertDontSeeRecordTypes($records, ['A']);
     }
 
-
     /** @test */
     public function it_doesnt_care_about_casing()
     {
@@ -84,9 +83,9 @@ class DnsTest extends TestCase
 
     protected function assertSeeRecordTypes($records, $type)
     {
-        $types = (array)$type;
+        $types = (array) $type;
 
-        foreach($types as $type) {
+        foreach ($types as $type) {
             //some dns servers use tabs, let's replace them by spaces
             $records = preg_replace('/\s+/', ' ', $records);
 
@@ -96,9 +95,9 @@ class DnsTest extends TestCase
 
     protected function assertDontSeeRecordTypes($records, $type)
     {
-        $types = (array)$type;
+        $types = (array) $type;
 
-        foreach($types as $type) {
+        foreach ($types as $type) {
             //some dns servers use tabs, let's replace them by spaces
             $records = preg_replace('/\s+/', ' ', $records);
 
