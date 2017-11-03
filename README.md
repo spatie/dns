@@ -1,6 +1,6 @@
 > This package is still in development, a stable release will be tagged soon.
 
-# A easy class to get all sort of dns related info for a given domain name
+# Retrieve DNS records
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
 [![Build Status](https://img.shields.io/travis/spatie/dns/master.svg?style=flat-square)](https://travis-ci.org/spatie/dns)
@@ -8,7 +8,15 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/dns.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/dns)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
 
-Get all sort of DNS related info for a given domain name.
+This package contains a class that can fetch DNS records.
+
+```php
+$dns = new Spatie\Dns('spatie.be');
+
+$stringWithRecords = $dns->getRecords('A'); // getting all A records
+
+$stringWithRecords = $dns->getRecords(); // getting all available dns records
+```
 
 ## Installation
 
@@ -20,13 +28,18 @@ composer require spatie/dns
 
 ## Usage
 
+The class can get these record types: `A`, `AAAA`, `NS`, `SOA`, `MX`, `TXT`, `DNSKEY`.
+
 ``` php
 $dns = new Spatie\Dns('spatie.be');
-echo $dns->getARecords();
-echo $dns->getTxtRecords();
-echo $dns->getRecords('A');
-echo $dns->getRecords(['A', 'TXT']);
-echo $dns->getAllRecords(); // To get all records
+
+$dns->getRecords(); // returns all records
+
+$dns->getRecords('A'); // returns only A records
+$dns->getRecords('MX'); // returns only MX records
+
+$dns->getRecords('A', 'MX'); // returns both A and MX records
+$dns->getRecords(['A', 'MX']); // returns both A and MX records
 ```
 
 ### Testing
