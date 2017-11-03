@@ -45,13 +45,29 @@ class Dns
     }
 
     /**
+     * Get DNS records for given record types.
+     *
+     * @return string
+     */
+    public function getRecords($recordTypes): string
+    {
+        $recordTypes = is_array($recordTypes) ? array_map('strtoupper', $recordTypes) : array (strtoupper($recordTypes));
+
+        if (empty(array_intersect($recordTypes, $this->recordTypes))) {
+            throw new Exception("No such record type");
+        }
+
+        return $this->retrieveDnsRecords($recordTypes);
+    }
+
+    /**
      * Get A type records.
      *
      * @return string
      */
     public function getARecords(): string
     {
-        return $this->retrieveDnsRecords($this->getRecordType(0));
+        return $this->getRecords('A');
     }
 
     /**
@@ -59,9 +75,9 @@ class Dns
      *
      * @return string
      */
-    public function getAAAARecords(): string
+    public function getAaaaRecords(): string
     {
-        return $this->retrieveDnsRecords($this->getRecordType(1));
+        return $this->getRecords('AAAA');
     }
 
     /**
@@ -69,9 +85,9 @@ class Dns
      *
      * @return string
      */
-    public function getNSRecords(): string
+    public function getNsRecords(): string
     {
-        return $this->retrieveDnsRecords($this->getRecordType(2));
+        return $this->getRecords('NS');
     }
 
     /**
@@ -79,9 +95,9 @@ class Dns
      *
      * @return string
      */
-    public function getSOARecords(): string
+    public function getSoaRecords(): string
     {
-        return $this->retrieveDnsRecords($this->getRecordType(3));
+        return $this->getRecords('SOA');
     }
 
     /**
@@ -89,9 +105,9 @@ class Dns
      *
      * @return string
      */
-    public function getMXRecords(): string
+    public function getMxRecords(): string
     {
-        return $this->retrieveDnsRecords($this->getRecordType(4));
+        return $this->getRecords('MX');
     }
 
     /**
@@ -99,9 +115,9 @@ class Dns
      *
      * @return string
      */
-    public function getTXTRecords(): string
+    public function getTxtRecords(): string
     {
-        return $this->retrieveDnsRecords($this->getRecordType(5));
+        return $this->getRecords('TXT');
     }
 
     /**
@@ -109,9 +125,9 @@ class Dns
      *
      * @return string
      */
-    public function getDNSKEYRecords(): string
+    public function getDnsKeyRecords(): string
     {
-        return $this->retrieveDnsRecords($this->getRecordType(6));
+        return $this->getRecords('DNSKEY');
     }
 
     /**
@@ -134,17 +150,6 @@ class Dns
     }
 
     /**
-     * Get the record type.
-     *
-     * @param int
-     * @return array
-     */
-    protected function getRecordType(int $index): array
-    {
-        return array ($this->recordTypes[$index]);
-    }
-
-    /**
      * Retrieve the asked DNS records.
      *
      * @param array
@@ -155,6 +160,11 @@ class Dns
         $records = '';
 
         foreach ($recordTypes as $recordType) {
+
+            if (! in_array($recordType, $this->recordTypes)) {
+                throw new Exception("No such record type");
+            }
+
             $command = 'dig +nocmd ' . escapeshellarg($this->domain) . " {$recordType} +multiline +noall +answer";
 
             $process = new Process($command);

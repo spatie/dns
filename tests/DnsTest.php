@@ -52,6 +52,33 @@ class DnsTest extends TestCase
     }
 
     /** @test */
+    public function it_fetches_records_for_a_given_single_record_type()
+    {
+        $this->dns->getRecords('txt');
+        $this->dns->getRecords('TXT');
+
+        $this->assertTrue(true);
+    }
+
+    /** @test */
+    public function it_fetches_records_for_a_given_array_of_record_types()
+    {
+        $this->dns->getRecords(['A', 'TXT']);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function it_throws_an_exception_if_an_invalid_record_type_is_passed()
+    {
+        $this->dns->getRecords('xyz');
+        $this->dns->getRecords(['A', 'XYZ']);
+    }
+
+    /** @test */
     public function it_fetches_a_type_records_for_the_given_domain_name()
     {
         $this->dns->getARecords();
@@ -62,7 +89,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_fetches_aaaa_type_records_for_the_given_domain_name()
     {
-        $this->dns->getAAAARecords();
+        $this->dns->getAaaaRecords();
 
         $this->assertTrue(true);
     }
@@ -70,7 +97,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_fetches_ns_type_records_for_the_given_domain_name()
     {
-        $this->dns->getNSRecords();
+        $this->dns->getNsRecords();
 
         $this->assertTrue(true);
     }
@@ -78,7 +105,7 @@ class DnsTest extends TestCase
      /** @test */
     public function it_fetches_soa_type_records_for_the_given_domain_name()
     {
-        $this->dns->getSOARecords();
+        $this->dns->getSoaRecords();
 
         $this->assertTrue(true);
     }
@@ -86,7 +113,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_fetches_mx_type_records_for_the_given_domain_name()
     {
-        $this->dns->getMXRecords();
+        $this->dns->getMxRecords();
 
         $this->assertTrue(true);
     }
@@ -94,7 +121,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_fetches_txt_type_records_for_the_given_domain_name()
     {
-        $this->dns->getTXTRecords();
+        $this->dns->getTxtRecords();
 
         $this->assertTrue(true);
     }
@@ -102,7 +129,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_fetches_dnskey_type_records_for_the_given_domain_name()
     {
-        $this->dns->getDNSKEYRecords();
+        $this->dns->getDnsKeyRecords();
 
         $this->assertTrue(true);
     }

@@ -8,7 +8,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/dns-info.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/dns-info)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns-info.svg?style=flat-square)](https://packagist.org/packages/spatie/dns-info)
 
-A easy to handle and drop in class that can get all sort of dns related info for a given domain name.
+Get all sort of DNS related info for a given domain name.
 
 ## Installation
 
@@ -23,12 +23,10 @@ composer require spatie/dns
 ``` php
 $dns = new Spatie\Dns('spatie.be');
 echo $dns->getARecords();
-echo $dns->getAAAARecords();
-echo $dns->getNSRecords();
-echo $dns->getSOARecords();
-echo $dns->getMXRecords();
-echo $dns->getTXTRecords();
-echo $dns->getDNSKEYRecords();
+echo $dns->getTxtRecords();
+echo $dns->getRecords('A');
+echo $dns->getRecords(['A', 'TXT']);
+echo $dns->getAllRecords(); // To get all records
 ```
 
 ### Testing
