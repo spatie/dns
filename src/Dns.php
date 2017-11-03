@@ -22,7 +22,7 @@ class Dns
 
     public function __construct(string $domain)
     {
-        if ($domain === '') {
+        if (empty($domain)) {
             throw InvalidArgument::domainIsMissing();
         }
 
@@ -42,9 +42,7 @@ class Dns
             ? $types
             : $this->recordTypes;
 
-        $dnsRecords = array_map(function ($type) {
-            return $this->getRecordsOfType($type);
-        }, $types);
+        $dnsRecords = array_map([$this, 'getRecordsOfType'], $types);
 
         return implode('', array_filter($dnsRecords));
     }
@@ -55,9 +53,7 @@ class Dns
             ? $types[0]
             : $types;
 
-        $types = array_map(function (string $type) {
-            return strtoupper($type);
-        }, $types);
+        $types = array_map('strtoupper', $types);
 
         foreach ($types as $type) {
             if (! in_array($type, $this->recordTypes)) {
@@ -72,7 +68,7 @@ class Dns
     {
         $domain = str_replace(['http://', 'https://'], '', $domain);
 
-        $domain = $this->stringBefore($domain, '/');
+        $domain = strtok($domain, '/');
 
         return strtolower($domain);
     }
@@ -90,16 +86,5 @@ class Dns
         }
 
         return $process->getOutput();
-    }
-
-    protected function stringBefore(string $subject, string $search): string
-    {
-        $position = strpos($subject, $search);
-
-        if ($position === false) {
-            return $subject;
-        }
-
-        return substr($subject, 0, $position);
     }
 }
