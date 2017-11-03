@@ -67,7 +67,7 @@ class Dns
     {
         $domain = str_replace(['http://', 'https://'], '', $domain);
 
-        $domain = static::str_before($domain, '/');
+        $domain = $this->stringBefore($domain, '/');
 
         return strtolower($domain);
     }
@@ -87,7 +87,7 @@ class Dns
         return $process->getOutput();
     }
 
-    protected static function str_before(string $subject, string $search): string
+    protected function stringBefore(string $subject, string $search): string
     {
         $position = strpos($subject, $search);
 
