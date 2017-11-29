@@ -89,6 +89,18 @@ class DnsTest extends TestCase
         $this->assertEquals('spatie.be', (new Dns('https://SPATIE.be'))->getDomain());
     }
 
+    /** @test */
+    public function it_uses_provided_nameserver_if_set()
+    {
+        $this->assertEquals("ns1.openminds.be", (new Dns("spatie.be", "ns1.openminds.be"))->getNameserver());
+    }
+
+    /** @test */
+    public function it_uses_default_nameserver_if_not_set()
+    {
+        $this->assertEquals(Dns::NAMESERVER_DEFAULT, ($this->dns->getNameserver()));
+    }
+
     protected function assertSeeRecordTypes($records, $type)
     {
         $types = (array) $type;

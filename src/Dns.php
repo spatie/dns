@@ -8,7 +8,10 @@ use Spatie\Dns\Exceptions\InvalidArgument;
 
 class Dns
 {
+    const NAMESERVER_DEFAULT = 'default';
+
     protected $domain = '';
+    protected $nameserver = '';
 
     protected $recordTypes = [
         'A',
@@ -20,11 +23,17 @@ class Dns
         'DNSKEY',
     ];
 
-    public function __construct(string $domain)
+    public function __construct(string $domain, string $nameserver = '')
     {
         if (empty($domain)) {
             throw InvalidArgument::domainIsMissing();
         }
+
+        $this->nameserver = self::NAMESERVER_DEFAULT;
+        if (!empty($nameserver)) {
+            $this->nameserver = $nameserver;
+        }
+
 
         $this->domain = $this->sanitizeDomainName($domain);
     }
@@ -32,6 +41,11 @@ class Dns
     public function getDomain(): string
     {
         return $this->domain;
+    }
+
+    public function getNameserver(): string
+    {
+        return $this->nameserver;
     }
 
     public function getRecords(...$types): string
@@ -75,7 +89,9 @@ class Dns
 
     protected function getRecordsOfType(string $type): string
     {
-        $command = 'dig +nocmd '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
+        $nameserverPart = $this->getSpecificNameserverPart();
+
+        $command = 'dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
 
         $process = new Process($command);
 
@@ -86,5 +102,14 @@ class Dns
         }
 
         return $process->getOutput();
+    }
+
+    protected function getSpecificNameserverPart()
+    {
+        if ($this->nameserver == self::NAMESERVER_DEFAULT) {
+            return '';
+        }
+
+        return '@'.escapeshellarg($this->nameserver);
     }
 }
