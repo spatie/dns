@@ -98,7 +98,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_uses_default_nameserver_if_not_set()
     {
-        $this->assertEquals(Dns::NAMESERVER_DEFAULT, ($this->dns->getNameserver()));
+        $this->assertEquals('', ($this->dns->getNameserver()));
     }
 
     protected function assertSeeRecordTypes($records, $type)

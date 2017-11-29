@@ -8,9 +8,8 @@ use Spatie\Dns\Exceptions\InvalidArgument;
 
 class Dns
 {
-    const NAMESERVER_DEFAULT = 'default';
-
     protected $domain = '';
+
     protected $nameserver = '';
 
     protected $recordTypes = [
@@ -29,13 +28,16 @@ class Dns
             throw InvalidArgument::domainIsMissing();
         }
 
-        $this->nameserver = self::NAMESERVER_DEFAULT;
-        if (!empty($nameserver)) {
-            $this->nameserver = $nameserver;
-        }
-
+        $this->nameserver = $nameserver;
 
         $this->domain = $this->sanitizeDomainName($domain);
+    }
+
+    public function useNameserver(string $nameserver)
+    {
+        $this->nameserver = $nameserver;
+
+        return $this;
     }
 
     public function getDomain(): string
@@ -106,7 +108,7 @@ class Dns
 
     protected function getSpecificNameserverPart()
     {
-        if ($this->nameserver == self::NAMESERVER_DEFAULT) {
+        if ($this->nameserver === '') {
             return '';
         }
 
