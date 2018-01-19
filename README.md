@@ -27,7 +27,7 @@ composer require spatie/dns
 
 ## Usage
 
-The class can get these record types: `A`, `AAAA`, `NS`, `SOA`, `MX`, `TXT`, `DNSKEY`.
+The class can get these record types: `A`, `AAAA`, `NS`, `SOA`, `MX`, `TXT`, `DNSKEY`, `CAA`.
 
 ``` php
 $dns = new Spatie\Dns('spatie.be');
