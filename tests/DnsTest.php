@@ -92,7 +92,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_uses_provided_nameserver_if_set()
     {
-        $this->assertEquals("ns1.openminds.be", (new Dns("spatie.be", "ns1.openminds.be"))->getNameserver());
+        $this->assertEquals('ns1.openminds.be', (new Dns('spatie.be', 'ns1.openminds.be'))->getNameserver());
     }
 
     /** @test */

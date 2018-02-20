@@ -20,7 +20,7 @@ class Dns
         'MX',
         'TXT',
         'DNSKEY',
-        'CAA'
+        'CAA',
     ];
 
     public function __construct(string $domain, string $nameserver = '')
@@ -73,7 +73,7 @@ class Dns
         $types = array_map('strtoupper', $types);
 
         foreach ($types as $type) {
-            if (!in_array($type, $this->recordTypes)) {
+            if (! in_array($type, $this->recordTypes)) {
                 throw InvalidArgument::filterIsNotAValidRecordType($type, $this->recordTypes);
             }
         }
@@ -94,13 +94,13 @@ class Dns
     {
         $nameserverPart = $this->getSpecificNameserverPart();
 
-        $command = 'dig +nocmd ' . $nameserverPart . ' ' . escapeshellarg($this->domain) . " {$type} +multiline +noall +answer";
+        $command = 'dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
 
         $process = new Process($command);
 
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new Exception('Dns records could not be fetched');
         }
 
@@ -113,6 +113,6 @@ class Dns
             return '';
         }
 
-        return '@' . escapeshellarg($this->nameserver);
+        return '@'.escapeshellarg($this->nameserver);
     }
 }
