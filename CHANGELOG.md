@@ -2,6 +2,11 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 1.3.1 - 2018-02-20
+
+- fix tests
+- allow Symfony 4
+
 ## 1.3.0 - 2017-11-29
 
 - add support for `CAA` records
