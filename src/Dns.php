@@ -31,7 +31,9 @@ class Dns
 
         $this->nameserver = $nameserver;
 
-        $this->domain = $this->sanitizeDomainName($domain);
+        $sanitized = $this->sanitizeDomainName($domain);
+
+        $this->domain = $this->convertToPunycode($sanitized);
     }
 
     public function useNameserver(string $nameserver)
@@ -79,6 +81,11 @@ class Dns
         }
 
         return $types;
+    }
+
+    public function convertToPunycode(string $domain): string
+    {
+        return idn_to_ascii($domain);
     }
 
     protected function sanitizeDomainName(string $domain): string
