@@ -45,7 +45,7 @@ class Dns
 
     public function getDomain(): string
     {
-        return $this->domain;
+        return idn_to_utf8($this->domain, 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     public function getNameserver(): string
@@ -85,7 +85,7 @@ class Dns
 
     public function convertToPunycode(string $domain): string
     {
-        return idn_to_ascii($domain);
+        return idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     protected function sanitizeDomainName(string $domain): string
