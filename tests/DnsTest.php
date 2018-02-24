@@ -3,19 +3,26 @@
 namespace Spatie\Dns\Test;
 
 use Spatie\Dns\Dns;
+use Spatie\Dns\DnsClient\Dig;
 use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Exceptions\InvalidArgument;
+use Spatie\Dns\DnsClient\DnsClientInterface;
 
 class DnsTest extends TestCase
 {
     /** @var \Spatie\Dns\Dns */
     protected $dns;
 
+    /** @var Dig */
+    protected $dnsClient;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->dns = new Dns('spatie.be');
+        $this->dnsClient = new Dig();
+
+        $this->dns = new Dns('spatie.be', '', $this->dnsClient);
     }
 
     /** @test */
@@ -81,26 +88,6 @@ class DnsTest extends TestCase
         $this->dns->getRecords('xyz');
     }
 
-    /** @test */
-    public function it_can_get_a_sanitized_version_of_the_domain_name()
-    {
-        $this->assertEquals('spatie.be', (new Dns('https://spatie.be'))->getDomain());
-        $this->assertEquals('spatie.be', (new Dns('https://spatie.be/page'))->getDomain());
-        $this->assertEquals('spatie.be', (new Dns('https://SPATIE.be'))->getDomain());
-    }
-
-    /** @test */
-    public function it_uses_provided_nameserver_if_set()
-    {
-        $this->assertEquals('ns1.openminds.be', (new Dns('spatie.be', 'ns1.openminds.be'))->getNameserver());
-    }
-
-    /** @test */
-    public function it_uses_default_nameserver_if_not_set()
-    {
-        $this->assertEquals('', ($this->dns->getNameserver()));
-    }
-
     protected function assertSeeRecordTypes($records, $type)
     {
         $types = (array) $type;
@@ -123,5 +110,31 @@ class DnsTest extends TestCase
 
             $this->assertNotContains("IN {$type}", $records);
         }
+    }
+
+    /** @test */
+    public function it_can_get_a_sanitized_version_of_the_domain_name()
+    {
+        $this->assertEquals('spatie.be', (new Dns('https://spatie.be'))->getDomain());
+        $this->assertEquals('spatie.be', (new Dns('https://spatie.be/page'))->getDomain());
+        $this->assertEquals('spatie.be', (new Dns('https://SPATIE.be'))->getDomain());
+    }
+
+    /** @test */
+    public function it_uses_provided_nameserver_if_set()
+    {
+        $this->assertEquals('ns1.openminds.be', (new Dns('spatie.be', 'ns1.openminds.be'))->getNameserver());
+    }
+
+    /** @test */
+    public function it_uses_default_nameserver_if_not_set()
+    {
+        $this->assertEquals('', ($this->dns->getNameserver()));
+    }
+
+    /** @test */
+    public function assertDnsClient()
+    {
+        $this->assertInstanceOf(DnsClientInterface::class, $this->dns->getDnsClient());
     }
 }
