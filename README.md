@@ -10,7 +10,7 @@
 This package contains a class that can fetch DNS records.
 
 ```php
-$dns = new Spatie\Dns('spatie.be');
+$dns = new Spatie\Dns\Dns('spatie.be');
 
 $dns->getRecords(); // returns all available dns records
 
@@ -30,7 +30,7 @@ composer require spatie/dns
 The class can get these record types: `A`, `AAAA`, `NS`, `SOA`, `MX`, `TXT`, `DNSKEY`, `CAA`.
 
 ``` php
-$dns = new Spatie\Dns('spatie.be');
+$dns = new Spatie\Dns\Dns('spatie.be');
 
 $dns->getRecords(); // returns all records
 
