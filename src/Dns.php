@@ -31,7 +31,9 @@ class Dns
 
         $this->nameserver = $nameserver;
 
-        $this->domain = $this->sanitizeDomainName($domain);
+        $sanitized = $this->sanitizeDomainName($domain);
+
+        $this->domain = $this->convertToPunycode($sanitized);
     }
 
     public function useNameserver(string $nameserver)
@@ -43,7 +45,7 @@ class Dns
 
     public function getDomain(): string
     {
-        return $this->domain;
+        return idn_to_utf8($this->domain, 0, INTL_IDNA_VARIANT_UTS46);
     }
 
     public function getNameserver(): string
@@ -81,6 +83,11 @@ class Dns
         return $types;
     }
 
+    public function convertToPunycode(string $domain): string
+    {
+        return idn_to_ascii($domain, 0, INTL_IDNA_VARIANT_UTS46);
+    }
+
     protected function sanitizeDomainName(string $domain): string
     {
         $domain = str_replace(['http://', 'https://'], '', $domain);
@@ -94,7 +101,7 @@ class Dns
     {
         $nameserverPart = $this->getSpecificNameserverPart();
 
-        $command = 'dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
+        $command = 'CHARSET=ASCII dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
 
         $process = new Process($command);
 

@@ -101,6 +101,12 @@ class DnsTest extends TestCase
         $this->assertEquals('', ($this->dns->getNameserver()));
     }
 
+    /** @test */
+    public function it_properly_converts_foreign_characters_to_punycode()
+    {
+        $this->assertEquals('xn--ms-umzge-c6a.de', (new Dns('ms-umzüge.de'))->convertToPunycode('ms-umzüge.de'));
+    }
+
     protected function assertSeeRecordTypes($records, $type)
     {
         $types = (array) $type;
