@@ -101,6 +101,20 @@ class DnsTest extends TestCase
         $this->assertEquals('', ($this->dns->getNameserver()));
     }
 
+    /** @test */
+    public function it_can_set_the_use_name_server()
+    {
+        $this->assertEquals('dns.spatie.be', (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getNameServer());
+    }
+
+    /** @test */
+    public function it_throws_excpetion_on_failed_to_fetch_dns_record()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Dns records could not be fetched');
+        (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getRecords('MX');
+    }
+
     protected function assertSeeRecordTypes($records, $type)
     {
         $types = (array) $type;
