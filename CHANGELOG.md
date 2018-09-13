@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 1.4.0 - 2018-09-13
+
+- add CNAME and SRV record types
+
 ## 1.3.1 - 2018-02-20
 
 - fix tests
