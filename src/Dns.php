@@ -15,9 +15,11 @@ class Dns
     protected $recordTypes = [
         'A',
         'AAAA',
+        'CNAME',
         'NS',
         'SOA',
         'MX',
+        'SRV',
         'TXT',
         'DNSKEY',
         'CAA',
