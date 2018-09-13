@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
 [![Build Status](https://img.shields.io/travis/spatie/dns/master.svg?style=flat-square)](https://travis-ci.org/spatie/dns)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/69452621-a46c-4c51-82c0-d5be0b67ebc3.svg?style=flat-square)](https://insight.sensiolabs.com/projects/69452621-a46c-4c51-82c0-d5be0b67ebc3)
 [![StyleCI](https://styleci.io/repos/108810419/shield?branch=master)](https://styleci.io/repos/108810419)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/dns.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/dns)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
