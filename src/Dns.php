@@ -34,6 +34,8 @@ class Dns
         $this->nameserver = $nameserver;
 
         $this->domain = $this->sanitizeDomainName($domain);
+
+        $this->fqdn = $this->domain;
     }
 
     public function useNameserver(string $nameserver)
@@ -45,7 +47,23 @@ class Dns
 
     public function getDomain(): string
     {
-        return $this->domain;
+        return $this->fqdn;
+    }
+
+    public function setSubDomain($subDomain): string
+    {
+        $this->subDomain = $subDomain;
+
+        $this->fqdn = $subDomain.".".$this->domain;
+
+        return $this;
+    }
+
+    public function unsetSubDomain()
+    {
+        $this->fqdn = $this->domain;
+
+        return $this->fqdn;
     }
 
     public function getNameserver(): string
@@ -96,7 +114,8 @@ class Dns
     {
         $nameserverPart = $this->getSpecificNameserverPart();
 
-        $command = 'dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
+
+        $command = 'dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->fqdn)." {$type} +multiline +noall +answer";
 
         $process = new Process($command);
 

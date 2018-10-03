@@ -40,6 +40,19 @@ $dns->getRecords('A', 'MX'); // returns both A and MX records
 $dns->getRecords(['A', 'MX']); // returns both A and MX records
 ```
 
+To get Subdomains of the domain name use the above Syntax, but first set the sub domain.
+
+``` php
+$dns->setSubDomain("server");
+```
+
+This will change the FQDN (Fully Qualified Domain Name) to "server.spatie.be" which will be tested when using getRecords, so if you need to check the domain again, without the sub domain, you will need to unset the sub domain first.
+
+``` php
+$dns->unsetSubDomain("server");
+```
+
+
 ### Testing
 
 ``` bash
