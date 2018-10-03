@@ -54,7 +54,7 @@ class Dns
     {
         $this->subDomain = $subDomain;
 
-        $this->fqdn = $subDomain.".".$this->domain;
+        $this->fqdn = $subDomain.'.'.$this->domain;
 
         return $this;
     }
@@ -113,7 +113,6 @@ class Dns
     protected function getRecordsOfType(string $type): string
     {
         $nameserverPart = $this->getSpecificNameserverPart();
-
 
         $command = 'dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->fqdn)." {$type} +multiline +noall +answer";
 
