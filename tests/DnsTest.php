@@ -5,6 +5,7 @@ namespace Spatie\Dns\Test;
 use Spatie\Dns\Dns;
 use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Exceptions\InvalidArgument;
+use Spatie\Dns\Exceptions\CouldNotFetchDns;
 
 class DnsTest extends TestCase
 {
@@ -110,8 +111,8 @@ class DnsTest extends TestCase
     /** @test */
     public function it_throws_excpetion_on_failed_to_fetch_dns_record()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Dns records could not be fetched');
+        $this->expectException(CouldNotFetchDns::class);
+        $this->expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
         (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getRecords('MX');
     }
 
