@@ -2,7 +2,6 @@
 
 namespace Spatie\Dns;
 
-use Exception;
 use Symfony\Component\Process\Process;
 use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
