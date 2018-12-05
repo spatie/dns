@@ -2,9 +2,9 @@
 
 namespace Spatie\Dns;
 
-use Exception;
 use Symfony\Component\Process\Process;
 use Spatie\Dns\Exceptions\InvalidArgument;
+use Spatie\Dns\Exceptions\CouldNotFetchDns;
 
 class Dns
 {
@@ -53,6 +53,9 @@ class Dns
         return $this->nameserver;
     }
 
+    /**
+     * @throws CouldNotFetchDns
+     */
     public function getRecords(...$types): string
     {
         $types = $this->determineTypes($types);
@@ -92,6 +95,9 @@ class Dns
         return strtolower($domain);
     }
 
+    /**
+     * @throws CouldNotFetchDns
+     */
     protected function getRecordsOfType(string $type): string
     {
         $nameserverPart = $this->getSpecificNameserverPart();
@@ -103,7 +109,7 @@ class Dns
         $process->run();
 
         if (! $process->isSuccessful()) {
-            throw new Exception('Dns records could not be fetched');
+            throw CouldNotFetchDns::digReturnedWithError(trim($process->getErrorOutput()));
         }
 
         return $process->getOutput();
