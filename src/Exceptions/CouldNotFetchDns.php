@@ -2,9 +2,7 @@
 
 namespace Spatie\Dns\Exceptions;
 
-use InvalidArgumentException;
-
-class CouldNotFetchDns extends InvalidArgumentException
+class CouldNotFetchDns extends \Exception
 {
     public static function digReturnedWithError($output)
     {
