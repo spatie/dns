@@ -53,6 +53,9 @@ class Dns
         return $this->nameserver;
     }
 
+    /**
+     * @throws CouldNotFetchDns
+     */
     public function getRecords(...$types): string
     {
         $types = $this->determineTypes($types);
@@ -92,6 +95,9 @@ class Dns
         return strtolower($domain);
     }
 
+    /**
+     * @throws CouldNotFetchDns
+     */
     protected function getRecordsOfType(string $type): string
     {
         $nameserverPart = $this->getSpecificNameserverPart();
