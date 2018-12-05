@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 1.4.1 - 2018-12-06
+
+- throw a custom exception when dig fails
+
 ## 1.4.0 - 2018-09-13
 
 - add CNAME and SRV record types
