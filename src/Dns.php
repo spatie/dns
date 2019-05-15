@@ -23,6 +23,7 @@ class Dns
         'TXT',
         'DNSKEY',
         'CAA',
+        'NAPTR',
     ];
 
     public function __construct(string $domain, string $nameserver = '')
