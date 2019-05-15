@@ -110,7 +110,7 @@ class Dns
             $type,
             '+multiline',
             '+noall',
-            '+answer'
+            '+answer',
         ]);
 
         $process = new Process($command);
