@@ -103,7 +103,16 @@ class Dns
     {
         $nameserverPart = $this->getSpecificNameserverPart();
 
-        $command = 'dig +nocmd '.$nameserverPart.' '.escapeshellarg($this->domain)." {$type} +multiline +noall +answer";
+        $command = array_filter([
+            'dig',
+            '+nocmd',
+            $nameserverPart,
+            $this->domain,
+            $type,
+            '+multiline',
+            '+noall',
+            '+answer',
+        ]);
 
         $process = new Process($command);
 
@@ -116,12 +125,12 @@ class Dns
         return $process->getOutput();
     }
 
-    protected function getSpecificNameserverPart()
+    protected function getSpecificNameserverPart(): ?string
     {
         if ($this->nameserver === '') {
-            return '';
+            return null;
         }
 
-        return '@'.escapeshellarg($this->nameserver);
+        return '@'.$this->nameserver;
     }
 }
