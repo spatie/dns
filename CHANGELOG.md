@@ -2,6 +2,11 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 1.4.2 - 2019-05-17
+
+- add support for NAPTR record type
+- resolve symfony/process deprecation
+
 ## 1.4.1 - 2018-12-06
 
 - throw a custom exception when dig fails
