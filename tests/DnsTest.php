@@ -109,17 +109,15 @@ class DnsTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_excpetion_on_failed_to_fetch_dns_record()
+    public function it_throws_exception_on_failed_to_fetch_dns_record()
     {
         $this->expectException(CouldNotFetchDns::class);
         $this->expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
         (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getRecords('MX');
     }
 
-    protected function assertSeeRecordTypes($records, $type)
+    protected function assertSeeRecordTypes($records, array $types)
     {
-        $types = (array) $type;
-
         foreach ($types as $type) {
             //some dns servers use tabs, let's replace them by spaces
             $records = preg_replace('/\s+/', ' ', $records);
@@ -128,10 +126,8 @@ class DnsTest extends TestCase
         }
     }
 
-    protected function assertDontSeeRecordTypes($records, $type)
+    protected function assertDontSeeRecordTypes($records, array $types)
     {
-        $types = (array) $type;
-
         foreach ($types as $type) {
             //some dns servers use tabs, let's replace them by spaces
             $records = preg_replace('/\s+/', ' ', $records);
