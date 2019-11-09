@@ -55,6 +55,7 @@ class Dns
     }
 
     /**
+     * @throws InvalidArgument
      * @throws CouldNotFetchDns
      */
     public function getRecords(...$types): string
@@ -70,6 +71,9 @@ class Dns
         return implode('', array_filter($dnsRecords));
     }
 
+    /**
+     * @throws InvalidArgument
+     */
     protected function determineTypes(array $types): array
     {
         $types = is_array($types[0] ?? null)
@@ -78,10 +82,8 @@ class Dns
 
         $types = array_map('strtoupper', $types);
 
-        foreach ($types as $type) {
-            if (! in_array($type, $this->recordTypes)) {
-                throw InvalidArgument::filterIsNotAValidRecordType($type, $this->recordTypes);
-            }
+        if ($invalidTypes = array_diff($types, $this->recordTypes)) {
+            throw InvalidArgument::filterIsNotAValidRecordType(reset($invalidTypes), $this->recordTypes);
         }
 
         return $types;
