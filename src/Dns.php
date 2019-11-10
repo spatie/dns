@@ -89,7 +89,7 @@ class Dns
 
     protected function sanitizeDomainName(string $domain): string
     {
-        $domain = str_replace(['http://', 'https://'], '', $domain);
+        $domain = preg_replace('/^\s*https?:\/\//i', '', $domain);
 
         $domain = strtok($domain, '/');
 
