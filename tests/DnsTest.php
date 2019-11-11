@@ -2,10 +2,10 @@
 
 namespace Spatie\Dns\Test;
 
-use Spatie\Dns\Dns;
 use PHPUnit\Framework\TestCase;
-use Spatie\Dns\Exceptions\InvalidArgument;
+use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
+use Spatie\Dns\Exceptions\InvalidArgument;
 
 class DnsTest extends TestCase
 {
