@@ -11,7 +11,7 @@ class InvalidArgument extends InvalidArgumentException
         return new static('A domain name is required');
     }
 
-    public static function filterIsNotAValidRecordType($filter, $validRecordTypes)
+    public static function filterIsNotAValidRecordType($filter, array $validRecordTypes)
     {
         $recordTypeString = implode(', ', $validRecordTypes);
 
