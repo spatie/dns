@@ -18,6 +18,8 @@ $dns->getRecords('A'); // returns only A records
 
 ## Installation
 
+If you do not have [https://linux.die.net/man/1/dig](dig) installed you will need it. 
+
 You can install the package via composer:
 
 ```bash
