@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 1.4.3 - 2019-11-30
+
+- drop support for PHP 7.3 and below
+
 ## 1.4.2 - 2019-05-17
 
 - add support for NAPTR record type
