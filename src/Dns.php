@@ -8,11 +8,11 @@ use Symfony\Component\Process\Process;
 
 class Dns
 {
-    protected $domain = '';
+    protected string $domain = '';
 
-    protected $nameserver = '';
+    protected string $nameserver = '';
 
-    protected $recordTypes = [
+    protected array $recordTypes = [
         'A',
         'AAAA',
         'CNAME',
@@ -54,10 +54,7 @@ class Dns
         return $this->nameserver;
     }
 
-    /**
-     * @throws InvalidArgument
-     * @throws CouldNotFetchDns
-     */
+
     public function getRecords(...$types): string
     {
         $types = $this->determineTypes($types);
