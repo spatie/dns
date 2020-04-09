@@ -42,6 +42,12 @@ $dns->getRecords('A', 'MX'); // returns both A and MX records
 $dns->getRecords(['A', 'MX']); // returns both A and MX records
 ```
 
+You can get records from a specific nameserver.
+
+```php
+$dns = new Spatie\Dns\Dns('spatie.be', 'ns1.openminds.be'); // use ns1.openminds.be 
+```
+
 ### Testing
 
 ``` bash
