@@ -111,6 +111,7 @@ class Dns
             '+multiline',
             '+noall',
             '+answer',
+            '+noidnout',
         ]);
 
         $process = new Process($command);
