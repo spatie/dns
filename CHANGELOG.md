@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 1.5.0 - 2020-08-24
+
+- add `noidnout`
+
 ## 1.4.3 - 2019-11-30
 
 - drop support for PHP 7.3 and below
