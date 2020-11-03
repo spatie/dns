@@ -54,7 +54,6 @@ class Dns
         return $this->nameserver;
     }
 
-
     public function getRecords(...$types): string
     {
         $types = $this->determineTypes($types);
