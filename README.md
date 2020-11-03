@@ -1,7 +1,8 @@
 # Retrieve DNS records
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
-https://github.com/spatie/dns/blob/master/.github/workflows/tests.yml#L27-L30[![StyleCI](https://styleci.io/repos/108810419/shield?branch=master)](https://styleci.io/repos/108810419)
+![Tests](https://github.com/spatie/dns/workflows/Tests/badge.svg)
+[![StyleCI](https://styleci.io/repos/108810419/shield?branch=master)](https://styleci.io/repos/108810419)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
 
 This package contains a class that can fetch DNS records.
