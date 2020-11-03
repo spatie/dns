@@ -39,3 +39,5 @@ jobs:
       run: |
         wget https://scrutinizer-ci.com/ocular.phar
         php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+      # Disable on PHP 8 as Ocular isn't supported
+      if: matrix.php < 8
