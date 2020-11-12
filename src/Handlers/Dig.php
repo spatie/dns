@@ -46,7 +46,6 @@ class Dig extends Handler
             'dig',
             '+nocmd',
             '+noall',
-            '+noidnout',
             '+nomultiline',
             '+answer',
             $this->prepareNameserver(),
