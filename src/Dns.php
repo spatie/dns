@@ -2,19 +2,16 @@
 
 namespace Spatie\Dns;
 
-use OutOfBoundsException;
 use Spatie\Dns\Contracts\Collection as CollectionContract;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Handlers\Dig;
 use Spatie\Dns\Handlers\DnsGetRecord;
 use Spatie\Dns\Handlers\Handler;
-use Spatie\Dns\Records\Record;
 use Spatie\Dns\Support\Collection;
 use Spatie\Dns\Support\Domain;
 use Spatie\Dns\Support\Factory;
 use Spatie\Dns\Support\Types;
-use Symfony\Component\Process\Process;
 
 class Dns
 {
@@ -39,6 +36,11 @@ class Dns
         $this->nameserver = $nameserver;
 
         return $this;
+    }
+
+    public function getNameserver(): ?string
+    {
+        return $this->nameserver;
     }
 
     /**
