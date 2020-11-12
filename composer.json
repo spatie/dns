@@ -29,6 +29,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "ext-mbstring": "*",
         "symfony/process": "^5.0"
     },
     "require-dev": {

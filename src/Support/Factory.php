@@ -19,7 +19,7 @@ class Factory
 
     protected function resolve(string $type): string
     {
-        $type = strtoupper($type);
+        $type = mb_strtoupper($type);
 
         $class = 'Spatie\\Dns\\Records\\'.$type;
 

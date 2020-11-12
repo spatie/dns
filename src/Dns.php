@@ -90,13 +90,7 @@ class Dns
 
     protected function sanitizeDomain(string $input): string
     {
-        $domain = strval(new Domain($input));
-
-        if (empty($domain)) {
-            throw InvalidArgument::domainIsMissing();
-        }
-
-        return $domain;
+        return strval(new Domain($input));
     }
 
     /**

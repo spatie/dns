@@ -35,7 +35,7 @@ class Types
         $flags = 0;
 
         foreach ($types as $type) {
-            $flag = array_search(strtoupper($type), self::TYPES);
+            $flag = array_search(mb_strtoupper($type), self::TYPES);
 
             if ($flag !== false) {
                 $flags = $flags | $flag;

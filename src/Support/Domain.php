@@ -2,6 +2,8 @@
 
 namespace Spatie\Dns\Support;
 
+use Spatie\Dns\Exceptions\InvalidArgument;
+
 class Domain
 {
     protected string $domain;
@@ -22,6 +24,12 @@ class Domain
             $url = 'https://'.$url;
         }
 
-        return parse_url($url, PHP_URL_HOST);
+        $domain = mb_strtolower(parse_url($url, PHP_URL_HOST));
+
+        if (empty($domain)) {
+            throw InvalidArgument::domainIsMissing();
+        }
+
+        return $domain;
     }
 }

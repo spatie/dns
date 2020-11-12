@@ -19,7 +19,7 @@ class CNAME extends Record
             'host' => trim($attributes[0], '.'),
             'ttl' => intval($attributes[1]),
             'class' => $attributes[2],
-            'type' => strtoupper($attributes[3]),
+            'type' => mb_strtoupper($attributes[3]),
             'target' => trim($attributes[4], '.'),
         ]);
     }
