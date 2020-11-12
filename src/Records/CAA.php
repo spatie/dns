@@ -2,8 +2,6 @@
 
 namespace Spatie\Dns\Records;
 
-use Spatie\Dns\Support\Domain;
-
 /**
  * @method int flags()
  * @method string tag()

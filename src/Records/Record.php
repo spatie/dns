@@ -70,7 +70,7 @@ abstract class Record
     {
         $method = sprintf('cast%s', str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute))));
 
-        if(method_exists($this, $method)) {
+        if (method_exists($this, $method)) {
             return $this->$method($value);
         }
 

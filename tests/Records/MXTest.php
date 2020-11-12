@@ -3,7 +3,6 @@
 namespace Spatie\Dns\Test\Records;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\Dns\Records\A;
 use Spatie\Dns\Records\MX;
 
 class MXTest extends TestCase

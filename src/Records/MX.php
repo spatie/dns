@@ -2,8 +2,6 @@
 
 namespace Spatie\Dns\Records;
 
-use Spatie\Dns\Support\Domain;
-
 /**
  * @method int pri()
  * @method string target()

@@ -2,8 +2,6 @@
 
 namespace Spatie\Dns\Records;
 
-use Spatie\Dns\Support\Domain;
-
 /**
  * @method string ipv6()
  */

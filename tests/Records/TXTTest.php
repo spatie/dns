@@ -3,9 +3,6 @@
 namespace Spatie\Dns\Test\Records;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\Dns\Records\A;
-use Spatie\Dns\Records\MX;
-use Spatie\Dns\Records\NS;
 use Spatie\Dns\Records\TXT;
 
 class TXTTest extends TestCase
