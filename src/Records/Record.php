@@ -28,12 +28,22 @@ abstract class Record
         }
     }
 
-    public static function make(array $record): static
+    /**
+     * @param array $record
+     *
+     * @return static
+     */
+    public static function make(array $record): self
     {
         return new static($record);
     }
 
-    abstract public static function parse(string $line): static;
+    /**
+     * @param string $line
+     *
+     * @return static
+     */
+    abstract public static function parse(string $line): self;
 
     abstract public function __toString(): string;
 

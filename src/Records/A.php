@@ -11,7 +11,7 @@ class A extends Record
 {
     protected string $ip;
 
-    public static function parse(string $line): static
+    public static function parse(string $line): self
     {
         $attributes = static::lineToArray($line, 5);
 

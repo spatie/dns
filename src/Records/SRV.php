@@ -17,7 +17,7 @@ class SRV extends Record
     protected string $target;
     protected int $port;
 
-    public static function parse(string $line): static
+    public static function parse(string $line): self
     {
         $attributes = static::lineToArray($line, 8);
 

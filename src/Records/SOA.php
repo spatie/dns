@@ -23,7 +23,7 @@ class SOA extends Record
     protected int $expire;
     protected int $minimum_ttl;
 
-    public static function parse(string $line): static
+    public static function parse(string $line): self
     {
         $attributes = static::lineToArray($line, 11);
 

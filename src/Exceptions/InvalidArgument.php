@@ -6,12 +6,12 @@ use InvalidArgumentException;
 
 class InvalidArgument extends InvalidArgumentException
 {
-    public static function domainIsMissing(): static
+    public static function domainIsMissing(): self
     {
         return new static('A domain name is required');
     }
 
-    public static function invalidRecordType(): static
+    public static function invalidRecordType(): self
     {
         return new static('Acceptable types are "*", php DNS_* constants flags, a single name or an array of names.');
     }

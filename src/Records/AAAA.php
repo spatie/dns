@@ -11,7 +11,7 @@ class AAAA extends Record
 {
     protected string $ipv6;
 
-    public static function parse(string $line): static
+    public static function parse(string $line): self
     {
         $attributes = static::lineToArray($line, 5);
 

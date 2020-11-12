@@ -31,7 +31,7 @@ class Dns
         $this->factory = $factory ?? new Factory();
     }
 
-    public function useNameserver(string $nameserver): static
+    public function useNameserver(string $nameserver): self
     {
         $this->nameserver = $nameserver;
 
@@ -43,7 +43,12 @@ class Dns
         return $this->nameserver;
     }
 
-    public function getRecords(Domain|string $search, int|string|array $types = DNS_ALL): CollectionContract
+    /**
+     * @param \Spatie\Dns\Support\Domain|string $search
+     * @param int|string|string[] $types
+     * @return \Spatie\Dns\Contracts\Collection
+     */
+    public function getRecords($search, $types = DNS_ALL): CollectionContract
     {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
@@ -89,7 +94,11 @@ class Dns
         return strval(new Domain($input));
     }
 
-    protected function resolveTypes(int|string|array $type): array
+    /**
+     * @param int|string|string[] $type
+     * @return string[]
+     */
+    protected function resolveTypes($type): array
     {
         if (is_string($type) && $type === '*') {
             return $this->types->toNames(DNS_ALL);

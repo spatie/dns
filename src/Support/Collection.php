@@ -6,10 +6,16 @@ use Spatie\Dns\Contracts\Collection as CollectionContract;
 
 class Collection implements CollectionContract
 {
+    /** @var \Spatie\Dns\Records\Record[] */
+    protected array $records;
+
     /**
      * @param \Spatie\Dns\Records\Record[] $records
      */
-    public function __construct(protected array $records) {}
+    public function __construct(array $records)
+    {
+        $this->records = $records;
+    }
 
     public function all(): array
     {

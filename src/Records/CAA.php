@@ -15,7 +15,7 @@ class CAA extends Record
     protected string $tag;
     protected string $value;
 
-    public static function parse(string $line): static
+    public static function parse(string $line): self
     {
         $attributes = static::lineToArray($line, 7);
 
