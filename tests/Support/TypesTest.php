@@ -19,43 +19,43 @@ class TypesTest extends TestCase
     /** @test */
     public function it_can_transform_flag_to_name(): void
     {
-        static::assertEquals(['A'], $this->types->toNames(DNS_A));
-        static::assertEquals(['AAAA'], $this->types->toNames(DNS_AAAA));
-        static::assertEquals(['CAA'], $this->types->toNames(DNS_CAA));
-        static::assertEquals(['CNAME'], $this->types->toNames(DNS_CNAME));
-        static::assertEquals(['MX'], $this->types->toNames(DNS_MX));
-        static::assertEquals(['NS'], $this->types->toNames(DNS_NS));
-        static::assertEquals(['SOA'], $this->types->toNames(DNS_SOA));
-        static::assertEquals(['SRV'], $this->types->toNames(DNS_SRV));
-        static::assertEquals(['TXT'], $this->types->toNames(DNS_TXT));
+        static::assertSame([DNS_A => 'A'], $this->types->toNames(DNS_A));
+        static::assertSame([DNS_AAAA =>'AAAA'], $this->types->toNames(DNS_AAAA));
+        static::assertSame([DNS_CAA => 'CAA'], $this->types->toNames(DNS_CAA));
+        static::assertSame([DNS_CNAME => 'CNAME'], $this->types->toNames(DNS_CNAME));
+        static::assertSame([DNS_MX => 'MX'], $this->types->toNames(DNS_MX));
+        static::assertSame([DNS_NS => 'NS'], $this->types->toNames(DNS_NS));
+        static::assertSame([DNS_SOA => 'SOA'], $this->types->toNames(DNS_SOA));
+        static::assertSame([DNS_SRV => 'SRV'], $this->types->toNames(DNS_SRV));
+        static::assertSame([DNS_TXT => 'TXT'], $this->types->toNames(DNS_TXT));
     }
 
     /** @test */
     public function it_can_transform_flags_to_names(): void
     {
-        static::assertEquals(['A', 'AAAA'], $this->types->toNames(DNS_A | DNS_AAAA));
-        static::assertEquals(['NS', 'SOA'], $this->types->toNames(DNS_NS | DNS_SOA));
+        static::assertSame([DNS_A => 'A', DNS_AAAA => 'AAAA'], $this->types->toNames(DNS_A | DNS_AAAA));
+        static::assertSame([DNS_NS => 'NS', DNS_SOA => 'SOA'], $this->types->toNames(DNS_NS | DNS_SOA));
     }
 
     /** @test */
     public function it_can_transform_name_to_flag(): void
     {
-        static::assertEquals(DNS_A, $this->types->toFlags(['A']));
-        static::assertEquals(DNS_AAAA, $this->types->toFlags(['AAAA']));
-        static::assertEquals(DNS_CAA, $this->types->toFlags(['CAA']));
-        static::assertEquals(DNS_CNAME, $this->types->toFlags(['CNAME']));
-        static::assertEquals(DNS_MX, $this->types->toFlags(['MX']));
-        static::assertEquals(DNS_NS, $this->types->toFlags(['NS']));
-        static::assertEquals(DNS_SOA, $this->types->toFlags(['SOA']));
-        static::assertEquals(DNS_SRV, $this->types->toFlags(['SRV']));
-        static::assertEquals(DNS_TXT, $this->types->toFlags(['TXT']));
+        static::assertSame(DNS_A, $this->types->toFlags(['A']));
+        static::assertSame(DNS_AAAA, $this->types->toFlags(['AAAA']));
+        static::assertSame(DNS_CAA, $this->types->toFlags(['CAA']));
+        static::assertSame(DNS_CNAME, $this->types->toFlags(['CNAME']));
+        static::assertSame(DNS_MX, $this->types->toFlags(['MX']));
+        static::assertSame(DNS_NS, $this->types->toFlags(['NS']));
+        static::assertSame(DNS_SOA, $this->types->toFlags(['SOA']));
+        static::assertSame(DNS_SRV, $this->types->toFlags(['SRV']));
+        static::assertSame(DNS_TXT, $this->types->toFlags(['TXT']));
     }
 
     /** @test */
     public function it_can_transform_names_to_flags(): void
     {
-        static::assertEquals(DNS_A | DNS_AAAA, $this->types->toFlags(['A', 'AAAA']));
-        static::assertEquals(DNS_NS | DNS_SOA, $this->types->toFlags(['NS', 'SOA']));
-        static::assertEquals(DNS_A | DNS_AAAA | DNS_CNAME, $this->types->toFlags(['A', 'aaAA', 'cname']));
+        static::assertSame(DNS_A | DNS_AAAA, $this->types->toFlags(['A', 'AAAA']));
+        static::assertSame(DNS_NS | DNS_SOA, $this->types->toFlags(['NS', 'SOA']));
+        static::assertSame(DNS_A | DNS_AAAA | DNS_CNAME, $this->types->toFlags(['A', 'aaAA', 'cname']));
     }
 }
