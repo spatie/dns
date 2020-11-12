@@ -3,20 +3,15 @@
 namespace Spatie\Dns\Test;
 
 use PHPUnit\Framework\TestCase;
+use Spatie\Dns\Contracts\Collection as CollectionContract;
 use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
-use Spatie\Dns\Contracts\Collection as CollectionContract;
 use Spatie\Dns\Records\A;
-use Spatie\Dns\Records\AAAA;
-use Spatie\Dns\Records\CAA;
-use Spatie\Dns\Records\CNAME;
 use Spatie\Dns\Records\MX;
 use Spatie\Dns\Records\NS;
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Records\SOA;
-use Spatie\Dns\Records\SRV;
-use Spatie\Dns\Records\TXT;
 
 class DnsTest extends TestCase
 {
@@ -165,7 +160,7 @@ class DnsTest extends TestCase
                 $records->all(),
                 function (Record $record) use ($types): bool {
                     foreach ($types as $type) {
-                        if(is_a($record, $type)) {
+                        if (is_a($record, $type)) {
                             return true;
                         }
                     }

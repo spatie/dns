@@ -2,10 +2,6 @@
 
 namespace Spatie\Dns\Handlers;
 
-use Spatie\Dns\Records\Record;
-use Spatie\Dns\Support\Factory;
-use Spatie\Dns\Support\Types;
-
 class DnsGetRecord extends Handler
 {
     public function __invoke(string $domain, int $flag, string $type): array

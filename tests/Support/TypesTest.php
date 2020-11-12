@@ -3,7 +3,6 @@
 namespace Spatie\Dns\Test\Support;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\Dns\Support\Domain;
 use Spatie\Dns\Support\Types;
 
 class TypesTest extends TestCase
