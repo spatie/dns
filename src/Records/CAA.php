@@ -2,6 +2,8 @@
 
 namespace Spatie\Dns\Records;
 
+use Spatie\Dns\Support\Domain;
+
 /**
  * @method int flags()
  * @method string tag()
@@ -18,13 +20,13 @@ class CAA extends Record
         $attributes = static::lineToArray($line, 7);
 
         return static::make([
-            'host' => trim($attributes[0], '.'),
-            'ttl' => intval($attributes[1]),
+            'host' => $attributes[0],
+            'ttl' => $attributes[1],
             'class' => $attributes[2],
-            'type' => mb_strtoupper($attributes[3]),
-            'flags' => intval($attributes[4]),
+            'type' => $attributes[3],
+            'flags' => $attributes[4],
             'tag' => $attributes[5],
-            'value' => trim($attributes[6], '"'),
+            'value' => $attributes[6],
         ]);
     }
 
@@ -40,5 +42,15 @@ class CAA extends Record
             $this->tag,
             $this->value
         );
+    }
+
+    protected function castFlags(string $value): int
+    {
+        return $this->prepareInt($value);
+    }
+
+    protected function castValue(string $value): string
+    {
+        return $this->prepareText($value);
     }
 }

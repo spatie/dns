@@ -2,6 +2,8 @@
 
 namespace Spatie\Dns\Records;
 
+use Spatie\Dns\Support\Domain;
+
 /**
  * @method int pri()
  * @method string target()
@@ -16,12 +18,12 @@ class MX extends Record
         $attributes = static::lineToArray($line, 6);
 
         return static::make([
-            'host' => trim($attributes[0], '.'),
-            'ttl' => intval($attributes[1]),
+            'host' => $attributes[0],
+            'ttl' => $attributes[1],
             'class' => $attributes[2],
-            'type' => mb_strtoupper($attributes[3]),
-            'pri' => intval($attributes[4]),
-            'target' => trim($attributes[5], '.'),
+            'type' => $attributes[3],
+            'pri' => $attributes[4],
+            'target' => $attributes[5],
         ]);
     }
 
@@ -36,5 +38,15 @@ class MX extends Record
             $this->pri,
             $this->target
         );
+    }
+
+    protected function castPri($value): string
+    {
+        return $this->prepareInt($value);
+    }
+
+    protected function castTarget(string $value): string
+    {
+        return $this->prepareDomain($value);
     }
 }

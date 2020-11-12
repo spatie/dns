@@ -2,6 +2,8 @@
 
 namespace Spatie\Dns\Records;
 
+use Spatie\Dns\Support\Domain;
+
 /**
  * @method string ipv6()
  */
@@ -14,10 +16,10 @@ class AAAA extends Record
         $attributes = static::lineToArray($line, 5);
 
         return static::make([
-            'host' => trim($attributes[0], '.'),
-            'ttl' => intval($attributes[1]),
+            'host' => $attributes[0],
+            'ttl' => $attributes[1],
             'class' => $attributes[2],
-            'type' => mb_strtoupper($attributes[3]),
+            'type' => $attributes[3],
             'ipv6' => $attributes[4],
         ]);
     }

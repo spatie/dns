@@ -2,6 +2,8 @@
 
 namespace Spatie\Dns\Records;
 
+use Spatie\Dns\Support\Domain;
+
 /**
  * @method string mname()
  * @method string rname()
@@ -26,17 +28,17 @@ class SOA extends Record
         $attributes = static::lineToArray($line, 11);
 
         return static::make([
-            'host' => trim($attributes[0], '.'),
-            'ttl' => intval($attributes[1]),
+            'host' => $attributes[0],
+            'ttl' => $attributes[1],
             'class' => $attributes[2],
-            'type' => mb_strtoupper($attributes[3]),
-            'mname' => trim($attributes[4], '.'),
-            'rname' => trim($attributes[5], '.'),
-            'serial' => intval($attributes[6]),
-            'refresh' => intval($attributes[7]),
-            'retry' => intval($attributes[8]),
-            'expire' => intval($attributes[9]),
-            'minimum-ttl' => intval($attributes[10]),
+            'type' => $attributes[3],
+            'mname' => $attributes[4],
+            'rname' => $attributes[5],
+            'serial' => $attributes[6],
+            'refresh' => $attributes[7],
+            'retry' => $attributes[8],
+            'expire' => $attributes[9],
+            'minimum-ttl' => $attributes[10],
         ]);
     }
 
@@ -56,5 +58,40 @@ class SOA extends Record
             $this->expire,
             $this->minimum_ttl
         );
+    }
+
+    protected function castMname(string $value): string
+    {
+        return $this->prepareDomain($value);
+    }
+
+    protected function castRname(string $value): string
+    {
+        return $this->prepareDomain($value);
+    }
+
+    protected function castSerial($value): int
+    {
+        return $this->prepareInt($value);
+    }
+
+    protected function castRefresh($value): int
+    {
+        return $this->prepareInt($value);
+    }
+
+    protected function castRetry($value): int
+    {
+        return $this->prepareInt($value);
+    }
+
+    protected function castExpire($value): int
+    {
+        return $this->prepareInt($value);
+    }
+
+    protected function castMinimumTtl($value): int
+    {
+        return $this->prepareInt($value);
     }
 }

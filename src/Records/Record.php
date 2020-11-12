@@ -3,6 +3,7 @@
 namespace Spatie\Dns\Records;
 
 use BadMethodCallException;
+use Spatie\Dns\Support\Domain;
 
 /**
  * @method string host()
@@ -23,7 +24,7 @@ abstract class Record
             $key = str_replace('-', '_', $key);
 
             if (property_exists($this, $key)) {
-                $this->$key = $value;
+                $this->$key = $this->cast($key, $value);
             }
         }
     }
@@ -63,5 +64,51 @@ abstract class Record
             preg_replace('/\s+/', ' ', $line),
             $limit
         );
+    }
+
+    protected function cast(string $attribute, $value)
+    {
+        $method = sprintf('cast%s', str_replace(' ', '', ucwords(str_replace('_', ' ', $attribute))));
+
+        if(method_exists($this, $method)) {
+            return $this->$method($value);
+        }
+
+        return $value;
+    }
+
+    protected function prepareDomain(string $value): string
+    {
+        return strval(new Domain(trim($value, '.')));
+    }
+
+    protected function prepareInt($value): int
+    {
+        return intval($value);
+    }
+
+    protected function prepareText(string $value): string
+    {
+        return trim($value, '"');
+    }
+
+    protected function castHost(string $value): string
+    {
+        return $this->prepareDomain($value);
+    }
+
+    protected function castTtl($value): int
+    {
+        return $this->prepareInt($value);
+    }
+
+    protected function castClass(string $value): string
+    {
+        return mb_strtoupper($value);
+    }
+
+    protected function castType(string $value): string
+    {
+        return mb_strtoupper($value);
     }
 }
