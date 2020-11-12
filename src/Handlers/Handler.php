@@ -8,7 +8,16 @@ use Spatie\Dns\Support\Types;
 
 abstract class Handler
 {
+    protected ?string $nameserver = null;
+
     public function __construct(protected Factory $factory) {}
+
+    public function setNameserver(?string $nameserver): static
+    {
+        $this->nameserver = $nameserver;
+
+        return $this;
+    }
 
     /**
      * @param string $domain

@@ -10,15 +10,6 @@ use Symfony\Component\Process\Process;
 
 class Dig extends Handler
 {
-    protected ?string $nameserver = null;
-
-    public function setNameserver(?string $nameserver): static
-    {
-        $this->nameserver = $nameserver;
-
-        return $this;
-    }
-
     public function __invoke(string $domain, int $flag, string $type): array
     {
         $process = new Process($this->buildCommand($domain, $type));

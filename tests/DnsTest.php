@@ -99,7 +99,7 @@ class DnsTest extends TestCase
     {
         static::expectException(InvalidArgument::class);
 
-        $this->dns->getRecords('xyz');
+        $this->dns->getRecords('spatie.be', 'xyz');
     }
 
     /** @test */

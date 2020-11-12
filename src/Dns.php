@@ -54,7 +54,7 @@ class Dns
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
-        $handler = $this->getHandler();
+        $handler = $this->getHandler()->setNameserver($this->nameserver);
 
         $records = [];
 
@@ -109,7 +109,7 @@ class Dns
      */
     protected function resolveTypes($type): array
     {
-        if (is_string($type) && '*' === $type) {
+        if (is_string($type) && $type === '*') {
             return $this->types->toNames(DNS_ALL);
         }
 
