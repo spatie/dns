@@ -14,7 +14,7 @@ class Types
         DNS_SRV => 'SRV',
         DNS_TXT => 'TXT',
         DNS_CAA => 'CAA',
-        //        DNS_NAPTR => 'NAPTR',
+        // DNS_NAPTR => 'NAPTR',
     ];
 
     public function toNames(int $flags): array
