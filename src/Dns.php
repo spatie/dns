@@ -113,7 +113,7 @@ class Dns
             return $this->types->toNames(DNS_ALL);
         }
 
-        if (is_string($type) && in_array($type, Types::TYPES)) {
+        if (is_string($type) && in_array(mb_strtoupper($type), Types::TYPES)) {
             return $this->types->toNames($this->types->toFlags([$type]));
         }
 
