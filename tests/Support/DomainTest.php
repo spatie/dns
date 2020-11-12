@@ -15,7 +15,7 @@ class DomainTest extends TestCase
         static::assertEquals('spatie.be', strval(new Domain('http://spatie.be')));
         static::assertEquals('spatie.be', strval(new Domain('https://spatie.be/page')));
         static::assertEquals('spatie.be', strval(new Domain('https://SPATIE.be')));
-        static::assertEquals('spatie.be', strval(new Domain('https://www.SPATIE.be')));
+        static::assertEquals('www.spatie.be', strval(new Domain('https://www.SPATIE.be')));
         static::assertEquals('ftp.spatie.be', strval(new Domain('ftp://ftp.spatie.be')));
     }
 }
