@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        php: ['7.4', '8.0']
+        php: ['8.0']
         dependency-version: [prefer-lowest, prefer-stable]
 
     name: PHP ${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
@@ -33,11 +33,4 @@ jobs:
       run: composer update --${{ matrix.dependency-version }} --no-interaction --no-progress --ansi
 
     - name: Unit Tests
-      run: vendor/bin/phpunit --colors=always --coverage-text --coverage-clover=coverage.clover
-
-    - name: Upload Coverage to Scrutinizer
-      run: |
-        wget https://scrutinizer-ci.com/ocular.phar
-        php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-      # Disable on PHP 8 as Ocular isn't supported
-      if: matrix.php < 8
+      run: vendor/bin/phpunit --colors=always --coverage-text

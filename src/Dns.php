@@ -2,134 +2,133 @@
 
 namespace Spatie\Dns;
 
+use OutOfBoundsException;
+use Spatie\Dns\Contracts\Collection as CollectionContract;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
+use Spatie\Dns\Handlers\Dig;
+use Spatie\Dns\Handlers\DnsGetRecord;
+use Spatie\Dns\Handlers\Handler;
+use Spatie\Dns\Records\Record;
+use Spatie\Dns\Support\Collection;
+use Spatie\Dns\Support\Domain;
+use Spatie\Dns\Support\Factory;
+use Spatie\Dns\Support\Types;
 use Symfony\Component\Process\Process;
 
 class Dns
 {
-    protected string $domain = '';
+    protected ?Types $types;
 
-    protected string $nameserver = '';
+    protected ?Factory $factory;
 
-    protected array $recordTypes = [
-        'A',
-        'AAAA',
-        'CNAME',
-        'NS',
-        'SOA',
-        'MX',
-        'SRV',
-        'TXT',
-        'DNSKEY',
-        'CAA',
-        'NAPTR',
-    ];
+    protected ?string $nameserver = null;
 
-    public function __construct(string $domain, string $nameserver = '')
+    public function __construct(
+        ?Types $types = null,
+        ?Factory $factory = null
+    )
     {
-        if (empty($domain)) {
-            throw InvalidArgument::domainIsMissing();
-        }
+        $this->types = $types ?? new Types();
 
-        $this->nameserver = $nameserver;
-
-        $this->domain = $this->sanitizeDomainName($domain);
+        $this->factory = $factory ?? new Factory();
     }
 
-    public function useNameserver(string $nameserver)
+    public function useNameserver(string $nameserver): static
     {
         $this->nameserver = $nameserver;
 
         return $this;
     }
 
-    public function getDomain(): string
+    /**
+     * @param \Spatie\Dns\Support\Domain|string $search
+     * @param int|string|string[] $types
+     *
+     * @return \Spatie\Dns\Contracts\Collection
+     */
+    public function getRecords($search, $types = DNS_ALL): CollectionContract
     {
-        return $this->domain;
+        $domain = $this->sanitizeDomain(strval($search));
+        $types = $this->resolveTypes($types);
+
+        $handler = $this->getHandler();
+
+        $records = [];
+
+        foreach ($types as $flag => $type) {
+            $records = array_merge(
+                $records,
+                $handler($domain, $flag, $type)
+            );
+        }
+
+        return $this->collect($records);
     }
 
-    public function getNameserver(): string
+    protected function collect(array $records): CollectionContract
     {
-        return $this->nameserver;
+        return new Collection($records);
     }
 
-    public function getRecords(...$types): string
+    protected function getHandler(): Handler
     {
-        $types = $this->determineTypes($types);
+        $handlers = array_filter(
+            [
+                new Dig($this->factory),
+                new DnsGetRecord($this->factory),
+            ],
+            fn(Handler $handler): bool => $handler->canHandle()
+        );
 
-        $types = count($types)
-            ? $types
-            : $this->recordTypes;
+        if (empty($handlers)) {
+            throw CouldNotFetchDns::noHandlerFound();
+        }
 
-        $dnsRecords = array_map([$this, 'getRecordsOfType'], $types);
+        return array_shift($handlers);
+    }
 
-        return implode('', array_filter($dnsRecords));
+    protected function sanitizeDomain(string $input): string
+    {
+        $domain = strval(new Domain($input));
+
+        if (empty($domain)) {
+            throw InvalidArgument::domainIsMissing();
+        }
+
+        return $domain;
     }
 
     /**
-     * @throws InvalidArgument
+     * @param int|string|string[] $type
+     *
+     * @return string[]
+     * @example $this->resolveTypes("A")
+     * @example $this->resolveTypes(["A", "MX"])
+     * @example $this->resolveTypes(DNS_A | DNS_MX)
+     *
+     * @see Types::TYPES
+     *
+     * @example $this->resolveTypes("*")
      */
-    protected function determineTypes(array $types): array
+    protected function resolveTypes($type): array
     {
-        $types = is_array($types[0] ?? null)
-            ? $types[0]
-            : $types;
-
-        $types = array_map('strtoupper', $types);
-
-        if ($invalidTypes = array_diff($types, $this->recordTypes)) {
-            throw InvalidArgument::filterIsNotAValidRecordType(reset($invalidTypes), $this->recordTypes);
+        if (is_string($type) && '*' === $type) {
+            return $this->types->toNames(DNS_ALL);
         }
 
-        return $types;
-    }
-
-    protected function sanitizeDomainName(string $domain): string
-    {
-        $domain = str_replace(['http://', 'https://'], '', $domain);
-
-        $domain = strtok($domain, '/');
-
-        return strtolower($domain);
-    }
-
-    /**
-     * @throws CouldNotFetchDns
-     */
-    protected function getRecordsOfType(string $type): string
-    {
-        $nameserverPart = $this->getSpecificNameserverPart();
-
-        $command = array_filter([
-            'dig',
-            '+nocmd',
-            $nameserverPart,
-            $this->domain,
-            $type,
-            '+multiline',
-            '+noall',
-            '+answer',
-            '+noidnout',
-        ]);
-
-        $process = new Process($command);
-
-        $process->run();
-
-        if (! $process->isSuccessful()) {
-            throw CouldNotFetchDns::digReturnedWithError(trim($process->getErrorOutput()));
+        if (is_string($type) && in_array($type, Types::TYPES)) {
+            return $this->types->toNames($this->types->toFlags([$type]));
         }
 
-        return $process->getOutput();
-    }
-
-    protected function getSpecificNameserverPart(): ?string
-    {
-        if ($this->nameserver === '') {
-            return null;
+        if (is_int($type)) {
+            return $this->types->toNames($type);
         }
 
-        return '@'.$this->nameserver;
+        if (is_array($type)) {
+            return $this->types->toNames($this->types->toFlags($type));
+        }
+
+        throw InvalidArgument::invalidRecordType();
     }
 }
