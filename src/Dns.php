@@ -24,8 +24,7 @@ class Dns
     public function __construct(
         ?Types $types = null,
         ?Factory $factory = null
-    )
-    {
+    ) {
         $this->types = $types ?? new Types();
 
         $this->factory = $factory ?? new Factory();
@@ -79,7 +78,7 @@ class Dns
                 new Dig($this->factory),
                 new DnsGetRecord($this->factory),
             ],
-            fn(Handler $handler): bool => $handler->canHandle()
+            fn (Handler $handler): bool => $handler->canHandle()
         );
 
         if (empty($handlers)) {

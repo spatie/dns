@@ -4,7 +4,6 @@ namespace Spatie\Dns\Handlers;
 
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Support\Factory;
-use Spatie\Dns\Support\Types;
 
 abstract class Handler
 {
@@ -38,7 +37,7 @@ abstract class Handler
     {
         return array_map(
             function ($record) use ($type): Record {
-                if(is_string($record)) {
+                if (is_string($record)) {
                     return $this->factory->parse($type, $record);
                 }
 

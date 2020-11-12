@@ -2,8 +2,6 @@
 
 namespace Spatie\Dns\Records;
 
-
-
 /**
  * @method string txt()
  */

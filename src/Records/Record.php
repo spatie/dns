@@ -49,7 +49,7 @@ abstract class Record
 
     public function __call(string $name, array $arguments)
     {
-        if(property_exists($this, $name)) {
+        if (property_exists($this, $name)) {
             return $this->$name;
         }
 

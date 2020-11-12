@@ -3,9 +3,6 @@
 namespace Spatie\Dns\Handlers;
 
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
-use Spatie\Dns\Records\Record;
-use Spatie\Dns\Support\Factory;
-use Spatie\Dns\Support\Types;
 use Symfony\Component\Process\Process;
 
 class Dig extends Handler
