@@ -37,7 +37,7 @@ abstract class Record
 
     abstract public function __toString(): string;
 
-    public function __call(string $name)
+    public function __call(string $name, array $arguments)
     {
         if(property_exists($this, $name)) {
             return $this->$name;
