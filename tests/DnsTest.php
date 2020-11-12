@@ -105,27 +105,26 @@ class DnsTest extends TestCase
     /** @test */
     public function it_uses_provided_nameserver_if_set(): void
     {
-        $this->assertEquals('ns1.openminds.be', (new Dns('spatie.be', 'ns1.openminds.be'))->getNameserver());
+        $this->dns->useNameserver('ns1.openminds.be');
+
+        static::assertEquals('ns1.openminds.be', $this->dns->getNameserver());
     }
 
     /** @test */
     public function it_uses_default_nameserver_if_not_set(): void
     {
-        $this->assertEquals('', ($this->dns->getNameserver()));
-    }
-
-    /** @test */
-    public function it_can_set_the_use_name_server(): void
-    {
-        $this->assertEquals('dns.spatie.be', (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getNameServer());
+        static::assertNull($this->dns->getNameserver());
     }
 
     /** @test */
     public function it_throws_exception_on_failed_to_fetch_dns_record(): void
     {
-        $this->expectException(CouldNotFetchDns::class);
-        $this->expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
-        (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getRecords('MX');
+        static::expectException(CouldNotFetchDns::class);
+        static::expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
+
+        $this->dns
+            ->useNameserver('dns.spatie.be')
+            ->getRecords('spatie.be', DNS_A);
     }
 
     protected static function assertSeeRecordTypes(CollectionContract $records, array $types): void
