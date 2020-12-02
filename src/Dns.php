@@ -26,7 +26,7 @@ class Dns
         'NAPTR',
     ];
 
-    public static function of(string $domain, string $nameserver = '')
+    public static function of(string $domain, string $nameserver = ''): self
     {
         return new static($domain, $nameserver);
     }
