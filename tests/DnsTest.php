@@ -15,7 +15,7 @@ class DnsTest extends TestCase
     {
         parent::setUp();
 
-        $this->dns = new Dns('spatie.be');
+        $this->dns = Dns::of('spatie.be');
     }
 
     /** @test */
