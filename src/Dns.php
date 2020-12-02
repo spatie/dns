@@ -26,6 +26,11 @@ class Dns
         'NAPTR',
     ];
 
+    public static function of(string $domain, string $nameserver = '')
+    {
+        return new static($domain, $nameserver);
+    }
+
     public function __construct(string $domain, string $nameserver = '')
     {
         if (empty($domain)) {
