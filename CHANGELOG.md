@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 1.6.0 - 2020-12-02
+
+- add `of` method
+
 ## 1.5.0 - 2020-08-24
 
 - add `noidnout`

@@ -8,7 +8,9 @@
 This package contains a class that can fetch DNS records.
 
 ```php
-$dns = new Spatie\Dns\Dns('spatie.be');
+use Spatie\Dns\Dns;
+
+$dns = Dns::of('spatie.be');
 
 $dns->getRecords(); // returns all available dns records
 
@@ -25,7 +27,7 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Installation
 
-If you do not have [dig](https://linux.die.net/man/1/dig) installed you will need it. 
+If you do not have [dig](https://linux.die.net/man/1/dig) installed you will need it.
 
 You can install the package via composer:
 
@@ -38,7 +40,9 @@ composer require spatie/dns
 The class can get these record types: `A`, `AAAA`, `CNAME`, `NS`, `SOA`, `MX`, `SRV`, `TXT`, `DNSKEY`, `CAA`, `NAPTR`.
 
 ``` php
-$dns = new Spatie\Dns\Dns('spatie.be');
+use Spatie\Dns\Dns;
+
+$dns = Dns::of('spatie.be');
 
 $dns->getRecords(); // returns all records
 
@@ -52,7 +56,9 @@ $dns->getRecords(['A', 'MX']); // returns both A and MX records
 You can get records from a specific nameserver.
 
 ```php
-$dns = new Spatie\Dns\Dns('spatie.be', 'ns1.openminds.be'); // use ns1.openminds.be 
+use Spatie\Dns\Dns;
+
+$dns = Dns::of('spatie.be', 'ns1.openminds.be'); // use ns1.openminds.be 
 ```
 
 ### Testing
