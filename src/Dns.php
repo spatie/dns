@@ -37,12 +37,7 @@ class Dns
         return $this->nameserver;
     }
 
-    /**
-     * @param \Spatie\Dns\Support\Domain|string $search
-     * @param int|string|string[] $types
-     * @return \Spatie\Dns\Contracts\Collection
-     */
-    public function getRecords($search, $types = DNS_ALL): CollectionContract
+    public function getRecords(Domain|string $search, int|string|array $types = DNS_ALL): CollectionContract
     {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
@@ -88,11 +83,7 @@ class Dns
         return strval(new Domain($input));
     }
 
-    /**
-     * @param int|string|string[] $type
-     * @return string[]
-     */
-    protected function resolveTypes($type): array
+    protected function resolveTypes(int|string|array $type): array
     {
         if (is_string($type) && $type === '*') {
             return $this->types->toNames(DNS_ALL);
