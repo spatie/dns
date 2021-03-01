@@ -15,19 +15,14 @@ use Spatie\Dns\Support\Types;
 
 class Dns
 {
-    protected ?Types $types;
-
-    protected ?Factory $factory;
-
     protected ?string $nameserver = null;
 
     public function __construct(
-        ?Types $types = null,
-        ?Factory $factory = null
+        protected ?Types $types = null,
+        protected ?Factory $factory = null
     ) {
-        $this->types = $types ?? new Types();
-
-        $this->factory = $factory ?? new Factory();
+        $this->types ??= new Types();
+        $this->factory ??= new Factory();
     }
 
     public function useNameserver(string $nameserver): self
