@@ -9,11 +9,8 @@ abstract class Handler
 {
     protected ?string $nameserver = null;
 
-    protected Factory $factory;
-
-    public function __construct(Factory $factory)
+    public function __construct(protected Factory $factory)
     {
-        $this->factory = $factory;
     }
 
     public function setNameserver(?string $nameserver): self
