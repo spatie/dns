@@ -4,6 +4,7 @@ namespace Spatie\Dns\Records;
 
 use BadMethodCallException;
 use Spatie\Dns\Support\Domain;
+use Stringable;
 
 /**
  * @method string host()
@@ -11,7 +12,7 @@ use Spatie\Dns\Support\Domain;
  * @method string class()
  * @method string type()
  */
-abstract class Record
+abstract class Record implements Stringable
 {
     protected string $host;
     protected int $ttl;
