@@ -24,13 +24,6 @@ class AAAA extends Record
 
     public function __toString(): string
     {
-        return sprintf(
-            "%s.\t\t%d\t%s\t%s\t%s",
-            $this->host,
-            $this->ttl,
-            $this->class,
-            $this->type,
-            $this->ipv6
-        );
+        return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->ipv6}";
     }
 }

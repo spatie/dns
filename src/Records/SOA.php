@@ -42,20 +42,7 @@ class SOA extends Record
 
     public function __toString(): string
     {
-        return sprintf(
-            "%s.\t\t%d\t%s\t%s\t%s.\t%s.\t%d\t%d\t%d\t%d\t%d",
-            $this->host,
-            $this->ttl,
-            $this->class,
-            $this->type,
-            $this->mname,
-            $this->rname,
-            $this->serial,
-            $this->refresh,
-            $this->retry,
-            $this->expire,
-            $this->minimum_ttl
-        );
+        return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->mname}.\t{$this->rname}.\t{$this->serial}\t{$this->refresh}\t{$this->retry}\t{$this->expire}\t{$this->minimum_ttl}";
     }
 
     protected function castMname(string $value): string

@@ -27,15 +27,7 @@ class MX extends Record
 
     public function __toString(): string
     {
-        return sprintf(
-            "%s.\t\t%d\t%s\t%s\t%d\t%s.",
-            $this->host,
-            $this->ttl,
-            $this->class,
-            $this->type,
-            $this->pri,
-            $this->target
-        );
+        return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->pri}\t{$this->target}.";
     }
 
     protected function castPri($value): string
