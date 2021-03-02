@@ -8,7 +8,7 @@ use Spatie\Dns\Support\Domain;
 class DomainTest extends TestCase
 {
     /** @test */
-    public function it_can_get_a_sanitized_version_of_the_domain_name(): void
+    public function it_can_get_a_sanitized_version_of_the_domain_name()
     {
         static::assertEquals('spatie.be', strval(new Domain('spatie.be')));
         static::assertEquals('www.spatie.be', strval(new Domain('www.spatie.be')));

@@ -8,7 +8,7 @@ use Spatie\Dns\Records\A;
 class ATest extends TestCase
 {
     /** @test */
-    public function it_can_parse_string(): void
+    public function it_can_parse_string()
     {
         $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
 
@@ -20,7 +20,7 @@ class ATest extends TestCase
     }
 
     /** @test */
-    public function it_can_make_from_array(): void
+    public function it_can_make_from_array()
     {
         $record = A::make([
             'host' => 'spatie.be',
@@ -38,7 +38,7 @@ class ATest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_to_string(): void
+    public function it_can_transform_to_string()
     {
         $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
 

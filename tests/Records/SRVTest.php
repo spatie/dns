@@ -8,7 +8,7 @@ use Spatie\Dns\Records\SRV;
 class SRVTest extends TestCase
 {
     /** @test */
-    public function it_can_parse_string(): void
+    public function it_can_parse_string()
     {
         $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.');
 
@@ -23,7 +23,7 @@ class SRVTest extends TestCase
     }
 
     /** @test */
-    public function it_can_make_from_array(): void
+    public function it_can_make_from_array()
     {
         $record = SRV::make([
             'host' => '_http._tcp.mxtoolbox.com',
@@ -47,7 +47,7 @@ class SRVTest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_to_string(): void
+    public function it_can_transform_to_string()
     {
         $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.');
 

@@ -8,7 +8,7 @@ use Spatie\Dns\Records\AAAA;
 class AAAATest extends TestCase
 {
     /** @test */
-    public function it_can_parse_string(): void
+    public function it_can_parse_string()
     {
         $record = AAAA::parse('google.com.             900     IN      AAAA    2a00:1450:400e:800::200e');
 
@@ -20,7 +20,7 @@ class AAAATest extends TestCase
     }
 
     /** @test */
-    public function it_can_make_from_array(): void
+    public function it_can_make_from_array()
     {
         $record = AAAA::make([
             'host' => 'google.com',
@@ -38,7 +38,7 @@ class AAAATest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_to_string(): void
+    public function it_can_transform_to_string()
     {
         $record = AAAA::parse('google.com.             900     IN      AAAA    2a00:1450:400e:800::200e');
 

@@ -8,7 +8,7 @@ use Spatie\Dns\Records\CNAME;
 class CNAMETest extends TestCase
 {
     /** @test */
-    public function it_can_parse_string(): void
+    public function it_can_parse_string()
     {
         $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
 
@@ -20,7 +20,7 @@ class CNAMETest extends TestCase
     }
 
     /** @test */
-    public function it_can_make_from_array(): void
+    public function it_can_make_from_array()
     {
         $record = CNAME::make([
             'host' => 'www.spatie.be',
@@ -38,7 +38,7 @@ class CNAMETest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_to_string(): void
+    public function it_can_transform_to_string()
     {
         $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
 

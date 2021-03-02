@@ -8,7 +8,7 @@ use Spatie\Dns\Records\NS;
 class NSTest extends TestCase
 {
     /** @test */
-    public function it_can_parse_string(): void
+    public function it_can_parse_string()
     {
         $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
 
@@ -20,7 +20,7 @@ class NSTest extends TestCase
     }
 
     /** @test */
-    public function it_can_make_from_array(): void
+    public function it_can_make_from_array()
     {
         $record = NS::make([
             'host' => 'spatie.be',
@@ -38,7 +38,7 @@ class NSTest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_to_string(): void
+    public function it_can_transform_to_string()
     {
         $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
 

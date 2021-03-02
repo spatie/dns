@@ -17,7 +17,7 @@ class TypesTest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_flag_to_name(): void
+    public function it_can_transform_flag_to_name()
     {
         static::assertSame([DNS_A => 'A'], $this->types->toNames(DNS_A));
         static::assertSame([DNS_AAAA =>'AAAA'], $this->types->toNames(DNS_AAAA));
@@ -31,14 +31,14 @@ class TypesTest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_flags_to_names(): void
+    public function it_can_transform_flags_to_names()
     {
         static::assertSame([DNS_A => 'A', DNS_AAAA => 'AAAA'], $this->types->toNames(DNS_A | DNS_AAAA));
         static::assertSame([DNS_NS => 'NS', DNS_SOA => 'SOA'], $this->types->toNames(DNS_NS | DNS_SOA));
     }
 
     /** @test */
-    public function it_can_transform_name_to_flag(): void
+    public function it_can_transform_name_to_flag()
     {
         static::assertSame(DNS_A, $this->types->toFlags(['A']));
         static::assertSame(DNS_AAAA, $this->types->toFlags(['AAAA']));
@@ -52,7 +52,7 @@ class TypesTest extends TestCase
     }
 
     /** @test */
-    public function it_can_transform_names_to_flags(): void
+    public function it_can_transform_names_to_flags()
     {
         static::assertSame(DNS_A | DNS_AAAA, $this->types->toFlags(['A', 'AAAA']));
         static::assertSame(DNS_NS | DNS_SOA, $this->types->toFlags(['NS', 'SOA']));
