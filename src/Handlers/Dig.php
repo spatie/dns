@@ -30,7 +30,7 @@ class Dig extends Handler
         $process = new Process(['dig', '-v', '2>&1']);
         $process->run();
 
-        if (stripos($process->getOutput(), 'not found') !== false) {
+        if (str_contains($process->getOutput(), 'not found')) {
             return false;
         }
 
