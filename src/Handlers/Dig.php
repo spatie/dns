@@ -16,7 +16,7 @@ class Dig extends Handler
             ->run();
 
         if (! $process->isSuccessful()) {
-            throw CouldNotFetchDns::digReturnedWithError(trim($process->getErrorOutput()));
+            throw CouldNotFetchDns::digReturnedWithError($process);
         }
 
         return $this->transform(
