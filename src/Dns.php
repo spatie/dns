@@ -20,7 +20,8 @@ class Dns
     public function __construct(
         protected ?Types $types = null,
         protected ?Factory $factory = null
-    ) {
+    )
+    {
         $this->types ??= new Types();
         $this->factory ??= new Factory();
     }
@@ -63,13 +64,10 @@ class Dns
 
     protected function getHandler(): Handler
     {
-        $handlers = array_filter(
-            [
-                new Dig($this->factory),
-                new DnsGetRecord($this->factory),
-            ],
-            fn (Handler $handler): bool => $handler->canHandle()
-        );
+        $handlers = array_filter([
+            new Dig($this->factory),
+            new DnsGetRecord($this->factory),
+        ], fn(Handler $handler): bool => $handler->canHandle());
 
         if (empty($handlers)) {
             throw CouldNotFetchDns::noHandlerFound();
