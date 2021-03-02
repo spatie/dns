@@ -12,11 +12,11 @@ class TXTTest extends TestCase
     {
         $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"');
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(594, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('TXT', $record->type());
-        static::assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $record->txt());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(594, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('TXT', $record->type());
+        $this->assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $record->txt());
     }
 
     /** @test */
@@ -30,11 +30,11 @@ class TXTTest extends TestCase
             'txt' => 'v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all',
         ]);
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(594, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('TXT', $record->type());
-        static::assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $record->txt());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(594, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('TXT', $record->type());
+        $this->assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $record->txt());
     }
 
     /** @test */
@@ -42,6 +42,6 @@ class TXTTest extends TestCase
     {
         $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"');
 
-        static::assertSame("spatie.be.\t\t594\tIN\tTXT\t\"v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all\"", strval($record));
+        $this->assertSame("spatie.be.\t\t594\tIN\tTXT\t\"v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all\"", strval($record));
     }
 }

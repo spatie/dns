@@ -12,11 +12,11 @@ class NSTest extends TestCase
     {
         $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(82516, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('NS', $record->type());
-        static::assertSame('ns1.openprovider.nl', $record->target());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(82516, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('NS', $record->type());
+        $this->assertSame('ns1.openprovider.nl', $record->target());
     }
 
     /** @test */
@@ -30,11 +30,11 @@ class NSTest extends TestCase
             'target' => 'ns1.openprovider.nl',
         ]);
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(82516, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('NS', $record->type());
-        static::assertSame('ns1.openprovider.nl', $record->target());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(82516, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('NS', $record->type());
+        $this->assertSame('ns1.openprovider.nl', $record->target());
     }
 
     /** @test */
@@ -42,6 +42,6 @@ class NSTest extends TestCase
     {
         $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
 
-        static::assertSame("spatie.be.\t\t82516\tIN\tNS\tns1.openprovider.nl.", strval($record));
+        $this->assertSame("spatie.be.\t\t82516\tIN\tNS\tns1.openprovider.nl.", strval($record));
     }
 }

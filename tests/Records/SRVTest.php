@@ -12,14 +12,14 @@ class SRVTest extends TestCase
     {
         $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.');
 
-        static::assertSame('_http._tcp.mxtoolbox.com', $record->host());
-        static::assertSame(3600, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('SRV', $record->type());
-        static::assertSame(10, $record->pri());
-        static::assertSame(100, $record->weight());
-        static::assertSame(80, $record->port());
-        static::assertSame('mxtoolbox.com', $record->target());
+        $this->assertSame('_http._tcp.mxtoolbox.com', $record->host());
+        $this->assertSame(3600, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('SRV', $record->type());
+        $this->assertSame(10, $record->pri());
+        $this->assertSame(100, $record->weight());
+        $this->assertSame(80, $record->port());
+        $this->assertSame('mxtoolbox.com', $record->target());
     }
 
     /** @test */
@@ -36,14 +36,14 @@ class SRVTest extends TestCase
             'target' => 'mxtoolbox.com',
         ]);
 
-        static::assertSame('_http._tcp.mxtoolbox.com', $record->host());
-        static::assertSame(3600, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('SRV', $record->type());
-        static::assertSame(10, $record->pri());
-        static::assertSame(100, $record->weight());
-        static::assertSame(80, $record->port());
-        static::assertSame('mxtoolbox.com', $record->target());
+        $this->assertSame('_http._tcp.mxtoolbox.com', $record->host());
+        $this->assertSame(3600, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('SRV', $record->type());
+        $this->assertSame(10, $record->pri());
+        $this->assertSame(100, $record->weight());
+        $this->assertSame(80, $record->port());
+        $this->assertSame('mxtoolbox.com', $record->target());
     }
 
     /** @test */
@@ -51,6 +51,6 @@ class SRVTest extends TestCase
     {
         $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.');
 
-        static::assertSame("_http._tcp.mxtoolbox.com.\t\t3600\tIN\tSRV\t10\t100\t80\tmxtoolbox.com.", strval($record));
+        $this->assertSame("_http._tcp.mxtoolbox.com.\t\t3600\tIN\tSRV\t10\t100\t80\tmxtoolbox.com.", strval($record));
     }
 }

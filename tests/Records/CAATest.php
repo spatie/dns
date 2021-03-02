@@ -12,13 +12,13 @@ class CAATest extends TestCase
     {
         $record = CAA::parse('google.com.             86400   IN      CAA     0 issue "pki.goog"');
 
-        static::assertSame('google.com', $record->host());
-        static::assertSame(86400, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('CAA', $record->type());
-        static::assertSame(0, $record->flags());
-        static::assertSame('issue', $record->tag());
-        static::assertSame('pki.goog', $record->value());
+        $this->assertSame('google.com', $record->host());
+        $this->assertSame(86400, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('CAA', $record->type());
+        $this->assertSame(0, $record->flags());
+        $this->assertSame('issue', $record->tag());
+        $this->assertSame('pki.goog', $record->value());
     }
 
     /** @test */
@@ -34,13 +34,13 @@ class CAATest extends TestCase
             'value' => 'pki.goog',
         ]);
 
-        static::assertSame('google.com', $record->host());
-        static::assertSame(86400, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('CAA', $record->type());
-        static::assertSame(0, $record->flags());
-        static::assertSame('issue', $record->tag());
-        static::assertSame('pki.goog', $record->value());
+        $this->assertSame('google.com', $record->host());
+        $this->assertSame(86400, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('CAA', $record->type());
+        $this->assertSame(0, $record->flags());
+        $this->assertSame('issue', $record->tag());
+        $this->assertSame('pki.goog', $record->value());
     }
 
     /** @test */
@@ -48,6 +48,6 @@ class CAATest extends TestCase
     {
         $record = CAA::parse('google.com.             86400   IN      CAA     0 issue "pki.goog"');
 
-        static::assertSame("google.com.\t\t86400\tIN\tCAA\t0\tissue\t\"pki.goog\"", strval($record));
+        $this->assertSame("google.com.\t\t86400\tIN\tCAA\t0\tissue\t\"pki.goog\"", strval($record));
     }
 }

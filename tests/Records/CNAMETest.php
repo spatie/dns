@@ -12,11 +12,11 @@ class CNAMETest extends TestCase
     {
         $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
 
-        static::assertSame('www.spatie.be', $record->host());
-        static::assertSame(300, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('CNAME', $record->type());
-        static::assertSame('spatie.be', $record->target());
+        $this->assertSame('www.spatie.be', $record->host());
+        $this->assertSame(300, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('CNAME', $record->type());
+        $this->assertSame('spatie.be', $record->target());
     }
 
     /** @test */
@@ -30,11 +30,11 @@ class CNAMETest extends TestCase
             'target' => 'spatie.be',
         ]);
 
-        static::assertSame('www.spatie.be', $record->host());
-        static::assertSame(300, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('CNAME', $record->type());
-        static::assertSame('spatie.be', $record->target());
+        $this->assertSame('www.spatie.be', $record->host());
+        $this->assertSame(300, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('CNAME', $record->type());
+        $this->assertSame('spatie.be', $record->target());
     }
 
     /** @test */
@@ -42,6 +42,6 @@ class CNAMETest extends TestCase
     {
         $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
 
-        static::assertSame("www.spatie.be.\t\t300\tIN\tCNAME\tspatie.be.", strval($record));
+        $this->assertSame("www.spatie.be.\t\t300\tIN\tCNAME\tspatie.be.", strval($record));
     }
 }

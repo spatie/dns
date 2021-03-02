@@ -12,11 +12,11 @@ class ATest extends TestCase
     {
         $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(900, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('A', $record->type());
-        static::assertSame('138.197.187.74', $record->ip());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(900, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('A', $record->type());
+        $this->assertSame('138.197.187.74', $record->ip());
     }
 
     /** @test */
@@ -30,11 +30,11 @@ class ATest extends TestCase
             'ip' => '138.197.187.74',
         ]);
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(900, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('A', $record->type());
-        static::assertSame('138.197.187.74', $record->ip());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(900, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('A', $record->type());
+        $this->assertSame('138.197.187.74', $record->ip());
     }
 
     /** @test */
@@ -42,6 +42,6 @@ class ATest extends TestCase
     {
         $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
 
-        static::assertSame("spatie.be.\t\t900\tIN\tA\t138.197.187.74", strval($record));
+        $this->assertSame("spatie.be.\t\t900\tIN\tA\t138.197.187.74", strval($record));
     }
 }

@@ -12,12 +12,12 @@ class MXTest extends TestCase
     {
         $record = MX::parse('spatie.be.              1665    IN      MX      10 ASPMX.L.GOOGLE.COM.');
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(1665, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('MX', $record->type());
-        static::assertSame(10, $record->pri());
-        static::assertSame('aspmx.l.google.com', $record->target());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(1665, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('MX', $record->type());
+        $this->assertSame(10, $record->pri());
+        $this->assertSame('aspmx.l.google.com', $record->target());
     }
 
     /** @test */
@@ -32,12 +32,12 @@ class MXTest extends TestCase
             'target' => 'ASPMX.L.GOOGLE.COM',
         ]);
 
-        static::assertSame('spatie.be', $record->host());
-        static::assertSame(1665, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('MX', $record->type());
-        static::assertSame(10, $record->pri());
-        static::assertSame('aspmx.l.google.com', $record->target());
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(1665, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('MX', $record->type());
+        $this->assertSame(10, $record->pri());
+        $this->assertSame('aspmx.l.google.com', $record->target());
     }
 
     /** @test */
@@ -45,6 +45,6 @@ class MXTest extends TestCase
     {
         $record = MX::parse('spatie.be.              1665    IN      MX      10 ASPMX.L.GOOGLE.COM.');
 
-        static::assertSame("spatie.be.\t\t1665\tIN\tMX\t10\taspmx.l.google.com.", strval($record));
+        $this->assertSame("spatie.be.\t\t1665\tIN\tMX\t10\taspmx.l.google.com.", strval($record));
     }
 }

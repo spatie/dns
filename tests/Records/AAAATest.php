@@ -12,11 +12,11 @@ class AAAATest extends TestCase
     {
         $record = AAAA::parse('google.com.             900     IN      AAAA    2a00:1450:400e:800::200e');
 
-        static::assertSame('google.com', $record->host());
-        static::assertSame(900, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('AAAA', $record->type());
-        static::assertSame('2a00:1450:400e:800::200e', $record->ipv6());
+        $this->assertSame('google.com', $record->host());
+        $this->assertSame(900, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('AAAA', $record->type());
+        $this->assertSame('2a00:1450:400e:800::200e', $record->ipv6());
     }
 
     /** @test */
@@ -30,11 +30,11 @@ class AAAATest extends TestCase
             'ipv6' => '2a00:1450:400e:800::200e',
         ]);
 
-        static::assertSame('google.com', $record->host());
-        static::assertSame(900, $record->ttl());
-        static::assertSame('IN', $record->class());
-        static::assertSame('AAAA', $record->type());
-        static::assertSame('2a00:1450:400e:800::200e', $record->ipv6());
+        $this->assertSame('google.com', $record->host());
+        $this->assertSame(900, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('AAAA', $record->type());
+        $this->assertSame('2a00:1450:400e:800::200e', $record->ipv6());
     }
 
     /** @test */
@@ -42,6 +42,6 @@ class AAAATest extends TestCase
     {
         $record = AAAA::parse('google.com.             900     IN      AAAA    2a00:1450:400e:800::200e');
 
-        static::assertSame("google.com.\t\t900\tIN\tAAAA\t2a00:1450:400e:800::200e", strval($record));
+        $this->assertSame("google.com.\t\t900\tIN\tAAAA\t2a00:1450:400e:800::200e", strval($record));
     }
 }
