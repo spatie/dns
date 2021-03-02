@@ -153,20 +153,25 @@ class DnsTest extends TestCase
 
     protected function assertOnlySeeRecordTypes(CollectionContract $records, array $types)
     {
-        $this->assertCount(
-            count($records->all()),
-            array_filter(
-                $records->all(),
-                function (Record $record) use ($types): bool {
-                    foreach ($types as $type) {
-                        if (is_a($record, $type)) {
-                            return true;
-                        }
-                    }
+        $expectedCount = count($records->all());
 
-                    return false;
-                }
-            )
+        $foundRecords = array_filter(
+            $records->all(),
+            fn(Record $record): bool => $this->recordIsOfType($record, $types)
         );
+
+        $this->assertCount($expectedCount, $foundRecords);
+    }
+
+    protected function recordIsOfType(Record $record, array $types): bool
+    {
+            foreach ($types as $type) {
+                if (is_a($record, $type)) {
+                    return true;
+                }
+            }
+
+            return false;
+
     }
 }
