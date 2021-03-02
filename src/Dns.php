@@ -42,7 +42,7 @@ class Dns
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
-        $handler = $this->getHandler()->setNameserver($this->nameserver);
+        $handler = $this->getHandler()->useNameserver($this->nameserver);
 
         $records = [];
 

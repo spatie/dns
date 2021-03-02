@@ -13,7 +13,7 @@ abstract class Handler
     {
     }
 
-    public function setNameserver(?string $nameserver): self
+    public function useNameserver(?string $nameserver): self
     {
         $this->nameserver = $nameserver;
 
@@ -33,13 +33,9 @@ abstract class Handler
     protected function transform(string $type, array $records): array
     {
         return array_map(
-            function ($record) use ($type): Record {
-                if (is_string($record)) {
-                    return $this->factory->parse($type, $record);
-                }
-
-                return $this->factory->make($type, $record);
-            },
+            fn($record): Record => is_string($record)
+                ? $this->factory->parse($type, $record)
+                : $this->factory->make($type, $record),
             $records
         );
     }
