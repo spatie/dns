@@ -8,7 +8,7 @@ class CouldNotFetchDns extends RuntimeException
 {
     public static function noHandlerFound(): self
     {
-        return new static('Was not able to find a runnable handler');
+        return new static('A runnable handler could not be found');
     }
 
     public static function digReturnedWithError($output): self
