@@ -130,24 +130,24 @@ class DnsTest extends TestCase
     protected function assertSeeRecordTypes(CollectionContract $records, array $types)
     {
         foreach ($types as $type) {
-            $this->assertNotEmpty(
-                array_filter(
-                    $records->all(),
-                    fn (Record $record): bool => is_a($record, $type)
-                )
+            $foundRecords = array_filter(
+                $records->all(),
+                fn (Record $record): bool => is_a($record, $type)
             );
+
+            $this->assertNotEmpty($foundRecords);
         }
     }
 
     protected function assertDontSeeRecordTypes(CollectionContract $records, array $types)
     {
         foreach ($types as $type) {
-            $this->assertEmpty(
-                array_filter(
-                    $records->all(),
-                    fn (Record $record): bool => is_a($record, $type)
-                )
+            $foundRecords =  array_filter(
+                $records->all(),
+                fn (Record $record): bool => is_a($record, $type)
             );
+
+            $this->assertEmpty($foundRecords);
         }
     }
 
