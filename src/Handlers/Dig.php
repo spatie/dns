@@ -57,7 +57,7 @@ class Dig extends Handler
             return null;
         }
 
-        return '@'.$this->nameserver;
+        return "@{$this->nameserver}";
     }
 
     protected function parseOutput(string $output): array
