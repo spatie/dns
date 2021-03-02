@@ -6,9 +6,9 @@ use InvalidArgumentException;
 
 class InvalidArgument extends InvalidArgumentException
 {
-    public static function domainIsMissing(): self
+    public static function domainIsMissing(string $url): self
     {
-        return new static('A domain name is required');
+        return new static("A domain name is required in the given url: `{$url}`");
     }
 
     public static function invalidRecordType(): self

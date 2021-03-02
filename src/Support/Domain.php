@@ -27,7 +27,7 @@ class Domain
         $domain = mb_strtolower(parse_url($url, PHP_URL_HOST));
 
         if (empty($domain)) {
-            throw InvalidArgument::domainIsMissing();
+            throw InvalidArgument::domainIsMissing($url);
         }
 
         return $domain;
