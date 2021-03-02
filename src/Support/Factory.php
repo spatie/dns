@@ -21,7 +21,7 @@ class Factory
     {
         $type = mb_strtoupper($type);
 
-        $class = 'Spatie\\Dns\\Records\\'.$type;
+        $class = "Spatie\\Dns\\Records\\{$type}";
 
         if (! in_array($type, Types::TYPES) || ! class_exists($class)) {
             throw new OutOfBoundsException(sprintf('Unsupported type %s', $type));
