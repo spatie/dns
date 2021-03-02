@@ -132,7 +132,7 @@ class DnsTest extends TestCase
         foreach ($types as $type) {
             $foundRecords = array_filter(
                 $records->all(),
-                fn(Record $record): bool => is_a($record, $type)
+                fn (Record $record): bool => is_a($record, $type)
             );
 
             $this->assertNotEmpty($foundRecords);
@@ -144,7 +144,7 @@ class DnsTest extends TestCase
         foreach ($types as $type) {
             $foundRecords = array_filter(
                 $records->all(),
-                fn(Record $record): bool => is_a($record, $type)
+                fn (Record $record): bool => is_a($record, $type)
             );
 
             $this->assertEmpty($foundRecords);
@@ -157,7 +157,7 @@ class DnsTest extends TestCase
 
         $foundRecords = array_filter(
             $records->all(),
-            fn(Record $record): bool => $this->recordIsOfType($record, $types)
+            fn (Record $record): bool => $this->recordIsOfType($record, $types)
         );
 
         $this->assertCount($expectedCount, $foundRecords);
@@ -172,6 +172,5 @@ class DnsTest extends TestCase
         }
 
         return false;
-
     }
 }

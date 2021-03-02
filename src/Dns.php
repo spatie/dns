@@ -20,8 +20,7 @@ class Dns
     public function __construct(
         protected ?Types $types = null,
         protected ?Factory $factory = null
-    )
-    {
+    ) {
         $this->types ??= new Types();
         $this->factory ??= new Factory();
     }
@@ -38,7 +37,7 @@ class Dns
         return $this->nameserver;
     }
 
-    public function getRecords(Domain|string $search, int|string|array $types = DNS_ALL): CollectionContract
+    public function getRecords(Domain | string $search, int | string | array $types = DNS_ALL): CollectionContract
     {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
@@ -67,7 +66,7 @@ class Dns
         $handlers = array_filter([
             new Dig($this->factory),
             new DnsGetRecord($this->factory),
-        ], fn(Handler $handler): bool => $handler->canHandle());
+        ], fn (Handler $handler): bool => $handler->canHandle());
 
         if (empty($handlers)) {
             throw CouldNotFetchDns::noHandlerFound();
@@ -81,7 +80,7 @@ class Dns
         return strval(new Domain($input));
     }
 
-    protected function resolveTypes(int|string|array $type): array
+    protected function resolveTypes(int | string | array $type): array
     {
         if (is_string($type) && $type === '*') {
             return $this->types->toNames(DNS_ALL);

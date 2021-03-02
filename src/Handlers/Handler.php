@@ -33,7 +33,7 @@ abstract class Handler
     protected function transform(string $type, array $records): array
     {
         return array_map(
-            fn($record): Record => is_string($record)
+            fn ($record): Record => is_string($record)
                 ? $this->factory->parse($type, $record)
                 : $this->factory->make($type, $record),
             $records

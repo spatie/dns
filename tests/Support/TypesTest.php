@@ -20,7 +20,7 @@ class TypesTest extends TestCase
     public function it_can_transform_flag_to_name()
     {
         $this->assertSame([DNS_A => 'A'], $this->types->toNames(DNS_A));
-        $this->assertSame([DNS_AAAA =>'AAAA'], $this->types->toNames(DNS_AAAA));
+        $this->assertSame([DNS_AAAA => 'AAAA'], $this->types->toNames(DNS_AAAA));
         $this->assertSame([DNS_CAA => 'CAA'], $this->types->toNames(DNS_CAA));
         $this->assertSame([DNS_CNAME => 'CNAME'], $this->types->toNames(DNS_CNAME));
         $this->assertSame([DNS_MX => 'MX'], $this->types->toNames(DNS_MX));

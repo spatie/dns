@@ -2,7 +2,6 @@
 
 namespace Spatie\Dns\Support;
 
-use OutOfBoundsException;
 use Spatie\Dns\Handlers\UnsupportedRecordType;
 use Spatie\Dns\Records\Record;
 
