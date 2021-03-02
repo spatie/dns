@@ -27,7 +27,7 @@ class DnsTest extends TestCase
     /** @test */
     public function it_throws_an_exception_if_an_empty_string_is_passed()
     {
-        static::expectException(InvalidArgument::class);
+        $this->expectException(InvalidArgument::class);
 
         $this->dns->getRecords('');
     }
@@ -37,7 +37,7 @@ class DnsTest extends TestCase
     {
         $records = $this->dns->getRecords('spatie.be');
 
-        static::assertSeeRecordTypes(
+        $this->assertSeeRecordTypes(
             $records,
             [A::class, NS::class, SOA::class, MX::class]
         );
@@ -48,7 +48,7 @@ class DnsTest extends TestCase
     {
         $records = $this->dns->getRecords('spatie.be', '*');
 
-        static::assertSeeRecordTypes(
+        $this->assertSeeRecordTypes(
             $records,
             [A::class, NS::class, SOA::class, MX::class]
         );
@@ -59,7 +59,7 @@ class DnsTest extends TestCase
     {
         $records = $this->dns->getRecords('spatie.be', DNS_NS);
 
-        static::assertOnlySeeRecordTypes($records, [NS::class]);
+        $this->assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
     /** @test */
@@ -67,7 +67,7 @@ class DnsTest extends TestCase
     {
         $records = $this->dns->getRecords('spatie.be', 'NS');
 
-        static::assertOnlySeeRecordTypes($records, [NS::class]);
+        $this->assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
     /** @test */
@@ -75,7 +75,7 @@ class DnsTest extends TestCase
     {
         $records = $this->dns->getRecords('spatie.be', DNS_NS | DNS_SOA);
 
-        static::assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
+        $this->assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
     }
 
     /** @test */
@@ -83,7 +83,7 @@ class DnsTest extends TestCase
     {
         $records = $this->dns->getRecords('spatie.be', ['NS', 'SOA']);
 
-        static::assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
+        $this->assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
     }
 
     /** @test */
@@ -91,13 +91,13 @@ class DnsTest extends TestCase
     {
         $records = $this->dns->getRecords('spatie.be', 'ns');
 
-        static::assertOnlySeeRecordTypes($records, [NS::class]);
+        $this->assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
     /** @test */
     public function it_throws_an_exception_if_an_invalid_record_type_is_passed()
     {
-        static::expectException(InvalidArgument::class);
+        $this->expectException(InvalidArgument::class);
 
         $this->dns->getRecords('spatie.be', 'xyz');
     }
@@ -107,30 +107,30 @@ class DnsTest extends TestCase
     {
         $this->dns->useNameserver('ns1.openminds.be');
 
-        static::assertEquals('ns1.openminds.be', $this->dns->getNameserver());
+        $this->assertEquals('ns1.openminds.be', $this->dns->getNameserver());
     }
 
     /** @test */
     public function it_uses_default_nameserver_if_not_set()
     {
-        static::assertNull($this->dns->getNameserver());
+        $this->assertNull($this->dns->getNameserver());
     }
 
     /** @test */
     public function it_throws_exception_on_failed_to_fetch_dns_record()
     {
-        static::expectException(CouldNotFetchDns::class);
-        static::expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
+        $this->expectException(CouldNotFetchDns::class);
+        $this->expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
 
         $this->dns
             ->useNameserver('dns.spatie.be')
             ->getRecords('spatie.be', DNS_A);
     }
 
-    protected static function assertSeeRecordTypes(CollectionContract $records, array $types)
+    protected function assertSeeRecordTypes(CollectionContract $records, array $types)
     {
         foreach ($types as $type) {
-            static::assertNotEmpty(
+            $this->assertNotEmpty(
                 array_filter(
                     $records->all(),
                     fn (Record $record): bool => is_a($record, $type)
@@ -139,10 +139,10 @@ class DnsTest extends TestCase
         }
     }
 
-    protected static function assertDontSeeRecordTypes(CollectionContract $records, array $types)
+    protected function assertDontSeeRecordTypes(CollectionContract $records, array $types)
     {
         foreach ($types as $type) {
-            static::assertEmpty(
+            $this->assertEmpty(
                 array_filter(
                     $records->all(),
                     fn (Record $record): bool => is_a($record, $type)
@@ -151,9 +151,9 @@ class DnsTest extends TestCase
         }
     }
 
-    protected static function assertOnlySeeRecordTypes(CollectionContract $records, array $types)
+    protected function assertOnlySeeRecordTypes(CollectionContract $records, array $types)
     {
-        static::assertCount(
+        $this->assertCount(
             count($records->all()),
             array_filter(
                 $records->all(),
