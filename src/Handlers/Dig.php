@@ -11,9 +11,9 @@ class Dig extends Handler
     {
         $process = new Process($this->buildCommand($domain, $type));
 
-        $process->enableOutput();
-
-        $process->run();
+        $process
+            ->enableOutput()
+            ->run();
 
         if (! $process->isSuccessful()) {
             throw CouldNotFetchDns::digReturnedWithError(trim($process->getErrorOutput()));
