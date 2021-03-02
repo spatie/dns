@@ -3,9 +3,15 @@
 namespace Spatie\Dns\Test;
 
 use PHPUnit\Framework\TestCase;
+use Spatie\Dns\Contracts\Collection as CollectionContract;
 use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
+use Spatie\Dns\Records\A;
+use Spatie\Dns\Records\MX;
+use Spatie\Dns\Records\NS;
+use Spatie\Dns\Records\Record;
+use Spatie\Dns\Records\SOA;
 
 class DnsTest extends TestCase
 {
@@ -15,123 +21,152 @@ class DnsTest extends TestCase
     {
         parent::setUp();
 
-        $this->dns = Dns::of('spatie.be');
+        $this->dns = new Dns();
     }
 
     /** @test */
-    public function it_throws_an_exception_if_an_empty_string_is_passed()
+    public function it_throws_an_exception_if_an_empty_string_is_passed(): void
     {
-        $this->expectException(InvalidArgument::class);
+        static::expectException(InvalidArgument::class);
 
-        new Dns('');
+        $this->dns->getRecords('');
     }
 
     /** @test */
-    public function it_fetches_all_dns_records_for_the_given_domain_name()
+    public function it_fetches_all_records_by_default(): void
     {
-        $records = $this->dns->getRecords();
+        $records = $this->dns->getRecords('spatie.be');
 
-        $this->assertSeeRecordTypes($records, ['A', 'NS', 'SOA', 'MX']);
+        static::assertSeeRecordTypes(
+            $records,
+            [A::class, NS::class, SOA::class, MX::class]
+        );
     }
 
     /** @test */
-    public function it_fetches_records_for_a_given_single_record_type()
+    public function it_fetches_all_records_with_asterisk(): void
     {
-        $records = $this->dns->getRecords('NS');
+        $records = $this->dns->getRecords('spatie.be', '*');
 
-        $this->assertSeeRecordTypes($records, ['NS']);
-        $this->assertDontSeeRecordTypes($records, ['A', 'MX']);
+        static::assertSeeRecordTypes(
+            $records,
+            [A::class, NS::class, SOA::class, MX::class]
+        );
     }
 
     /** @test */
-    public function it_fetches_records_for_multiple_given_record_types()
+    public function it_fetches_records_for_a_single_type_via_flag(): void
     {
-        $records = $this->dns->getRecords('NS', 'MX');
+        $records = $this->dns->getRecords('spatie.be', DNS_NS);
 
-        $this->assertSeeRecordTypes($records, ['NS', 'MX']);
-        $this->assertDontSeeRecordTypes($records, ['A']);
+        static::assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
     /** @test */
-    public function it_fetches_records_for_the_types_in_a_given_array()
+    public function it_fetches_records_for_a_single_type_via_name(): void
     {
-        $records = $this->dns->getRecords(['NS', 'MX']);
+        $records = $this->dns->getRecords('spatie.be', 'NS');
 
-        $this->assertSeeRecordTypes($records, ['NS', 'MX']);
-        $this->assertDontSeeRecordTypes($records, ['A']);
+        static::assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
     /** @test */
-    public function it_doesnt_care_about_casing()
+    public function it_fetches_records_for_multiple_types_via_flags(): void
     {
-        $records = $this->dns->getRecords('MX');
+        $records = $this->dns->getRecords('spatie.be', DNS_NS | DNS_SOA);
 
-        $this->assertSeeRecordTypes($records, ['MX']);
-
-        $records = $this->dns->getRecords('mx');
-
-        $this->assertSeeRecordTypes($records, ['MX']);
+        static::assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
     }
 
     /** @test */
-    public function it_throws_an_exception_if_an_invalid_record_type_is_passed()
+    public function it_fetches_records_for_multiple_types_via_names(): void
     {
-        $this->expectException(InvalidArgument::class);
+        $records = $this->dns->getRecords('spatie.be', ['NS', 'SOA']);
 
-        $this->dns->getRecords('xyz');
+        static::assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
     }
 
     /** @test */
-    public function it_can_get_a_sanitized_version_of_the_domain_name()
+    public function it_fetches_records_via_name_and_ignores_casing(): void
     {
-        $this->assertEquals('spatie.be', (new Dns('https://spatie.be'))->getDomain());
-        $this->assertEquals('spatie.be', (new Dns('https://spatie.be/page'))->getDomain());
-        $this->assertEquals('spatie.be', (new Dns('https://SPATIE.be'))->getDomain());
+        $records = $this->dns->getRecords('spatie.be', 'ns');
+
+        static::assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
     /** @test */
-    public function it_uses_provided_nameserver_if_set()
+    public function it_throws_an_exception_if_an_invalid_record_type_is_passed(): void
     {
-        $this->assertEquals('ns1.openminds.be', (new Dns('spatie.be', 'ns1.openminds.be'))->getNameserver());
+        static::expectException(InvalidArgument::class);
+
+        $this->dns->getRecords('spatie.be', 'xyz');
     }
 
     /** @test */
-    public function it_uses_default_nameserver_if_not_set()
+    public function it_uses_provided_nameserver_if_set(): void
     {
-        $this->assertEquals('', ($this->dns->getNameserver()));
+        $this->dns->useNameserver('ns1.openminds.be');
+
+        static::assertEquals('ns1.openminds.be', $this->dns->getNameserver());
     }
 
     /** @test */
-    public function it_can_set_the_use_name_server()
+    public function it_uses_default_nameserver_if_not_set(): void
     {
-        $this->assertEquals('dns.spatie.be', (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getNameServer());
+        static::assertNull($this->dns->getNameserver());
     }
 
     /** @test */
-    public function it_throws_exception_on_failed_to_fetch_dns_record()
+    public function it_throws_exception_on_failed_to_fetch_dns_record(): void
     {
-        $this->expectException(CouldNotFetchDns::class);
-        $this->expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
-        (new Dns('https://spatie.be'))->useNameServer('dns.spatie.be')->getRecords('MX');
+        static::expectException(CouldNotFetchDns::class);
+        static::expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
+
+        $this->dns
+            ->useNameserver('dns.spatie.be')
+            ->getRecords('spatie.be', DNS_A);
     }
 
-    protected function assertSeeRecordTypes($records, array $types)
+    protected static function assertSeeRecordTypes(CollectionContract $records, array $types): void
     {
         foreach ($types as $type) {
-            //some dns servers use tabs, let's replace them by spaces
-            $records = preg_replace('/\s+/', ' ', $records);
-
-            $this->assertStringContainsString("IN {$type}", $records);
+            static::assertNotEmpty(
+                array_filter(
+                    $records->all(),
+                    fn (Record $record): bool => is_a($record, $type)
+                )
+            );
         }
     }
 
-    protected function assertDontSeeRecordTypes($records, array $types)
+    protected static function assertDontSeeRecordTypes(CollectionContract $records, array $types): void
     {
         foreach ($types as $type) {
-            //some dns servers use tabs, let's replace them by spaces
-            $records = preg_replace('/\s+/', ' ', $records);
-
-            $this->assertStringNotContainsString("IN {$type}", $records);
+            static::assertEmpty(
+                array_filter(
+                    $records->all(),
+                    fn (Record $record): bool => is_a($record, $type)
+                )
+            );
         }
+    }
+
+    protected static function assertOnlySeeRecordTypes(CollectionContract $records, array $types): void
+    {
+        static::assertCount(
+            count($records->all()),
+            array_filter(
+                $records->all(),
+                function (Record $record) use ($types): bool {
+                    foreach ($types as $type) {
+                        if (is_a($record, $type)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            )
+        );
     }
 }
