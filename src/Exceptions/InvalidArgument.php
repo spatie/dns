@@ -13,6 +13,6 @@ class InvalidArgument extends InvalidArgumentException
 
     public static function invalidRecordType(): self
     {
-        return new static('Acceptable types are "*", php DNS_* constants flags, a single name or an array of names.');
+        return new static('Acceptable types are "*", php DNS_* constants flags, a single name or an array of names');
     }
 }
