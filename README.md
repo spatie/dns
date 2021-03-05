@@ -62,7 +62,7 @@ use Spatie\Dns\Dns;
     ->getRecords('spatie.be');
 ```
 
-To filter the DNS record types you can use a string with the name of the record type, an array of names or one or multiple native php `DNS_XYZ` constants - for multiple you should use the `|` (pipe)  bit operator.
+To filter the DNS record types you can use a string with the name of the record type, an array of names or one or multiple native php `DNS_XYZ` constants - for multiple you should use the `|` (pipe) bit operator.
 
 The package comes with two handlers to get DNS records.
 The `\Spatie\Dns\Handlers\Dig` handler will use [dig](https://wiki.ubuntuusers.de/dig/) CLI tool.
