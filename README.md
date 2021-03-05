@@ -68,6 +68,8 @@ The package comes with two handlers to get DNS records.
 The `\Spatie\Dns\Handlers\Dig` handler will use [dig](https://wiki.ubuntuusers.de/dig/) CLI tool.
 In case this isn't installed the `\Spatie\Dns\Handlers\DnsGetRecord` will be used which uses php native `dns_get_record()` function.
 
+The domain argument is very flexible as we sanitize it. So you can use use domain only `spatie.be` or a full URL `https://spatie.be/open-source` also with different protocols like `ftp://` and even a full email address `freek@spatie.be` can be used.
+
 ### Testing
 
 ``` bash
