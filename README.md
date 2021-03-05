@@ -10,11 +10,11 @@ This package contains a class that can fetch DNS records.
 ```php
 use Spatie\Dns\Dns;
 
-$dns = Dns::of('spatie.be');
+$dns = new Dns();
 
-$dns->getRecords(); // returns all available dns records
+$dns->getRecords('spatie.be'); // returns all available dns records
 
-$dns->getRecords('A'); // returns only A records
+$dns->getRecords('spatie.be', 'A'); // returns only A records
 ```
 
 ## Support us
@@ -39,18 +39,17 @@ composer require spatie/dns
 
 The class can get these record types: `A`, `AAAA`, `CNAME`, `NS`, `SOA`, `MX`, `SRV`, `TXT`, `DNSKEY`, `CAA`, `NAPTR`.
 
-``` php
+```php
 use Spatie\Dns\Dns;
 
-$dns = Dns::of('spatie.be');
+$dns = new Dns();
 
-$dns->getRecords(); // returns all records
+$dns->getRecords('spatie.be'); // returns all available dns records
 
-$dns->getRecords('A'); // returns only A records
-$dns->getRecords('MX'); // returns only MX records
-
-$dns->getRecords('A', 'MX'); // returns both A and MX records
-$dns->getRecords(['A', 'MX']); // returns both A and MX records
+$dns->getRecords('spatie.be', 'A'); // returns only A records
+$dns->getRecords('spatie.be', ['A', 'CNAME']); // returns both A and CNAME records
+$dns->getRecords('spatie.be', DNS_MX); // returns only MX records
+$dns->getRecords('spatie.be', DNS_A | DNS_AAAA); // returns both A and AAAA records
 ```
 
 You can get records from a specific nameserver.
@@ -58,8 +57,12 @@ You can get records from a specific nameserver.
 ```php
 use Spatie\Dns\Dns;
 
-$dns = Dns::of('spatie.be', 'ns1.openminds.be'); // use ns1.openminds.be 
+(new Dns)
+    ->useNameserver('ns1.openminds.be') // use ns1.openminds.be
+    ->getRecords('spatie.be');
 ```
+
+To filter the DNS record types you can use a string with the name of the record type, an array of names or one or multiple native php `DNS_XYZ` constants - for multiple you should use the `|` (pipe)  bit operator.
 
 ### Testing
 
