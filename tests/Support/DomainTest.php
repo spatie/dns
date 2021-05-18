@@ -17,5 +17,8 @@ class DomainTest extends TestCase
         $this->assertEquals('spatie.be', strval(new Domain('https://SPATIE.be')));
         $this->assertEquals('www.spatie.be', strval(new Domain('https://www.SPATIE.be')));
         $this->assertEquals('ftp.spatie.be', strval(new Domain('ftp://ftp.spatie.be')));
+        $this->assertEquals('spatie.be', strval(new Domain('freek@spatie.be')));
+        $this->assertEquals('spatie.be', strval(new Domain('freek+dns@spatie.be')));
+        $this->assertEquals('spatie.be', strval(new Domain('freek.dns@spatie.be')));
     }
 }
