@@ -51,6 +51,31 @@ $dns->getRecords('spatie.be', DNS_MX); // returns only MX records
 $dns->getRecords('spatie.be', DNS_A | DNS_AAAA); // returns both A and AAAA records
 ```
 
+`getRecords` will return an array with objects that implement the `Spatie\Dns\Records\Record` interface.
+
+## Working with DNS records
+
+Here's how you can fetch the first A-record of a domain.
+
+```php
+$ARecord = $dns->getRecords('spatie.be', 'A')[0];
+```
+
+These methods can be called on all records:
+
+- `host()`: returns the host (`spatie.be`)
+- `ttl()`: return the time to live (`900`)
+- `class()`: returns the class (`IN`)
+- `type()`: returns the type (`A`)
+
+When converting a record to a string you'll get a string with all info separated with tabs.
+
+```php
+(string)$ARecord // returns `spatie.be.              900     IN      A       138.197.187.74`
+```
+
+Some records have additional methods available. For example, records of type A [have an additional `ip()` method](https://github.com/spatie/dns/blob/72bf709a44e19e5d8f0bc7e6c93cf70e7a1b18f3/src/Records/A.php#L6). To know which extra methods there are, check the docblocks above [all record classes](https://github.com/spatie/dns/tree/72bf709a44e19e5d8f0bc7e6c93cf70e7a1b18f3/src/Records) in the source code.
+
 ## Using a specific nameserver
 
 You can get records from a specific nameserver.
@@ -63,11 +88,9 @@ use Spatie\Dns\Dns;
     ->getRecords('spatie.be');
 ```
 
-To filter the DNS record types you can use a string with the name of the record type, an array of names or one or multiple native php `DNS_XYZ` constants - for multiple you should use the `|` (pipe) bit operator.
+## Under the hood
 
-The package comes with two handlers to get DNS records.
-The `\Spatie\Dns\Handlers\Dig` handler will use [dig](https://wiki.ubuntuusers.de/dig/) CLI tool.
-In case this isn't installed the `\Spatie\Dns\Handlers\DnsGetRecord` will be used which uses php native `dns_get_record()` function.
+We will use [dig](https://wiki.ubuntuusers.de/dig/) to fetch DNS info. If it is not installed on your system, we'll call the native `dns_get_record()` function.
 
 ### Testing
 

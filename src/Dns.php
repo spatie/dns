@@ -37,7 +37,10 @@ class Dns
         return $this->nameserver;
     }
 
-    public function getRecords(Domain | string $search, int | string | array $types = DNS_ALL): CollectionContract
+    public function getRecords(
+        Domain | string $search,
+        int | string | array $types = DNS_ALL
+    ): CollectionContract
     {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
