@@ -1,9 +1,8 @@
 # Retrieve DNS records
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
-![Tests](https://github.com/spatie/dns/workflows/Tests/badge.svg)
-[![StyleCI](https://styleci.io/repos/108810419/shield?branch=master)](https://styleci.io/repos/108810419)
-[![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
+![Tests](https://github.com/spatie/dns/workflows/tests/badge.svg)
+[![Code style](https://github.com/spatie/dns/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/spatie/dns/actions/workflows/php-cs-fixer.yml)[![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
 
 This package contains a class that can fetch DNS records.
 
@@ -52,6 +51,8 @@ $dns->getRecords('spatie.be', DNS_MX); // returns only MX records
 $dns->getRecords('spatie.be', DNS_A | DNS_AAAA); // returns both A and AAAA records
 ```
 
+## Using a specific nameserver
+
 You can get records from a specific nameserver.
 
 ```php
@@ -67,8 +68,6 @@ To filter the DNS record types you can use a string with the name of the record 
 The package comes with two handlers to get DNS records.
 The `\Spatie\Dns\Handlers\Dig` handler will use [dig](https://wiki.ubuntuusers.de/dig/) CLI tool.
 In case this isn't installed the `\Spatie\Dns\Handlers\DnsGetRecord` will be used which uses php native `dns_get_record()` function.
-
-The domain argument is very flexible as we sanitize it. So you can use use domain only `spatie.be` or a full URL `https://spatie.be/open-source` also with different protocols like `ftp://` and even a full email address `freek@spatie.be` can be used.
 
 ### Testing
 
