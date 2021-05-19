@@ -3,6 +3,7 @@
 namespace Spatie\Dns\Handlers;
 
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class Dig extends Handler
@@ -27,7 +28,11 @@ class Dig extends Handler
 
     public function canHandle(): bool
     {
-        $process = new Process(['dig', '-v', '2>&1']);
+        if (! $digPath = (new ExecutableFinder())->find('dig')) {
+            return false;
+        }
+
+        $process = new Process([$digPath, '-v', '2>&1']);
         $process->run();
 
         if (str_contains($process->getOutput(), 'not found')) {
