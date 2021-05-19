@@ -40,8 +40,7 @@ class Dns
     public function getRecords(
         Domain | string $search,
         int | string | array $types = DNS_ALL
-    ): CollectionContract
-    {
+    ): CollectionContract {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
