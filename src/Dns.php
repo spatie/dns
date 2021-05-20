@@ -84,7 +84,7 @@ class Dns
 
     protected function resolveTypes(int | string | array $type): array
     {
-        $parameter =  match(true) {
+        $flags =  match(true) {
             is_string($type) && $type === '*' => DNS_ALL,
             is_string($type) && in_array(mb_strtoupper($type), Types::TYPES) => $this->types->toFlags([$type]),
             is_int($type) => $type,
@@ -92,6 +92,6 @@ class Dns
             default => throw InvalidArgument::invalidRecordType(),
         };
 
-        return $this->types->toNames($parameter);
+        return $this->types->toNames($flags);
     }
 }
