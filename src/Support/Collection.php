@@ -2,7 +2,9 @@
 
 namespace Spatie\Dns\Support;
 
-class Collection
+use Countable;
+
+class Collection implements Countable
 {
     protected array $items;
 
@@ -23,13 +25,26 @@ class Collection
 
     public function first(callable $callable): mixed
     {
-        foreach ($this->items as $record) {
-            if ($callable($record)) {
-                return $record;
+        foreach ($this->items as $item) {
+            if ($callable($item)) {
+                return $item;
             }
         }
 
         return null;
+    }
+
+    public function filter(callable $callable): Collection
+    {
+        $filteredItems = [];
+
+        foreach ($this->items as $item) {
+            if ($callable($item)) {
+                $filteredItems[] = $item;
+            }
+        }
+
+        return Collection::make($filteredItems);
     }
 
     public function __toString(): string
@@ -38,5 +53,10 @@ class Collection
             PHP_EOL,
             array_map('strval', $this->all())
         );
+    }
+
+    public function count()
+    {
+        return count($this->items);
     }
 }

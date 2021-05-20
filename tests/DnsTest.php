@@ -22,6 +22,8 @@ class DnsTest extends TestCase
     {
         parent::setUp();
 
+        ray()->newScreen($this->getName());
+
         $this->dns = new Dns();
     }
 
@@ -90,8 +92,10 @@ class DnsTest extends TestCase
     /** @test */
     public function it_fetches_records_via_name_and_ignores_casing()
     {
-        $records = $this->dns->getRecords('spatie.be', 'ns');
 
+        $records = $this->dns->getRecords('spatie.be', 'ns');
+        ray()->clearScreen();
+ray($records);
         $this->assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
@@ -156,10 +160,8 @@ class DnsTest extends TestCase
     {
         $expectedCount = count($records->all());
 
-        $foundRecords = array_filter(
-            $records->all(),
-            fn (Record $record): bool => $this->recordIsOfType($record, $types)
-        );
+        $foundRecords = Collection::make($records->all())
+            ->filter(fn (Record $record) => $this->recordIsOfType($record, $types));
 
         $this->assertCount($expectedCount, $foundRecords);
     }
