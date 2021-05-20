@@ -2,6 +2,12 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.0.0 - 2021-05-20
+
+- near-total rewrite
+- added methods on record types 
+- added support for multiple handlers
+
 ## 1.6.0 - 2020-12-02
 
 - add `of` method

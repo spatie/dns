@@ -122,6 +122,7 @@ We publish all received postcards [on our company website](https://spatie.be/en/
 ## Credits
 
 - [Harish Toshniwal](https://github.com/introwit)
+- [Tom Witkowski](https://github.com/Gummibeer)
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
 
