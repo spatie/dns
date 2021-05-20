@@ -2,24 +2,34 @@
 
 namespace Spatie\Dns\Support;
 
-use Spatie\Dns\Contracts\Collection as CollectionContract;
-
-class Collection implements CollectionContract
+class Collection
 {
-    /** @var \Spatie\Dns\Records\Record[] */
-    protected array $records;
+    protected array $items;
 
-    /**
-     * @param \Spatie\Dns\Records\Record[] $records
-     */
-    public function __construct(array $records)
+    public static function make(array $items): self
     {
-        $this->records = $records;
+        return new static($items);
+    }
+
+    public function __construct(array $items)
+    {
+        $this->items = $items;
     }
 
     public function all(): array
     {
-        return $this->records;
+        return $this->items;
+    }
+
+    public function first(callable $callable): mixed
+    {
+        foreach ($this->items as $record) {
+            if ($callable($record)) {
+                return $record;
+            }
+        }
+
+        return null;
     }
 
     public function __toString(): string

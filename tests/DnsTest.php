@@ -12,6 +12,7 @@ use Spatie\Dns\Records\MX;
 use Spatie\Dns\Records\NS;
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Records\SOA;
+use Spatie\Dns\Support\Collection;
 
 class DnsTest extends TestCase
 {
@@ -127,7 +128,7 @@ class DnsTest extends TestCase
             ->getRecords('spatie.be', DNS_A);
     }
 
-    protected function assertSeeRecordTypes(CollectionContract $records, array $types)
+    protected function assertSeeRecordTypes(Collection $records, array $types)
     {
         foreach ($types as $type) {
             $foundRecords = array_filter(
@@ -139,7 +140,7 @@ class DnsTest extends TestCase
         }
     }
 
-    protected function assertDontSeeRecordTypes(CollectionContract $records, array $types)
+    protected function assertDontSeeRecordTypes(Collection $records, array $types)
     {
         foreach ($types as $type) {
             $foundRecords = array_filter(
@@ -151,7 +152,7 @@ class DnsTest extends TestCase
         }
     }
 
-    protected function assertOnlySeeRecordTypes(CollectionContract $records, array $types)
+    protected function assertOnlySeeRecordTypes(Collection $records, array $types)
     {
         $expectedCount = count($records->all());
 

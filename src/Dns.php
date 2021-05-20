@@ -2,7 +2,6 @@
 
 namespace Spatie\Dns;
 
-use Spatie\Dns\Contracts\Collection as CollectionContract;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Handlers\Dig;
@@ -20,7 +19,8 @@ class Dns
     public function __construct(
         protected ?Types $types = null,
         protected ?Factory $factory = null
-    ) {
+    )
+    {
         $this->types ??= new Types();
         $this->factory ??= new Factory();
     }
@@ -38,9 +38,10 @@ class Dns
     }
 
     public function getRecords(
-        Domain | string $search,
-        int | string | array $types = DNS_ALL
-    ): CollectionContract {
+        Domain|string $search,
+        int|string|array $types = DNS_ALL
+    ): Collection
+    {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
@@ -55,26 +56,22 @@ class Dns
             );
         }
 
-        return $this->collect($records);
-    }
-
-    protected function collect(array $records): CollectionContract
-    {
-        return new Collection($records);
+        return Collection::make($records);
     }
 
     protected function getHandler(): Handler
     {
-        $handlers = array_filter([
+        $handler = Collection::make([
             new Dig($this->factory),
             new DnsGetRecord($this->factory),
-        ], fn (Handler $handler): bool => $handler->canHandle());
+        ])
+            ->first(fn(Handler $handler) => $handler->canHandle());
 
-        if (empty($handlers)) {
+        if (!$handler) {
             throw CouldNotFetchDns::noHandlerFound();
         }
 
-        return array_shift($handlers);
+        return $handler;
     }
 
     protected function sanitizeDomain(string $input): string
@@ -82,9 +79,9 @@ class Dns
         return strval(new Domain($input));
     }
 
-    protected function resolveTypes(int | string | array $type): array
+    protected function resolveTypes(int|string|array $type): array
     {
-        $flags =  match(true) {
+        $flags = match (true) {
             is_string($type) && $type === '*' => DNS_ALL,
             is_string($type) && in_array(mb_strtoupper($type), Types::TYPES) => $this->types->toFlags([$type]),
             is_int($type) => $type,
