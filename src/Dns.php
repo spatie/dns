@@ -84,22 +84,14 @@ class Dns
 
     protected function resolveTypes(int | string | array $type): array
     {
-        if (is_string($type) && $type === '*') {
-            return $this->types->toNames(DNS_ALL);
-        }
+        $parameter =  match(true) {
+            is_string($type) && $type === '*' => DNS_ALL,
+            is_string($type) && in_array(mb_strtoupper($type), Types::TYPES) => $this->types->toFlags([$type]),
+            is_int($type) => $type,
+            is_array($type) => $this->types->toFlags($type),
+            default => throw InvalidArgument::invalidRecordType(),
+        };
 
-        if (is_string($type) && in_array(mb_strtoupper($type), Types::TYPES)) {
-            return $this->types->toNames($this->types->toFlags([$type]));
-        }
-
-        if (is_int($type)) {
-            return $this->types->toNames($type);
-        }
-
-        if (is_array($type)) {
-            return $this->types->toNames($this->types->toFlags($type));
-        }
-
-        throw InvalidArgument::invalidRecordType();
+        return $this->types->toNames($parameter);
     }
 }
