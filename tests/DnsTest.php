@@ -3,7 +3,6 @@
 namespace Spatie\Dns\Test;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\Dns\Contracts\Collection as CollectionContract;
 use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;

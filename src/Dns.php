@@ -19,8 +19,7 @@ class Dns
     public function __construct(
         protected ?Types $types = null,
         protected ?Factory $factory = null
-    )
-    {
+    ) {
         $this->types ??= new Types();
         $this->factory ??= new Factory();
     }
@@ -38,10 +37,9 @@ class Dns
     }
 
     public function getRecords(
-        Domain|string $search,
-        int|string|array $types = DNS_ALL
-    ): Collection
-    {
+        Domain | string $search,
+        int | string | array $types = DNS_ALL
+    ): Collection {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
@@ -65,9 +63,9 @@ class Dns
             new Dig($this->factory),
             new DnsGetRecord($this->factory),
         ])
-            ->first(fn(Handler $handler) => $handler->canHandle());
+            ->first(fn (Handler $handler) => $handler->canHandle());
 
-        if (!$handler) {
+        if (! $handler) {
             throw CouldNotFetchDns::noHandlerFound();
         }
 
@@ -79,7 +77,7 @@ class Dns
         return strval(new Domain($input));
     }
 
-    protected function resolveTypes(int|string|array $type): array
+    protected function resolveTypes(int | string | array $type): array
     {
         $flags = match (true) {
             is_string($type) && $type === '*' => DNS_ALL,
