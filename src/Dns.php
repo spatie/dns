@@ -16,6 +16,11 @@ class Dns
 {
     protected ?string $nameserver = null;
 
+    public static function query(?Types $types = null, ?Factory $factory = null): self
+    {
+        return new static($types, $factory);
+    }
+
     public function __construct(
         protected ?Types $types = null,
         protected ?Factory $factory = null

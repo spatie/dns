@@ -46,6 +46,17 @@ class DnsTest extends TestCase
     }
 
     /** @test */
+    public function it_has_a_static_constructor()
+    {
+        $records = DNS::query()->getRecords('spatie.be');
+
+        $this->assertSeeRecordTypes(
+            $records,
+            [A::class, NS::class, SOA::class, MX::class]
+        );
+    }
+
+    /** @test */
     public function it_fetches_all_records_with_asterisk()
     {
         $records = $this->dns->getRecords('spatie.be', '*');
