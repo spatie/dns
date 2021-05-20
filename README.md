@@ -1,8 +1,9 @@
 # Retrieve DNS records
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
-![Tests](https://github.com/spatie/dns/workflows/tests/badge.svg)
-[![Code style](https://github.com/spatie/dns/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/spatie/dns/actions/workflows/php-cs-fixer.yml)[![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
+[![Tests](https://github.com/spatie/dns/actions/workflows/tests.yml/badge.svg)](https://github.com/spatie/dns/actions/workflows/tests.yml)
+[![Code style](https://github.com/spatie/dns/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/spatie/dns/actions/workflows/php-cs-fixer.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/spatie/dns.svg?style=flat-square)](https://packagist.org/packages/spatie/dns)
 
 This package contains a class that can fetch DNS records.
 
