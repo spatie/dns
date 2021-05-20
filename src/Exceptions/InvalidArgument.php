@@ -6,15 +6,13 @@ use InvalidArgumentException;
 
 class InvalidArgument extends InvalidArgumentException
 {
-    public static function domainIsMissing()
+    public static function domainIsMissing(string $url): self
     {
-        return new static('A domain name is required');
+        return new static("A domain name is required in the given url: `{$url}`");
     }
 
-    public static function filterIsNotAValidRecordType($filter, array $validRecordTypes)
+    public static function invalidRecordType(): self
     {
-        $recordTypeString = implode(', ', $validRecordTypes);
-
-        return new static("The given filter `{$filter}` is not valid. It should be one of {$recordTypeString}");
+        return new static('Acceptable types are "*", php DNS_* constants flags, a single name or an array of names');
     }
 }
