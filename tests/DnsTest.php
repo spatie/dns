@@ -91,10 +91,9 @@ class DnsTest extends TestCase
     /** @test */
     public function it_fetches_records_via_name_and_ignores_casing()
     {
-
         $records = $this->dns->getRecords('spatie.be', 'ns');
         ray()->clearScreen();
-ray($records);
+        ray($records);
         $this->assertOnlySeeRecordTypes($records, [NS::class]);
     }
 
