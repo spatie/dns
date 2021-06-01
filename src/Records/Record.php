@@ -3,6 +3,8 @@
 namespace Spatie\Dns\Records;
 
 use BadMethodCallException;
+use ReflectionClass;
+use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Support\Domain;
 use Stringable;
 
@@ -21,6 +23,13 @@ abstract class Record implements Stringable
 
     public function __construct(array $attributes)
     {
+        $type = $attributes['type'] ?? null;
+        $expectedType = (new ReflectionClass($this))->getShortName();
+
+        if ($type !== $expectedType) {
+            throw InvalidArgument::wrongRecordType($type, $expectedType);
+        }
+
         foreach ($attributes as $key => $value) {
             $key = str_replace('-', '_', $key);
 
