@@ -17,6 +17,14 @@ $dns->getRecords('spatie.be'); // returns all available dns records
 $dns->getRecords('spatie.be', 'A'); // returns only A records
 ```
 
+You can use various methods to retrieve info of a record.
+
+```php
+$records = $dns->getRecords('spatie.be')
+
+$hostNameOfFirstRecord = $records[0]->host();
+```
+
 ## Support us
 
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/dns.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/dns)
