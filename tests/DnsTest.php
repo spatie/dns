@@ -3,6 +3,7 @@
 namespace Spatie\Dns\Test;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
@@ -103,9 +104,16 @@ class DnsTest extends TestCase
     public function it_fetches_records_via_name_and_ignores_casing()
     {
         $records = $this->dns->getRecords('spatie.be', 'ns');
-        ray()->clearScreen();
-        ray($records);
+
         $this->assertOnlySeeRecordTypes($records, [NS::class]);
+    }
+
+    /** @test */
+    public function it_fetches_records_for_given_type_and_ignores_record_chain()
+    {
+        $records = $this->dns->getRecords('www.opendor.me', DNS_A);
+
+        $this->assertOnlySeeRecordTypes($records, [A::class]);
     }
 
     /** @test */
@@ -178,7 +186,7 @@ class DnsTest extends TestCase
     protected function recordIsOfType(Record $record, array $types): bool
     {
         foreach ($types as $type) {
-            if (is_a($record, $type)) {
+            if (is_a($record, $type) && $record->type() === (new ReflectionClass($type))->getShortName()) {
                 return true;
             }
         }
