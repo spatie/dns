@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.0.2 - 2021-06-01
+
+- always only return the requests record types (#63)
+
 ## 2.0.1 - 2021-06-01
 
 - let `getRecords` return an array instead of a custom collection
