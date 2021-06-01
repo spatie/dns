@@ -141,11 +141,11 @@ class DnsTest extends TestCase
             ->getRecords('spatie.be', DNS_A);
     }
 
-    protected function assertSeeRecordTypes(Collection $records, array $types)
+    protected function assertSeeRecordTypes(array $records, array $types)
     {
         foreach ($types as $type) {
             $foundRecords = array_filter(
-                $records->all(),
+                $records,
                 fn (Record $record): bool => is_a($record, $type)
             );
 
@@ -165,11 +165,11 @@ class DnsTest extends TestCase
         }
     }
 
-    protected function assertOnlySeeRecordTypes(Collection $records, array $types)
+    protected function assertOnlySeeRecordTypes(array $records, array $types)
     {
-        $expectedCount = count($records->all());
+        $expectedCount = count($records);
 
-        $foundRecords = Collection::make($records->all())
+        $foundRecords = Collection::make($records)
             ->filter(fn (Record $record) => $this->recordIsOfType($record, $types));
 
         $this->assertCount($expectedCount, $foundRecords);
