@@ -3,6 +3,7 @@
 namespace Spatie\Dns\Records;
 
 use BadMethodCallException;
+use Illuminate\Contracts\Support\Arrayable;
 use ReflectionClass;
 use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Support\Domain;
@@ -14,7 +15,7 @@ use Stringable;
  * @method string class()
  * @method string type()
  */
-abstract class Record implements Stringable
+abstract class Record implements Stringable, Arrayable
 {
     protected string $host;
     protected int $ttl;
@@ -57,6 +58,11 @@ abstract class Record implements Stringable
     abstract public static function parse(string $line): self;
 
     abstract public function __toString(): string;
+
+    /**
+     * @return array
+     */
+    abstract public function toArray();
 
     public function __call(string $name, array $arguments)
     {
