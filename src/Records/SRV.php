@@ -55,18 +55,4 @@ class SRV extends Record
     {
         return $this->prepareDomain($value);
     }
-
-    public function toArray()
-    {
-        return [
-            'host' => $this->host,
-            'ttl' => $this->ttl,
-            'class' => $this->class,
-            'type' => $this->type,
-            'pri' => $this->pri,
-            'weight' => $this->weight,
-            'port' => $this->port,
-            'target' => $this->target,
-        ];
-    }
 }
