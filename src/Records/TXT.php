@@ -31,15 +31,4 @@ class TXT extends Record
     {
         return $this->prepareText($value);
     }
-
-    public function toArray()
-    {
-        return [
-            'host' => $this->host,
-            'ttl' => $this->ttl,
-            'class' => $this->class,
-            'type' => $this->type,
-            'txt' => $this->txt,
-        ];
-    }
 }
