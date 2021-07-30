@@ -79,4 +79,21 @@ class SOA extends Record
     {
         return $this->prepareInt($value);
     }
+
+    public function toArray()
+    {
+        return [
+            'host' => $this->host,
+            'ttl' => $this->ttl,
+            'class' => $this->class,
+            'type' => $this->type,
+            'mname' => $this->mname,
+            'rname' => $this->rname,
+            'serial' => $this->serial,
+            'refresh' => $this->refresh,
+            'retry' => $this->retry,
+            'expire' => $this->expire,
+            'minimum-ttl' => $this->minimum_ttl,
+        ];
+    }
 }
