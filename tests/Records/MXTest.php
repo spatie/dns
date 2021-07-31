@@ -47,4 +47,25 @@ class MXTest extends TestCase
 
         $this->assertSame("spatie.be.\t\t1665\tIN\tMX\t10\taspmx.l.google.com.", strval($record));
     }
+
+    /** @test */
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = MX::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 1665,
+            'type' => 'MX',
+            'pri' => 10,
+            'target' => 'ASPMX.L.GOOGLE.COM',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('spatie.be', $data['host']);
+        $this->assertSame(1665, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('MX', $data['type']);
+        $this->assertSame(10, $data['pri']);
+        $this->assertSame('aspmx.l.google.com', $data['target']);
+    }
 }

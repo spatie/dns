@@ -44,4 +44,23 @@ class AAAATest extends TestCase
 
         $this->assertSame("google.com.\t\t900\tIN\tAAAA\t2a00:1450:400e:800::200e", strval($record));
     }
+
+    /** @test */
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = AAAA::make([
+            'host' => 'google.com',
+            'class' => 'IN',
+            'ttl' => 900,
+            'type' => 'AAAA',
+            'ipv6' => '2a00:1450:400e:800::200e',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('google.com', $data['host']);
+        $this->assertSame(900, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('AAAA', $data['type']);
+        $this->assertSame('2a00:1450:400e:800::200e', $data['ipv6']);
+    }
 }
