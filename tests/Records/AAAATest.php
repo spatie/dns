@@ -44,4 +44,12 @@ class AAAATest extends TestCase
 
         $this->assertSame("google.com.\t\t900\tIN\tAAAA\t2a00:1450:400e:800::200e", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = AAAA::parse('google.com.             900     IN      AAAA');
+
+        $this->assertNull($record);
+    }
 }

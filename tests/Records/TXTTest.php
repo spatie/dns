@@ -44,4 +44,12 @@ class TXTTest extends TestCase
 
         $this->assertSame("spatie.be.\t\t594\tIN\tTXT\t\"v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all\"", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = TXT::parse('spatie.be.              594     IN      TXT');
+
+        $this->assertNull($record);
+    }
 }

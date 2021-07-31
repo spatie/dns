@@ -54,7 +54,7 @@ abstract class Record implements Stringable
      *
      * @return static
      */
-    abstract public static function parse(string $line): self;
+    abstract public static function parse(string $line): ?self;
 
     abstract public function __toString(): string;
 

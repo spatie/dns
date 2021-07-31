@@ -50,4 +50,12 @@ class CAATest extends TestCase
 
         $this->assertSame("google.com.\t\t86400\tIN\tCAA\t0\tissue\t\"pki.goog\"", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = CAA::parse('google.com.             86400   IN      CAA     0 issue');
+
+        $this->assertNull($record);
+    }
 }

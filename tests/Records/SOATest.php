@@ -62,4 +62,12 @@ class SOATest extends TestCase
 
         $this->assertSame("spatie.be.\t\t82393\tIN\tSOA\tns1.openprovider.nl.\tdns.openprovider.eu.\t2020100801\t10800\t3600\t604800\t3600", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = SOA::parse('spatie.be.              82393   IN      SOA     ns1.openprovider.nl. dns.openprovider.eu. 2020100801 10800 3600 604800');
+
+        $this->assertNull($record);
+    }
 }

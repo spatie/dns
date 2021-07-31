@@ -44,4 +44,12 @@ class NSTest extends TestCase
 
         $this->assertSame("spatie.be.\t\t82516\tIN\tNS\tns1.openprovider.nl.", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = NS::parse('spatie.be.              82516   IN      NS');
+
+        $this->assertNull($record);
+    }
 }

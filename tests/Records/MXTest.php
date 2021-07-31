@@ -47,4 +47,12 @@ class MXTest extends TestCase
 
         $this->assertSame("spatie.be.\t\t1665\tIN\tMX\t10\taspmx.l.google.com.", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = MX::parse('spatie.be.              1665    IN      MX      10');
+
+        $this->assertNull($record);
+    }
 }

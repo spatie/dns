@@ -9,9 +9,13 @@ class CNAME extends Record
 {
     protected string $target;
 
-    public static function parse(string $line): self
+    public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 5);
+
+        if (count($attributes) < 5) {
+            return null;
+        }
 
         return static::make([
             'host' => $attributes[0],

@@ -53,4 +53,12 @@ class SRVTest extends TestCase
 
         $this->assertSame("_http._tcp.mxtoolbox.com.\t\t3600\tIN\tSRV\t10\t100\t80\tmxtoolbox.com.", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80');
+
+        $this->assertNull($record);
+    }
 }

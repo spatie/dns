@@ -44,4 +44,12 @@ class ATest extends TestCase
 
         $this->assertSame("spatie.be.\t\t900\tIN\tA\t138.197.187.74", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = A::parse('spatie.be.              900     IN      A');
+
+        $this->assertNull($record);
+    }
 }

@@ -44,4 +44,12 @@ class CNAMETest extends TestCase
 
         $this->assertSame("www.spatie.be.\t\t300\tIN\tCNAME\tspatie.be.", strval($record));
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributs()
+    {
+        $record = CNAME::parse('www.spatie.be.       300     IN      CNAME');
+
+        $this->assertNull($record);
+    }
 }
