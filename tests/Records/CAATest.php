@@ -50,4 +50,27 @@ class CAATest extends TestCase
 
         $this->assertSame("google.com.\t\t86400\tIN\tCAA\t0\tissue\t\"pki.goog\"", strval($record));
     }
+
+    /** @test */
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = CAA::make([
+            'host' => 'google.com',
+            'class' => 'IN',
+            'ttl' => 86400,
+            'type' => 'CAA',
+            'flags' => 0,
+            'tag' => 'issue',
+            'value' => 'pki.goog',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('google.com', $data['host']);
+        $this->assertSame(86400, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('CAA', $data['type']);
+        $this->assertSame(0, $data['flags']);
+        $this->assertSame('issue', $data['tag']);
+        $this->assertSame('pki.goog', $data['value']);
+    }
 }

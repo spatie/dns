@@ -44,4 +44,23 @@ class ATest extends TestCase
 
         $this->assertSame("spatie.be.\t\t900\tIN\tA\t138.197.187.74", strval($record));
     }
+
+    /** @test */
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = A::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 900,
+            'type' => 'A',
+            'ip' => '138.197.187.74',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('spatie.be', $data['host']);
+        $this->assertSame(900, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('A', $data['type']);
+        $this->assertSame('138.197.187.74', $data['ip']);
+    }
 }
