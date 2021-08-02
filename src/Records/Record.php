@@ -58,6 +58,11 @@ abstract class Record implements Stringable
 
     abstract public function __toString(): string;
 
+    /**
+     * @return array
+     */
+    abstract public function toArray();
+
     public function __call(string $name, array $arguments)
     {
         if (property_exists($this, $name)) {

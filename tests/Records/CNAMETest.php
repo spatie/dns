@@ -46,7 +46,26 @@ class CNAMETest extends TestCase
     }
 
     /** @test */
-    public function it_return_null_for_to_few_attributs()
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = CNAME::make([
+            'host' => 'www.spatie.be',
+            'class' => 'IN',
+            'ttl' => 300,
+            'type' => 'CNAME',
+            'target' => 'spatie.be',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('www.spatie.be', $data['host']);
+        $this->assertSame(300, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('CNAME', $data['type']);
+        $this->assertSame('spatie.be', $data['target']);
+    }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
     {
         $record = CNAME::parse('www.spatie.be.       300     IN      CNAME');
 

@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.1.0 - 2021-08-01
+
+- Make records arrayable (#70)
+
 ## 2.0.2 - 2021-06-01
 
 - always only return the requests record types (#63)

@@ -55,7 +55,32 @@ class SRVTest extends TestCase
     }
 
     /** @test */
-    public function it_return_null_for_to_few_attributs()
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = SRV::make([
+            'host' => '_http._tcp.mxtoolbox.com',
+            'class' => 'IN',
+            'ttl' => 3600,
+            'type' => 'SRV',
+            'pri' => 10,
+            'weight' => 100,
+            'port' => 80,
+            'target' => 'mxtoolbox.com',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('_http._tcp.mxtoolbox.com', $data['host']);
+        $this->assertSame(3600, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('SRV', $data['type']);
+        $this->assertSame(10, $data['pri']);
+        $this->assertSame(100, $data['weight']);
+        $this->assertSame(80, $data['port']);
+        $this->assertSame('mxtoolbox.com', $data['target']);
+    }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
     {
         $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80');
 

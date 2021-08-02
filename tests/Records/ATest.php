@@ -46,7 +46,26 @@ class ATest extends TestCase
     }
 
     /** @test */
-    public function it_return_null_for_to_few_attributs()
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = A::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 900,
+            'type' => 'A',
+            'ip' => '138.197.187.74',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('spatie.be', $data['host']);
+        $this->assertSame(900, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('A', $data['type']);
+        $this->assertSame('138.197.187.74', $data['ip']);
+    }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
     {
         $record = A::parse('spatie.be.              900     IN      A');
 

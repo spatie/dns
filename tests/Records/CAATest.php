@@ -52,7 +52,30 @@ class CAATest extends TestCase
     }
 
     /** @test */
-    public function it_return_null_for_to_few_attributs()
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = CAA::make([
+            'host' => 'google.com',
+            'class' => 'IN',
+            'ttl' => 86400,
+            'type' => 'CAA',
+            'flags' => 0,
+            'tag' => 'issue',
+            'value' => 'pki.goog',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('google.com', $data['host']);
+        $this->assertSame(86400, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('CAA', $data['type']);
+        $this->assertSame(0, $data['flags']);
+        $this->assertSame('issue', $data['tag']);
+        $this->assertSame('pki.goog', $data['value']);
+    }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
     {
         $record = CAA::parse('google.com.             86400   IN      CAA     0 issue');
 

@@ -46,7 +46,26 @@ class NSTest extends TestCase
     }
 
     /** @test */
-    public function it_return_null_for_to_few_attributs()
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = NS::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 82516,
+            'type' => 'NS',
+            'target' => 'ns1.openprovider.nl',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('spatie.be', $data['host']);
+        $this->assertSame(82516, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('NS', $data['type']);
+        $this->assertSame('ns1.openprovider.nl', $data['target']);
+    }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
     {
         $record = NS::parse('spatie.be.              82516   IN      NS');
 

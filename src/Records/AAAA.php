@@ -30,4 +30,15 @@ class AAAA extends Record
     {
         return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->ipv6}";
     }
+
+    public function toArray()
+    {
+        return [
+            'host' => $this->host,
+            'ttl' => $this->ttl,
+            'class' => $this->class,
+            'type' => $this->type,
+            'ipv6' => $this->ipv6,
+        ];
+    }
 }

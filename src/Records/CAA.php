@@ -46,4 +46,17 @@ class CAA extends Record
     {
         return $this->prepareText($value);
     }
+
+    public function toArray()
+    {
+        return [
+            'host' => $this->host,
+            'ttl' => $this->ttl,
+            'class' => $this->class,
+            'type' => $this->type,
+            'flags' => $this->flags,
+            'tag' => $this->tag,
+            'value' => $this->value,
+        ];
+    }
 }

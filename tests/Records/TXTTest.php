@@ -46,7 +46,26 @@ class TXTTest extends TestCase
     }
 
     /** @test */
-    public function it_return_null_for_to_few_attributs()
+    public function it_can_be_converted_to_an_array()
+    {
+        $record = TXT::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 594,
+            'type' => 'TXT',
+            'txt' => 'v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all',
+        ]);
+
+        $data = $record->toArray();
+        $this->assertSame('spatie.be', $data['host']);
+        $this->assertSame(594, $data['ttl']);
+        $this->assertSame('IN', $data['class']);
+        $this->assertSame('TXT', $data['type']);
+        $this->assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $data['txt']);
+    }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
     {
         $record = TXT::parse('spatie.be.              594     IN      TXT');
 
