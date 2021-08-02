@@ -63,4 +63,12 @@ class NSTest extends TestCase
         $this->assertSame('NS', $data['type']);
         $this->assertSame('ns1.openprovider.nl', $data['target']);
     }
+
+    /** @test */
+    public function it_does_not_throw_a_warning_for_insufficient_attributes()
+    {
+        $record = NS::parse('spatie.be.              82516   IN      NS');
+
+        $this->assertSame('', $record->target());
+    }
 }

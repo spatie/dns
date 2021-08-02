@@ -16,12 +16,12 @@ class MX extends Record
         $attributes = static::lineToArray($line, 6);
 
         return static::make([
-            'host' => $attributes[0],
-            'ttl' => $attributes[1],
-            'class' => $attributes[2],
-            'type' => $attributes[3],
-            'pri' => $attributes[4],
-            'target' => $attributes[5],
+            'host' => $attributes[0] ?? null,
+            'ttl' => $attributes[1] ?? null,
+            'class' => $attributes[2] ?? null,
+            'type' => $attributes[3] ?? null,
+            'pri' => $attributes[4] ?? null,
+            'target' => $attributes[5] ?? null,
         ]);
     }
 
@@ -35,7 +35,7 @@ class MX extends Record
         return $this->prepareInt($value);
     }
 
-    protected function castTarget(string $value): string
+    protected function castTarget(?string $value): string
     {
         return $this->prepareDomain($value);
     }

@@ -63,4 +63,12 @@ class ATest extends TestCase
         $this->assertSame('A', $data['type']);
         $this->assertSame('138.197.187.74', $data['ip']);
     }
+
+    /** @test */
+    public function it_does_not_throw_a_warning_for_insufficient_attributes()
+    {
+        $record = A::parse('spatie.be.              900     IN      A');
+
+        $this->assertSame(null, $record->ip());
+    }
 }

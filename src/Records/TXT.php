@@ -14,11 +14,11 @@ class TXT extends Record
         $attributes = static::lineToArray($line, 5);
 
         return static::make([
-            'host' => $attributes[0],
-            'ttl' => $attributes[1],
-            'class' => $attributes[2],
-            'type' => $attributes[3],
-            'txt' => $attributes[4],
+            'host' => $attributes[0] ?? null,
+            'ttl' => $attributes[1] ?? null,
+            'class' => $attributes[2] ?? null,
+            'type' => $attributes[3] ?? null,
+            'txt' => $attributes[4] ?? null,
         ]);
     }
 
@@ -27,7 +27,7 @@ class TXT extends Record
         return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t\"{$this->txt}\"";
     }
 
-    protected function castTxt(string $value): string
+    protected function castTxt(?string $value): string
     {
         return $this->prepareText($value);
     }

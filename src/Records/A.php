@@ -7,18 +7,18 @@ namespace Spatie\Dns\Records;
  */
 class A extends Record
 {
-    protected string $ip;
+    protected ?string $ip;
 
     public static function parse(string $line): self
     {
         $attributes = static::lineToArray($line, 5);
 
         return static::make([
-            'host' => $attributes[0],
-            'ttl' => $attributes[1],
-            'class' => $attributes[2],
-            'type' => $attributes[3],
-            'ip' => $attributes[4],
+            'host' => $attributes[0] ?? null,
+            'ttl' => $attributes[1] ?? null,
+            'class' => $attributes[2] ?? null,
+            'type' => $attributes[3] ?? null,
+            'ip' => $attributes[4] ?? null,
         ]);
     }
 

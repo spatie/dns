@@ -63,4 +63,12 @@ class AAAATest extends TestCase
         $this->assertSame('AAAA', $data['type']);
         $this->assertSame('2a00:1450:400e:800::200e', $data['ipv6']);
     }
+
+    /** @test */
+    public function it_does_not_throw_a_warning_for_insufficient_attributes()
+    {
+        $record = AAAA::parse('google.com.             900     IN      AAAA');
+
+        $this->assertSame(null, $record->ipv6());
+    }
 }

@@ -18,13 +18,13 @@ class CAA extends Record
         $attributes = static::lineToArray($line, 7);
 
         return static::make([
-            'host' => $attributes[0],
-            'ttl' => $attributes[1],
-            'class' => $attributes[2],
-            'type' => $attributes[3],
-            'flags' => $attributes[4],
-            'tag' => $attributes[5],
-            'value' => $attributes[6],
+            'host' => $attributes[0] ?? null,
+            'ttl' => $attributes[1] ?? null,
+            'class' => $attributes[2] ?? null,
+            'type' => $attributes[3] ?? null,
+            'flags' => $attributes[4] ?? null,
+            'tag' => $attributes[5] ?? null,
+            'value' => $attributes[6] ?? null,
         ]);
     }
 
@@ -33,12 +33,12 @@ class CAA extends Record
         return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->flags}\t{$this->tag}\t\"{$this->value}\"";
     }
 
-    protected function castFlags(string $value): int
+    protected function castFlags(?string $value): int
     {
         return $this->prepareInt($value);
     }
 
-    protected function castValue(string $value): string
+    protected function castValue(?string $value): string
     {
         return $this->prepareText($value);
     }

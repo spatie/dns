@@ -63,4 +63,12 @@ class CNAMETest extends TestCase
         $this->assertSame('CNAME', $data['type']);
         $this->assertSame('spatie.be', $data['target']);
     }
+
+    /** @test */
+    public function it_does_not_throw_a_warning_for_insufficient_attributes()
+    {
+        $record = CNAME::parse('www.spatie.be.       300     IN      CNAME');
+
+        $this->assertSame('', $record->target());
+    }
 }

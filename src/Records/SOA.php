@@ -26,17 +26,17 @@ class SOA extends Record
         $attributes = static::lineToArray($line, 11);
 
         return static::make([
-            'host' => $attributes[0],
-            'ttl' => $attributes[1],
-            'class' => $attributes[2],
-            'type' => $attributes[3],
-            'mname' => $attributes[4],
-            'rname' => $attributes[5],
-            'serial' => $attributes[6],
-            'refresh' => $attributes[7],
-            'retry' => $attributes[8],
-            'expire' => $attributes[9],
-            'minimum-ttl' => $attributes[10],
+            'host' => $attributes[0] ?? null,
+            'ttl' => $attributes[1] ?? null,
+            'class' => $attributes[2] ?? null,
+            'type' => $attributes[3] ?? null,
+            'mname' => $attributes[4] ?? null,
+            'rname' => $attributes[5] ?? null,
+            'serial' => $attributes[6] ?? null,
+            'refresh' => $attributes[7] ?? null,
+            'retry' => $attributes[8] ?? null,
+            'expire' => $attributes[9] ?? null,
+            'minimum-ttl' => $attributes[10] ?? null,
         ]);
     }
 
@@ -45,12 +45,12 @@ class SOA extends Record
         return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->mname}.\t{$this->rname}.\t{$this->serial}\t{$this->refresh}\t{$this->retry}\t{$this->expire}\t{$this->minimum_ttl}";
     }
 
-    protected function castMname(string $value): string
+    protected function castMname(?string $value): string
     {
         return $this->prepareDomain($value);
     }
 
-    protected function castRname(string $value): string
+    protected function castRname(?string $value): string
     {
         return $this->prepareDomain($value);
     }

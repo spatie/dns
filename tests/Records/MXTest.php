@@ -68,4 +68,12 @@ class MXTest extends TestCase
         $this->assertSame(10, $data['pri']);
         $this->assertSame('aspmx.l.google.com', $data['target']);
     }
+
+    /** @test */
+    public function it_does_not_throw_a_warning_for_insufficient_attributes()
+    {
+        $record = MX::parse('spatie.be.              1665    IN      MX      10');
+
+        $this->assertSame('', $record->target());
+    }
 }

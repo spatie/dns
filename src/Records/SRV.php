@@ -20,14 +20,14 @@ class SRV extends Record
         $attributes = static::lineToArray($line, 8);
 
         return static::make([
-            'host' => $attributes[0],
-            'ttl' => $attributes[1],
-            'class' => $attributes[2],
-            'type' => $attributes[3],
-            'pri' => $attributes[4],
-            'weight' => $attributes[5],
-            'port' => $attributes[6],
-            'target' => $attributes[7],
+            'host' => $attributes[0] ?? null,
+            'ttl' => $attributes[1] ?? null,
+            'class' => $attributes[2] ?? null,
+            'type' => $attributes[3] ?? null,
+            'pri' => $attributes[4] ?? null,
+            'weight' => $attributes[5] ?? null,
+            'port' => $attributes[6] ?? null,
+            'target' => $attributes[7] ?? null,
         ]);
     }
 
@@ -51,7 +51,7 @@ class SRV extends Record
         return $this->prepareInt($value);
     }
 
-    protected function castTarget(string $value): string
+    protected function castTarget(?string $value): string
     {
         return $this->prepareDomain($value);
     }

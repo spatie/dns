@@ -92,8 +92,12 @@ abstract class Record implements Stringable
         return $value;
     }
 
-    protected function prepareDomain(string $value): string
+    protected function prepareDomain(?string $value): string
     {
+        if (is_null($value)) {
+            return '';
+        }
+
         return strval(new Domain(trim($value, '.')));
     }
 
@@ -102,12 +106,12 @@ abstract class Record implements Stringable
         return intval($value);
     }
 
-    protected function prepareText(string $value): string
+    protected function prepareText(?string $value): string
     {
         return trim($value, '"');
     }
 
-    protected function castHost(string $value): string
+    protected function castHost(?string $value): string
     {
         return $this->prepareDomain($value);
     }
@@ -117,12 +121,12 @@ abstract class Record implements Stringable
         return $this->prepareInt($value);
     }
 
-    protected function castClass(string $value): string
+    protected function castClass(?string $value): string
     {
         return mb_strtoupper($value);
     }
 
-    protected function castType(string $value): string
+    protected function castType(?string $value): string
     {
         return mb_strtoupper($value);
     }
