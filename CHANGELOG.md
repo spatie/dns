@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.1.1 - 2021-08-04
+
+- ensure accessed indexes do exist (#68)
+
 ## 2.1.0 - 2021-08-01
 
 - Make records arrayable (#70)
