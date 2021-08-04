@@ -63,4 +63,12 @@ class TXTTest extends TestCase
         $this->assertSame('TXT', $data['type']);
         $this->assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $data['txt']);
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
+    {
+        $record = TXT::parse('spatie.be.              594     IN      TXT');
+
+        $this->assertNull($record);
+    }
 }

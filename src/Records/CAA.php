@@ -13,9 +13,13 @@ class CAA extends Record
     protected string $tag;
     protected string $value;
 
-    public static function parse(string $line): self
+    public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 7);
+
+        if (count($attributes) < 7) {
+            return null;
+        }
 
         return static::make([
             'host' => $attributes[0],

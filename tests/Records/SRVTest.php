@@ -78,4 +78,12 @@ class SRVTest extends TestCase
         $this->assertSame(80, $data['port']);
         $this->assertSame('mxtoolbox.com', $data['target']);
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
+    {
+        $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80');
+
+        $this->assertNull($record);
+    }
 }

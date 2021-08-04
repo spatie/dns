@@ -93,4 +93,12 @@ class SOATest extends TestCase
         $this->assertSame(604800, $data['expire']);
         $this->assertSame(3600, $data['minimum_ttl']);
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
+    {
+        $record = SOA::parse('spatie.be.              82393   IN      SOA     ns1.openprovider.nl. dns.openprovider.eu. 2020100801 10800 3600 604800');
+
+        $this->assertNull($record);
+    }
 }

@@ -7,7 +7,7 @@ use Spatie\Dns\Records\Record;
 
 class Factory
 {
-    public function parse(string $type, string $line): Record
+    public function parse(string $type, string $line): ?Record
     {
         return forward_static_call([$this->resolve($type), 'parse'], $line);
     }

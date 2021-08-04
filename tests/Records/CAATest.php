@@ -73,4 +73,12 @@ class CAATest extends TestCase
         $this->assertSame('issue', $data['tag']);
         $this->assertSame('pki.goog', $data['value']);
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
+    {
+        $record = CAA::parse('google.com.             86400   IN      CAA     0 issue');
+
+        $this->assertNull($record);
+    }
 }

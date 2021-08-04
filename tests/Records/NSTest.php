@@ -63,4 +63,12 @@ class NSTest extends TestCase
         $this->assertSame('NS', $data['type']);
         $this->assertSame('ns1.openprovider.nl', $data['target']);
     }
+
+    /** @test */
+    public function it_return_null_for_to_few_attributes()
+    {
+        $record = NS::parse('spatie.be.              82516   IN      NS');
+
+        $this->assertNull($record);
+    }
 }

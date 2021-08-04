@@ -21,9 +21,13 @@ class SOA extends Record
     protected int $expire;
     protected int $minimum_ttl;
 
-    public static function parse(string $line): self
+    public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 11);
+
+        if (count($attributes) < 11) {
+            return null;
+        }
 
         return static::make([
             'host' => $attributes[0],

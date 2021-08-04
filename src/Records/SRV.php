@@ -15,9 +15,13 @@ class SRV extends Record
     protected string $target;
     protected int $port;
 
-    public static function parse(string $line): self
+    public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 8);
+
+        if (count($attributes) < 8) {
+            return null;
+        }
 
         return static::make([
             'host' => $attributes[0],

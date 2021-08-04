@@ -11,9 +11,13 @@ class MX extends Record
     protected int $pri;
     protected string $target;
 
-    public static function parse(string $line): self
+    public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 6);
+
+        if (count($attributes) < 6) {
+            return null;
+        }
 
         return static::make([
             'host' => $attributes[0],
