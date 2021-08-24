@@ -23,6 +23,7 @@ All notable changes to `dns` will be documented in this file
 - near-total rewrite
 - added methods on record types 
 - added support for multiple handlers
+- drop support for any PHP 7.x (require >= 8.0)
 
 ## 1.6.0 - 2020-12-02
 
