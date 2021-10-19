@@ -97,6 +97,17 @@ use Spatie\Dns\Dns;
     ->getRecords('spatie.be');
 ```
 
+## Guessing a record
+
+When you have a string that contains a dns record, you can convert it to a `Record`
+
+```php
+use \Spatie\Dns\Support\Factory();
+
+// returns instance of `Spatie\Dns\Records\CNAME```
+(new Factory())->guess('www.spatie.be.       300     IN      CNAME   spatie.be.');
+```
+
 ## Under the hood
 
 We will use [dig](https://wiki.ubuntuusers.de/dig/) to fetch DNS info. If it is not installed on your system, we'll call the native `dns_get_record()` function.

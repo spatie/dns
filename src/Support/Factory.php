@@ -17,6 +17,17 @@ class Factory
         return forward_static_call([$this->resolve($type), 'make'], $record);
     }
 
+    public function guess(string $line): ?Record
+    {
+        $parts = preg_split('/\s+/', $line);
+
+        if (! $type = $parts[3] ?? null) {
+            return null;
+        }
+
+        return $this->parse($type, $line);
+    }
+
     protected function resolve(string $type): string
     {
         $type = mb_strtoupper($type);
