@@ -26,7 +26,7 @@ class FactoryTest extends TestCase
          $this->assertNull((new Factory())->guess('invalid-record'));
     }
 
-    public function dnsRecords()
+    public function dnsRecords(): array
     {
         return [
             [AAAA::class, 'google.com.             900     IN      AAAA    2a00:1450:400e:800::200e'],
