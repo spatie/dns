@@ -104,7 +104,7 @@ When you have a string that contains a dns record, you can convert it to a `Reco
 ```php
 use \Spatie\Dns\Support\Factory();
 
-// returns instance of `Spatie\Dns\Records\CNAME```
+// returns instance of \Spatie\Dns\Records\CNAME
 (new Factory())->guess('www.spatie.be.       300     IN      CNAME   spatie.be.');
 ```
 
