@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.2.0 - 2021-10-19
+
+- add `guess` method to `Factory`
+
 ## 2.1.1 - 2021-08-04
 
 - ensure accessed indexes do exist (#68)
