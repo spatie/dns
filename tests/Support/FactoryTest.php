@@ -23,7 +23,7 @@ class FactoryTest extends TestCase
 
     public function it_will_return_null_when_it_cannot_guess_the_record()
     {
-         $this->assertNull((new Factory())->guess('invalid-record'));
+        $this->assertNull((new Factory())->guess('invalid-record'));
     }
 
     public function dnsRecords()
