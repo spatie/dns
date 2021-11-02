@@ -11,7 +11,7 @@ class RecordTest extends TestCase
     /** @test */
     public function a_record_is_macroable()
     {
-        Record::macro('ping', fn() => 'pong');
+        Record::macro('ping', fn () => 'pong');
 
         $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
 

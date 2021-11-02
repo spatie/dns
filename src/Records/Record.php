@@ -2,7 +2,6 @@
 
 namespace Spatie\Dns\Records;
 
-use BadMethodCallException;
 use ReflectionClass;
 use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Support\Domain;
