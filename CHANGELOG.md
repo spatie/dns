@@ -4,6 +4,10 @@ All notable changes to `dns` will be documented in this file
 
 ## 2.3.1 - 2021-11-02
 
+- fix macroable behaviour
+
+## 2.3.1 - 2021-11-02
+
 - allow v1 of spatie/macroable
 
 ## 2.3.0 - 2021-11-02

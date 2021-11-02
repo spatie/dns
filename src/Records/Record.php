@@ -17,7 +17,9 @@ use Stringable;
  */
 abstract class Record implements Stringable
 {
-    use Macroable;
+    use Macroable {
+        __call as protected macroCall;
+    }
 
     protected string $host;
     protected int $ttl;
@@ -72,7 +74,7 @@ abstract class Record implements Stringable
             return $this->$name;
         }
 
-        throw new BadMethodCallException();
+        return $this->macroCall($name, $arguments);
     }
 
     protected static function lineToArray(string $line, ?int $limit = null): array
