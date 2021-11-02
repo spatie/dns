@@ -2,6 +2,10 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.3.0 - 2021-11-02
+
+- make `Record` macroable
+
 ## 2.2.0 - 2021-10-19
 
 - add `guess` method to `Factory`
