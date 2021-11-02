@@ -6,6 +6,7 @@ use BadMethodCallException;
 use ReflectionClass;
 use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Support\Domain;
+use Spatie\Macroable\Macroable;
 use Stringable;
 
 /**
@@ -16,6 +17,8 @@ use Stringable;
  */
 abstract class Record implements Stringable
 {
+    use Macroable;
+
     protected string $host;
     protected int $ttl;
     protected string $class;
