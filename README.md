@@ -108,6 +108,25 @@ use \Spatie\Dns\Support\Factory();
 (new Factory())->guess('www.spatie.be.       300     IN      CNAME   spatie.be.');
 ```
 
+## Using custom handlers
+
+A `Handler` is responsible for fetching DNS records of a certain type.
+
+By default, these handlers that ship with the package are used:
+
+- `Spatie\Dns\Handler\Dig`
+- `Spatie\Dns\Handler\DnsGetRecord`
+
+You can create custom handlers. A valid handler is any class that extends from `Spatie\Dns\Handler\Handler`.
+
+A custom handler class can be used by passing it to `useHandlers` on `Spatie\Dns\Dns`.
+
+```php``
+$results = $this->dns
+    ->useHandlers([new YourCustomHandler()])
+    ->getRecords('spatie.be');
+```
+
 ## Under the hood
 
 We will use [dig](https://wiki.ubuntuusers.de/dig/) to fetch DNS info. If it is not installed on your system, we'll call the native `dns_get_record()` function.
