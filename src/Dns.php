@@ -16,6 +16,9 @@ class Dns
 {
     protected ?string $nameserver = null;
 
+    /** @var array<int, Handler>  */
+    protected ?array $customHandlers = null;
+
     public static function query(?Types $types = null, ?Factory $factory = null): self
     {
         return new static($types, $factory);
@@ -45,6 +48,7 @@ class Dns
         Domain | string $search,
         int | string | array $types = DNS_ALL
     ): array {
+
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
@@ -62,12 +66,19 @@ class Dns
         return $records;
     }
 
+    /**
+     * @param array<int, Handler> $customHandlers
+     */
+    public function useHandlers(array $customHandlers): self
+    {
+        $this->customHandlers = $customHandlers;
+
+        return $this;
+    }
+
     protected function getHandler(): Handler
     {
-        $handler = Collection::make([
-            new Dig($this->factory),
-            new DnsGetRecord($this->factory),
-        ])
+        $handler = Collection::make($this->customHandlers ?? $this->defaultHandlers())
             ->first(fn (Handler $handler) => $handler->canHandle());
 
         if (! $handler) {
@@ -75,6 +86,17 @@ class Dns
         }
 
         return $handler;
+    }
+
+    /**
+     * @return array<int, Handler>
+     */
+    protected function defaultHandlers(): array
+    {
+        return [
+            new Dig($this->factory),
+            new DnsGetRecord($this->factory),
+        ];
     }
 
     protected function sanitizeDomain(string $input): string

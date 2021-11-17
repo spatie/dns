@@ -13,6 +13,7 @@ use Spatie\Dns\Records\NS;
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Records\SOA;
 use Spatie\Dns\Support\Collection;
+use Spatie\Dns\Test\TestClasses\CustomHandler;
 
 class DnsTest extends TestCase
 {
@@ -147,6 +148,26 @@ class DnsTest extends TestCase
         $this->dns
             ->useNameserver('dns.spatie.be')
             ->getRecords('spatie.be', DNS_A);
+    }
+
+    /** @test */
+    public function it_can_use_custom_handlers()
+    {
+        $result = $this->dns
+            ->useHandlers([new CustomHandler()])
+            ->getRecords('spatie.be');
+
+        $this->assertEquals([
+            'custom-handler-results-A',
+            'custom-handler-results-AAAA',
+            'custom-handler-results-CNAME',
+            'custom-handler-results-NS',
+            'custom-handler-results-SOA',
+            'custom-handler-results-MX',
+            'custom-handler-results-SRV',
+            'custom-handler-results-TXT',
+            'custom-handler-results-CAA',
+        ], $result);
     }
 
     protected function assertSeeRecordTypes(array $records, array $types)
