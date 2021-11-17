@@ -16,7 +16,7 @@ class Dns
 {
     protected ?string $nameserver = null;
 
-    /** @var array<int, Handler>  */
+    /** @var array<int, Handler> */
     protected ?array $customHandlers = null;
 
     public static function query(?Types $types = null, ?Factory $factory = null): self
@@ -48,7 +48,6 @@ class Dns
         Domain | string $search,
         int | string | array $types = DNS_ALL
     ): array {
-
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 

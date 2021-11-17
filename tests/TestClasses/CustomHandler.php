@@ -3,7 +3,6 @@
 namespace Spatie\Dns\Test\TestClasses;
 
 use Spatie\Dns\Handlers\Handler;
-use Spatie\Dns\Support\Factory;
 
 class CustomHandler extends Handler
 {
