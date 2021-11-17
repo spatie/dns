@@ -2,6 +2,14 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.4.0 - 2021-11-17
+
+## What's Changed
+
+- Add ability to use custom handlers by @freekmurze in https://github.com/spatie/dns/pull/78
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.3.2...2.4.0
+
 ## 2.3.2 - 2021-11-02
 
 - fix macroable behaviour
@@ -37,7 +45,7 @@ All notable changes to `dns` will be documented in this file
 ## 2.0.0 - 2021-05-20
 
 - near-total rewrite
-- added methods on record types 
+- added methods on record types
 - added support for multiple handlers
 - drop support for any PHP 7.x (require >= 8.0)
 
