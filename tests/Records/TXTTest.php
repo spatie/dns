@@ -20,6 +20,14 @@ class TXTTest extends TestCase
     }
 
     /** @test */
+    public function it_can_parse_long_txt_string()
+    {
+        $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 a mx ip4:100.101.102.103 ip4:104.105.106.107 ip4:108.109.110.111 ip6:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a include:_spf.google.com include:_spf.c" "reatesend.com ~all"');
+
+        $this->assertSame('v=spf1 a mx ip4:100.101.102.103 ip4:104.105.106.107 ip4:108.109.110.111 ip6:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a include:_spf.google.com include:_spf.createsend.com ~all', $record->txt());
+    }
+
+    /** @test */
     public function it_can_make_from_array()
     {
         $record = TXT::make([
