@@ -108,7 +108,7 @@ abstract class Record implements Stringable
 
     protected function prepareText(string $value): string
     {
-        return trim($value, '"');
+        return str_replace('" "', '', trim($value, '"'));
     }
 
     protected function castHost(string $value): string
