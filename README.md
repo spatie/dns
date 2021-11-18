@@ -121,7 +121,7 @@ You can create custom handlers. A valid handler is any class that extends from `
 
 A custom handler class can be used by passing it to `useHandlers` on `Spatie\Dns\Dns`.
 
-```php``
+```php
 $results = $this->dns
     ->useHandlers([new YourCustomHandler()])
     ->getRecords('spatie.be');
