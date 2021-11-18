@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.4.1 - 2021-11-18
+
+## What's Changed
+
+- Added support for long TXT records (see rfc4408, section 3.1.3) by @hostep in https://github.com/spatie/dns/pull/81
+
+## New Contributors
+
+- @hostep made their first contribution in https://github.com/spatie/dns/pull/81
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.4.0...2.4.1
+
 ## 2.4.0 - 2021-11-17
 
 ## What's Changed
