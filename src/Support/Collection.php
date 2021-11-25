@@ -55,7 +55,7 @@ class Collection implements Countable
         );
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->items);
     }

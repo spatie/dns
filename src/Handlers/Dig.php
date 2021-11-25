@@ -50,6 +50,8 @@ class Dig extends Handler
             '+noall',
             '+nomultiline',
             '+answer',
+            '+tries=2',
+            '+time=2',
             $this->prepareNameserver(),
             $domain,
             $type,
