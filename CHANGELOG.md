@@ -2,6 +2,11 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.4.2 - 2021-11-25
+
+- make compatible with PHP 8.1
+- add `time` and `tries` parameters
+
 ## 2.4.1 - 2021-11-18
 
 ## What's Changed
