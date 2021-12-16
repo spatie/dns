@@ -34,7 +34,7 @@ class Factory
 
         $class = "Spatie\\Dns\\Records\\{$type}";
 
-        if (! in_array($type, Types::TYPES) || ! class_exists($class)) {
+        if (! in_array($type, Types::getTypes()) || ! class_exists($class)) {
             throw UnsupportedRecordType::make($type);
         }
 
