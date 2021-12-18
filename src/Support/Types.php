@@ -4,7 +4,7 @@ namespace Spatie\Dns\Support;
 
 class Types
 {
-   public static function getTypes()
+    public static function getTypes()
     {
         $dnsTypes = [
             DNS_A => 'A',
