@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.4.3 - 2021-12-18
+
+## What's Changed
+
+- Fix Undefined constant DNS_CAA in windows platform by @ManojKiranA in https://github.com/spatie/dns/pull/84
+
+## New Contributors
+
+- @ManojKiranA made their first contribution in https://github.com/spatie/dns/pull/84
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.4.2...2.4.3
+
 ## 2.4.2 - 2021-11-25
 
 - make compatible with PHP 8.1
