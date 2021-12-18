@@ -107,7 +107,7 @@ class Dns
     {
         $flags = match (true) {
             is_string($type) && $type === '*' => DNS_ALL,
-            is_string($type) && in_array(mb_strtoupper($type), Types::TYPES) => $this->types->toFlags([$type]),
+            is_string($type) && in_array(mb_strtoupper($type), Types::getTypes()) => $this->types->toFlags([$type]),
             is_int($type) => $type,
             is_array($type) => $this->types->toFlags($type),
             default => throw InvalidArgument::invalidRecordType(),
