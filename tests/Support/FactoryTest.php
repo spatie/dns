@@ -35,11 +35,10 @@ class FactoryTest extends TestCase
 
     public function dnsRecords(): array
     {
-        return [
+        $recordTypes = [
             [AAAA::class, 'google.com.             900     IN      AAAA    2a00:1450:400e:800::200e'],
             [AAAA::class, 'google.com.  900 IN  AAAA    2a00:1450:400e:800::200e'],
             [A::class, 'spatie.be.              900     IN      A       138.197.187.74'],
-            [CAA::class, 'google.com.             86400   IN      CAA     0 issue "pki.goog"'],
             [CNAME::class, 'www.spatie.be.       300     IN      CNAME   spatie.be.'],
             [MX::class, 'spatie.be.              1665    IN      MX      10 ASPMX.L.GOOGLE.COM.'],
             [NS::class, 'spatie.be.              82516   IN      NS      ns1.openprovider.nl.'],
@@ -47,5 +46,9 @@ class FactoryTest extends TestCase
             [SRV::class, '_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.'],
             [TXT::class, 'spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"'],
         ];
+        if (defined('DNS_CAA')) {
+            $recordTypes[] = [CAA::class, 'google.com.             86400   IN      CAA     0 issue "pki.goog"'];
+        }
+        return $recordTypes;
     }
 }

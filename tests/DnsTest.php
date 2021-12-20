@@ -157,7 +157,7 @@ class DnsTest extends TestCase
             ->useHandlers([new CustomHandler()])
             ->getRecords('spatie.be');
 
-        $this->assertEquals([
+        $handlers = [
             'custom-handler-results-A',
             'custom-handler-results-AAAA',
             'custom-handler-results-CNAME',
@@ -166,8 +166,13 @@ class DnsTest extends TestCase
             'custom-handler-results-MX',
             'custom-handler-results-SRV',
             'custom-handler-results-TXT',
-            'custom-handler-results-CAA',
-        ], $result);
+        ];
+
+        if (defined('DNS_CAA')) {
+            $handlers[] = 'custom-handler-results-CAA';
+        }
+
+        $this->assertEquals($handlers, $result);
     }
 
     protected function assertSeeRecordTypes(array $records, array $types)

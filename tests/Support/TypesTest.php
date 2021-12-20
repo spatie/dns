@@ -21,7 +21,9 @@ class TypesTest extends TestCase
     {
         $this->assertSame([DNS_A => 'A'], $this->types->toNames(DNS_A));
         $this->assertSame([DNS_AAAA => 'AAAA'], $this->types->toNames(DNS_AAAA));
-        $this->assertSame([DNS_CAA => 'CAA'], $this->types->toNames(DNS_CAA));
+        if (defined('DNS_CAA')) {
+            $this->assertSame([DNS_CAA => 'CAA'], $this->types->toNames(DNS_CAA));
+        }
         $this->assertSame([DNS_CNAME => 'CNAME'], $this->types->toNames(DNS_CNAME));
         $this->assertSame([DNS_MX => 'MX'], $this->types->toNames(DNS_MX));
         $this->assertSame([DNS_NS => 'NS'], $this->types->toNames(DNS_NS));
@@ -42,7 +44,9 @@ class TypesTest extends TestCase
     {
         $this->assertSame(DNS_A, $this->types->toFlags(['A']));
         $this->assertSame(DNS_AAAA, $this->types->toFlags(['AAAA']));
-        $this->assertSame(DNS_CAA, $this->types->toFlags(['CAA']));
+        if (defined('DNS_CAA')) {
+            $this->assertSame(DNS_CAA, $this->types->toFlags(['CAA']));   
+        }
         $this->assertSame(DNS_CNAME, $this->types->toFlags(['CNAME']));
         $this->assertSame(DNS_MX, $this->types->toFlags(['MX']));
         $this->assertSame(DNS_NS, $this->types->toFlags(['NS']));
