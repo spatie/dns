@@ -49,6 +49,7 @@ class FactoryTest extends TestCase
         if (defined('DNS_CAA')) {
             $recordTypes[] = [CAA::class, 'google.com.             86400   IN      CAA     0 issue "pki.goog"'];
         }
+
         return $recordTypes;
     }
 }

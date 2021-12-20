@@ -45,7 +45,7 @@ class TypesTest extends TestCase
         $this->assertSame(DNS_A, $this->types->toFlags(['A']));
         $this->assertSame(DNS_AAAA, $this->types->toFlags(['AAAA']));
         if (defined('DNS_CAA')) {
-            $this->assertSame(DNS_CAA, $this->types->toFlags(['CAA']));   
+            $this->assertSame(DNS_CAA, $this->types->toFlags(['CAA']));
         }
         $this->assertSame(DNS_CNAME, $this->types->toFlags(['CNAME']));
         $this->assertSame(DNS_MX, $this->types->toFlags(['MX']));
