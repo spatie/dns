@@ -2,6 +2,19 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.4.4 - 2021-12-21
+
+## What's Changed
+
+- fix test in windows by @ManojKiranA in https://github.com/spatie/dns/pull/85
+- add support for Symfony 6 by @Nielsvanpach in https://github.com/spatie/dns/pull/86
+
+## New Contributors
+
+- @Nielsvanpach made their first contribution in https://github.com/spatie/dns/pull/86
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.4.3...2.4.4
+
 ## 2.4.3 - 2021-12-18
 
 ## What's Changed
