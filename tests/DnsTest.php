@@ -139,7 +139,10 @@ class DnsTest extends TestCase
         $this->assertNull($this->dns->getNameserver());
     }
 
-    /** @test */
+     /** 
+     * @requires OS Linux|Darwin
+     * @test 
+     */
     public function it_throws_exception_on_failed_to_fetch_dns_record()
     {
         $this->expectException(CouldNotFetchDns::class);
