@@ -140,7 +140,7 @@ class DnsTest extends TestCase
     }
 
      /** 
-     * @requires OS Linux|Darwin
+     * @requires OS Linux
      * @test 
      */
     public function it_throws_exception_on_failed_to_fetch_dns_record()
