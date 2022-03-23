@@ -18,4 +18,13 @@ class CouldNotFetchDns extends RuntimeException
 
         return new static("Dig command failed with message: `{$output}`");
     }
+
+    public static function dnsGetRecordReturnedWithError(string $error): self
+    {
+        if ($error === '') {
+            $error = 'dns_get_record function failed';
+        }
+
+        return new static($error);
+    }
 }

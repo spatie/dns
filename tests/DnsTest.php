@@ -7,12 +7,14 @@ use ReflectionClass;
 use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
+use Spatie\Dns\Handlers\DnsGetRecord;
 use Spatie\Dns\Records\A;
 use Spatie\Dns\Records\MX;
 use Spatie\Dns\Records\NS;
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Records\SOA;
 use Spatie\Dns\Support\Collection;
+use Spatie\Dns\Support\Factory;
 use Spatie\Dns\Test\TestClasses\CustomHandler;
 
 class DnsTest extends TestCase
@@ -148,6 +150,18 @@ class DnsTest extends TestCase
         $this->dns
             ->useNameserver('dns.spatie.be')
             ->getRecords('spatie.be', DNS_A);
+    }
+
+    /** @test */
+    public function it_throws_exception_on_failed_to_fetch_dns_record_with_dns_get_record_function()
+    {
+        $this->expectException(CouldNotFetchDns::class);
+        $this->expectExceptionMessage('dns_get_record(): A temporary server error occurred.');
+
+        $this->dns
+            ->useHandlers([new DnsGetRecord(new Factory())])
+            ->useNameserver('dns.spatie.be')
+            ->getRecords('non-existing-domain.whatever', DNS_NS);
     }
 
     /** @test */
