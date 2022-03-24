@@ -153,18 +153,6 @@ class DnsTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_exception_on_failed_to_fetch_dns_record_with_dns_get_record_function()
-    {
-        $this->expectException(CouldNotFetchDns::class);
-        $this->expectExceptionMessage('dns_get_record(): A temporary server error occurred.');
-
-        $this->dns
-            ->useHandlers([new DnsGetRecord(new Factory())])
-            ->useNameserver('dns.spatie.be')
-            ->getRecords('non-existing-domain.whatever', DNS_NS);
-    }
-
-    /** @test */
     public function it_can_use_custom_handlers()
     {
         $result = $this->dns

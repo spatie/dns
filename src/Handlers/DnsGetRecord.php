@@ -3,6 +3,7 @@
 namespace Spatie\Dns\Handlers;
 
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
+use Throwable;
 
 class DnsGetRecord extends Handler
 {
@@ -13,10 +14,10 @@ class DnsGetRecord extends Handler
 
         try {
             $records = dns_get_record($domain, $flag);
-        } catch (\Throwable $ex) {
-            $error = $ex->getMessage();
+        } catch (Throwable $exception) {
+            $error = $exception->getMessage();
         }
-
+dd($records);
         if ($records === false) {
             throw CouldNotFetchDns::dnsGetRecordReturnedWithError($error);
         }
