@@ -7,14 +7,12 @@ use ReflectionClass;
 use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
-use Spatie\Dns\Handlers\DnsGetRecord;
 use Spatie\Dns\Records\A;
 use Spatie\Dns\Records\MX;
 use Spatie\Dns\Records\NS;
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Records\SOA;
 use Spatie\Dns\Support\Collection;
-use Spatie\Dns\Support\Factory;
 use Spatie\Dns\Test\TestClasses\CustomHandler;
 
 class DnsTest extends TestCase

@@ -17,7 +17,7 @@ class DnsGetRecord extends Handler
         } catch (Throwable $exception) {
             $error = $exception->getMessage();
         }
-dd($records);
+        dd($records);
         if ($records === false) {
             throw CouldNotFetchDns::dnsGetRecordReturnedWithError($error);
         }
