@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.4.7 - 2022-04-06
+
+## What's Changed
+
+- Remove dd() by @jasonlfunk in https://github.com/spatie/dns/pull/91
+
+## New Contributors
+
+- @jasonlfunk made their first contribution in https://github.com/spatie/dns/pull/91
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.4.6...2.4.7
+
 ## 2.4.6 - 2022-04-06
 
 - improve error handling of dig
