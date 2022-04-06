@@ -145,7 +145,6 @@ class DnsTest extends TestCase
     public function it_throws_exception_on_failed_to_fetch_dns_record()
     {
         $this->expectException(CouldNotFetchDns::class);
-        $this->expectExceptionMessage("Dig command failed with message: `dig: couldn't get address for 'dns.spatie.be': not found`");
 
         $this->dns
             ->useNameserver('dns.spatie.be')

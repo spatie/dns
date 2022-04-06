@@ -10,6 +10,8 @@ class Dig extends Handler
 {
     public function __invoke(string $domain, int $flag, string $type): array
     {
+        $command = $this->buildCommand($domain, $type);
+
         $process = new Process($this->buildCommand($domain, $type));
 
         $process
@@ -17,7 +19,9 @@ class Dig extends Handler
             ->run();
 
         if (! $process->isSuccessful()) {
-            throw CouldNotFetchDns::digReturnedWithError($process);
+            $command = implode(' ', $command);
+
+            throw CouldNotFetchDns::digReturnedWithError($process, $command);
         }
 
         return $this->transform(

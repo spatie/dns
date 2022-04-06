@@ -12,11 +12,15 @@ class CouldNotFetchDns extends RuntimeException
         return new static('A runnable handler could not be found');
     }
 
-    public static function digReturnedWithError(Process $process): self
+    public static function digReturnedWithError(Process $process, string $command): self
     {
         $output = trim($process->getErrorOutput());
 
-        return new static("Dig command failed with message: `{$output}`");
+        if (empty($output)) {
+            $output = trim($process->getOutput());
+        }
+
+        return new static("Dig command `{$command}` failed with message: `{$output}`");
     }
 
     public static function dnsGetRecordReturnedWithError(string $error): self
