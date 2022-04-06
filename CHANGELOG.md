@@ -2,6 +2,12 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.4.6 - 2022-04-06
+
+- improve error handling of dig
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.4.5...2.4.6
+
 ## 2.4.4 - 2021-12-21
 
 ## What's Changed
