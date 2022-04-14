@@ -1,5 +1,5 @@
 {
-    "name": "everlytic/dns-record-retriever",
+    "name": "spatie/dns",
     "description": "Retrieve DNS records for use in domain verification",
     "keywords": [
         "spatie",
