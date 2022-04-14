@@ -1,5 +1,6 @@
 {
     "name": "everlytic/dns-record-retriever",
+    "type": "library",
     "description": "Retrieve DNS records for use in domain verification",
     "keywords": [
         "spatie",
