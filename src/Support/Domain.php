@@ -6,7 +6,7 @@ use Spatie\Dns\Exceptions\InvalidArgument;
 
 class Domain
 {
-    protected string $domain;
+    protected $domain;
 
     public function __construct(string $input)
     {

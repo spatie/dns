@@ -8,10 +8,12 @@ use Spatie\Dns\Support\Factory;
 
 abstract class Handler
 {
-    protected ?string $nameserver = null;
+    protected $nameserver = null;
+    protected $factory;
 
-    public function __construct(protected Factory $factory)
+    public function __construct(Factory $factory)
     {
+        $this->factory = $factory;
     }
 
     public function useNameserver(?string $nameserver): self
@@ -34,12 +36,12 @@ abstract class Handler
     protected function transform(string $type, array $records): array
     {
         return array_filter(array_map(
-            function (string | array $record) use ($type): ?Record {
+            function ($record) use ($type): ?Record {
                 try {
                     return is_string($record)
                         ? $this->factory->parse($type, $record)
                         : $this->factory->make($type, $record);
-                } catch (InvalidArgument) {
+                } catch (InvalidArgument $e) {
                     return null;
                 }
             },

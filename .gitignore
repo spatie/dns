@@ -1,3 +1,11 @@
+# IDE
+/.buildpath
+/.idea
+/.project
+/.settings
+/.sublime-*
+/nbproject
+
 build
 composer.lock
 docs

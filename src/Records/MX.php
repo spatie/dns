@@ -8,8 +8,8 @@ namespace Spatie\Dns\Records;
  */
 class MX extends Record
 {
-    protected int $pri;
-    protected string $target;
+    protected $pri;
+    protected $target;
 
     public static function parse(string $line): ?self
     {
@@ -51,7 +51,7 @@ class MX extends Record
             'ttl' => $this->ttl,
             'class' => $this->class,
             'type' => $this->type,
-            'pri' => $this->pri,
+            'pri' => (int) $this->pri,
             'target' => $this->target,
         ];
     }

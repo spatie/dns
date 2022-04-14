@@ -9,9 +9,9 @@ namespace Spatie\Dns\Records;
  */
 class CAA extends Record
 {
-    protected int $flags;
-    protected string $tag;
-    protected string $value;
+    protected $flags;
+    protected $tag;
+    protected $value;
 
     public static function parse(string $line): ?self
     {
@@ -54,7 +54,7 @@ class CAA extends Record
             'ttl' => $this->ttl,
             'class' => $this->class,
             'type' => $this->type,
-            'flags' => $this->flags,
+            'flags' => (int) $this->flags,
             'tag' => $this->tag,
             'value' => $this->value,
         ];

@@ -7,7 +7,7 @@ use Spatie\Dns\Support\Types;
 
 class TypesTest extends TestCase
 {
-    protected Types $types;
+    protected $types;
 
     protected function setUp(): void
     {

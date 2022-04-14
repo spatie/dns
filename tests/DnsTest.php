@@ -17,13 +17,11 @@ use Spatie\Dns\Test\TestClasses\CustomHandler;
 
 class DnsTest extends TestCase
 {
-    protected Dns $dns;
+    protected $dns;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        ray()->newScreen($this->getName());
 
         $this->dns = new Dns();
     }
@@ -179,7 +177,9 @@ class DnsTest extends TestCase
         foreach ($types as $type) {
             $foundRecords = array_filter(
                 $records,
-                fn (Record $record): bool => is_a($record, $type)
+                function (Record $record) use ($type) {
+                    return is_a($record, $type);
+                }
             );
 
             $this->assertNotEmpty($foundRecords);
@@ -191,7 +191,9 @@ class DnsTest extends TestCase
         foreach ($types as $type) {
             $foundRecords = array_filter(
                 $records->all(),
-                fn (Record $record): bool => is_a($record, $type)
+                function (Record $record) use ($type) {
+                    return is_a($record, $type);
+                }
             );
 
             $this->assertEmpty($foundRecords);
@@ -203,7 +205,9 @@ class DnsTest extends TestCase
         $expectedCount = count($records);
 
         $foundRecords = Collection::make($records)
-            ->filter(fn (Record $record) => $this->recordIsOfType($record, $types));
+            ->filter(function (Record $record) use ($types) {
+                return $this->recordIsOfType($record, $types);
+            });
 
         $this->assertCount($expectedCount, $foundRecords);
     }

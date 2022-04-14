@@ -12,7 +12,7 @@ class Dig extends Handler
     {
         $command = $this->buildCommand($domain, $type);
 
-        $process = new Process($this->buildCommand($domain, $type));
+        $process = new Process(implode(" ", $this->buildCommand($domain, $type)));
 
         $process
             ->enableOutput()
@@ -36,7 +36,7 @@ class Dig extends Handler
             return false;
         }
 
-        $process = new Process([$digPath, '-v', '2>&1']);
+        $process = new Process($digPath . ' -v 2>&1');
         $process->run();
 
         if (str_contains($process->getOutput(), 'not found')) {

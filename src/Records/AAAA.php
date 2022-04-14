@@ -7,7 +7,7 @@ namespace Spatie\Dns\Records;
  */
 class AAAA extends Record
 {
-    protected string $ipv6;
+    protected $ipv6;
 
     public static function parse(string $line): ?self
     {

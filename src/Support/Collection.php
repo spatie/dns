@@ -6,7 +6,7 @@ use Countable;
 
 class Collection implements Countable
 {
-    protected array $items;
+    protected $items;
 
     public static function make(array $items): self
     {
@@ -23,7 +23,7 @@ class Collection implements Countable
         return $this->items;
     }
 
-    public function first(callable $callable): mixed
+    public function first(callable $callable)
     {
         foreach ($this->items as $item) {
             if ($callable($item)) {

@@ -6,7 +6,6 @@ use ReflectionClass;
 use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Support\Domain;
 use Spatie\Macroable\Macroable;
-use Stringable;
 
 /**
  * @method string host()
@@ -14,16 +13,16 @@ use Stringable;
  * @method string class()
  * @method string type()
  */
-abstract class Record implements Stringable
+abstract class Record
 {
     use Macroable {
         __call as protected macroCall;
     }
 
-    protected string $host;
-    protected int $ttl;
-    protected string $class;
-    protected string $type;
+    protected $host;
+    protected $ttl;
+    protected $class;
+    protected $type;
 
     public function __construct(array $attributes)
     {

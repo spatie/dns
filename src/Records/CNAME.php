@@ -7,7 +7,7 @@ namespace Spatie\Dns\Records;
  */
 class CNAME extends Record
 {
-    protected string $target;
+    protected $target;
 
     public static function parse(string $line): ?self
     {

@@ -14,10 +14,10 @@ use Spatie\Dns\Support\Types;
 
 class Dns
 {
-    protected ?string $nameserver = null;
+    protected $nameserver = null;
 
     /** @var array<int, Handler> */
-    protected ?array $customHandlers = null;
+    protected $customHandlers = null;
 
     public static function query(?Types $types = null, ?Factory $factory = null): self
     {
@@ -25,11 +25,11 @@ class Dns
     }
 
     public function __construct(
-        protected ?Types $types = null,
-        protected ?Factory $factory = null
+        $types = null,
+        $factory = null
     ) {
-        $this->types ??= new Types();
-        $this->factory ??= new Factory();
+        $types !== null ? $this->types = $types : $this->types = new Types();
+        $factory !== null ? $this->factory = $factory : $this->factory = new Factory();
     }
 
     public function useNameserver(string $nameserver): self
@@ -45,8 +45,8 @@ class Dns
     }
 
     public function getRecords(
-        Domain | string $search,
-        int | string | array $types = DNS_ALL
+        $search,
+        $types = DNS_ALL
     ): array {
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
@@ -78,7 +78,9 @@ class Dns
     protected function getHandler(): Handler
     {
         $handler = Collection::make($this->customHandlers ?? $this->defaultHandlers())
-            ->first(fn (Handler $handler) => $handler->canHandle());
+            ->first(function (Handler $handler) {
+                return $handler->canHandle();
+            });
 
         if (! $handler) {
             throw CouldNotFetchDns::noHandlerFound();
@@ -103,15 +105,24 @@ class Dns
         return strval(new Domain($input));
     }
 
-    protected function resolveTypes(int | string | array $type): array
+    protected function resolveTypes($type): array
     {
-        $flags = match (true) {
-            is_string($type) && $type === '*' => DNS_ALL,
-            is_string($type) && in_array(mb_strtoupper($type), Types::getTypes()) => $this->types->toFlags([$type]),
-            is_int($type) => $type,
-            is_array($type) => $this->types->toFlags($type),
-            default => throw InvalidArgument::invalidRecordType(),
-        };
+        switch (true) {
+            case is_string($type) && $type === '*':
+                $flags = DNS_ALL;
+                break;
+            case is_string($type) && in_array(mb_strtoupper($type), Types::getTypes()):
+                $flags = $this->types->toFlags([$type]);
+                break;
+            case is_int($type):
+                $flags = $type;
+                break;
+            case is_array($type):
+                $flags = $this->types->toFlags($type);
+                break;
+            default:
+                throw InvalidArgument::invalidRecordType();
+        }
 
         return $this->types->toNames($flags);
     }

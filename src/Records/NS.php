@@ -7,7 +7,7 @@ namespace Spatie\Dns\Records;
  */
 class NS extends Record
 {
-    protected string $target;
+    protected $target;
 
     public static function parse(string $line): ?self
     {

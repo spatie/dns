@@ -10,10 +10,10 @@ namespace Spatie\Dns\Records;
  */
 class SRV extends Record
 {
-    protected int $pri;
-    protected int $weight;
-    protected string $target;
-    protected int $port;
+    protected $pri;
+    protected $weight;
+    protected $target;
+    protected $port;
 
     public static function parse(string $line): ?self
     {
@@ -67,7 +67,7 @@ class SRV extends Record
             'ttl' => $this->ttl,
             'class' => $this->class,
             'type' => $this->type,
-            'pri' => $this->pri,
+            'pri' => (int) $this->pri,
             'weight' => $this->weight,
             'port' => $this->port,
             'target' => $this->target,
