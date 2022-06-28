@@ -12,7 +12,7 @@ class Dig extends Handler
     {
         $command = $this->buildCommand($domain, $type);
 
-        $process = new Process($this->buildCommand($domain, $type));
+        $process = new Process($command);
 
         $process
             ->enableOutput()
