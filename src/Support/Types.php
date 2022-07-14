@@ -11,6 +11,7 @@ class Types
             DNS_AAAA => 'AAAA',
             DNS_CNAME => 'CNAME',
             DNS_NS => 'NS',
+            DNS_PTR => 'PTR',
             DNS_SOA => 'SOA',
             DNS_MX => 'MX',
             DNS_SRV => 'SRV',

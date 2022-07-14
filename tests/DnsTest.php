@@ -161,6 +161,7 @@ class DnsTest extends TestCase
             'custom-handler-results-AAAA',
             'custom-handler-results-CNAME',
             'custom-handler-results-NS',
+            'custom-handler-results-PTR',
             'custom-handler-results-SOA',
             'custom-handler-results-MX',
             'custom-handler-results-SRV',
