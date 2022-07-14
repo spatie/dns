@@ -2,6 +2,20 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.5.0 - 2022-07-14
+
+### What's Changed
+
+- Fix duplicated dig buildCommand by @0xb4lint in https://github.com/spatie/dns/pull/93
+- Add PTR to supported record types. by @lwohn in https://github.com/spatie/dns/pull/94
+
+### New Contributors
+
+- @0xb4lint made their first contribution in https://github.com/spatie/dns/pull/93
+- @lwohn made their first contribution in https://github.com/spatie/dns/pull/94
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.4.7...2.5.0
+
 ## 2.4.7 - 2022-04-06
 
 ## What's Changed
