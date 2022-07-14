@@ -27,6 +27,7 @@ class TypesTest extends TestCase
         $this->assertSame([DNS_CNAME => 'CNAME'], $this->types->toNames(DNS_CNAME));
         $this->assertSame([DNS_MX => 'MX'], $this->types->toNames(DNS_MX));
         $this->assertSame([DNS_NS => 'NS'], $this->types->toNames(DNS_NS));
+        $this->assertSame([DNS_PTR => 'PTR'], $this->types->toNames(DNS_PTR));
         $this->assertSame([DNS_SOA => 'SOA'], $this->types->toNames(DNS_SOA));
         $this->assertSame([DNS_SRV => 'SRV'], $this->types->toNames(DNS_SRV));
         $this->assertSame([DNS_TXT => 'TXT'], $this->types->toNames(DNS_TXT));
@@ -50,6 +51,7 @@ class TypesTest extends TestCase
         $this->assertSame(DNS_CNAME, $this->types->toFlags(['CNAME']));
         $this->assertSame(DNS_MX, $this->types->toFlags(['MX']));
         $this->assertSame(DNS_NS, $this->types->toFlags(['NS']));
+        $this->assertSame(DNS_PTR, $this->types->toFlags(['PTR']));
         $this->assertSame(DNS_SOA, $this->types->toFlags(['SOA']));
         $this->assertSame(DNS_SRV, $this->types->toFlags(['SRV']));
         $this->assertSame(DNS_TXT, $this->types->toFlags(['TXT']));
