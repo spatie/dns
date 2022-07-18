@@ -3,12 +3,11 @@
 namespace Spatie\Dns\Records;
 
 /**
- * @method string reversDnsName()
+ * @method string target()
  */
 class PTR extends Record
 {
-    protected string $reversDnsName;
-    protected string $name;
+    protected string $target;
 
     public static function parse(string $line): ?self
     {
@@ -19,32 +18,27 @@ class PTR extends Record
         }
 
         return static::make([
-            'reversDnsName' => $attributes[0],
+            'host' => $attributes[0],
             'ttl' => $attributes[1],
             'class' => $attributes[2],
             'type' => $attributes[3],
-            'name' => $attributes[4],
+            'target' => $attributes[4],
         ]);
     }
 
     public function __toString(): string
     {
-        return "{$this->reversDnsName}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->name}";
+        return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t{$this->target}";
     }
 
     public function toArray()
     {
         return [
-            'reversDnsName' => $this->reversDnsName,
+            'host' => $this->host,
             'ttl' => $this->ttl,
             'class' => $this->class,
             'type' => $this->type,
-            'name' => $this->name,
+            'target' => $this->target,
         ];
-    }
-
-    protected function castReversDnsName(string $value): string
-    {
-        return $this->prepareDomain($value);
     }
 }
