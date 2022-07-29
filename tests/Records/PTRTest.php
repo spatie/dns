@@ -7,67 +7,75 @@ use Spatie\Dns\Records\PTR;
 
 class PTRTest extends TestCase
 {
-    /** @test */
-    public function it_can_parse_string()
+    public function rDnsProvider()
     {
-        $record = PTR::parse('1.73.1.5.in-addr.arpa.              3600     IN      PTR       ae0.452.fra.as205948.creoline.net.');
+        return [
+            ['1.73.1.5.in-addr.arpa.', '1.73.1.5.in-addr.arpa'],
+            ['1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.0.0.0.c.f.6.7.0.a.2.ip6.arpa.', '1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.0.0.0.c.f.6.7.0.a.2.ip6.arpa'],
+        ];
+    }
 
-        $this->assertSame('1.73.1.5.in-addr.arpa', $record->reversDnsName());
+    /** @test @dataProvider rDnsProvider */
+    public function it_can_parse_string($rDNS, $trimmedRDNS)
+    {
+        $record = PTR::parse($rDNS . '              3600     IN      PTR       ae0.452.fra.as205948.creoline.net.');
+
+        $this->assertSame($trimmedRDNS, $record->host());
         $this->assertSame(3600, $record->ttl());
         $this->assertSame('IN', $record->class());
         $this->assertSame('PTR', $record->type());
-        $this->assertSame('ae0.452.fra.as205948.creoline.net.', $record->name());
+        $this->assertSame('ae0.452.fra.as205948.creoline.net.', $record->target());
     }
 
-    /** @test */
-    public function it_can_make_from_array()
+    /** @test @dataProvider rDnsProvider */
+    public function it_can_make_from_array($rDNS, $trimmedRDNS)
     {
         $record = PTR::make([
-            'reversDnsName' => '1.73.1.5.in-addr.arpa.',
+            'host' => $rDNS,
             'class' => 'IN',
             'ttl' => 3600,
             'type' => 'PTR',
-            'name' => 'ae0.452.fra.as205948.creoline.net.',
+            'target' => 'ae0.452.fra.as205948.creoline.net.',
         ]);
 
-        $this->assertSame('1.73.1.5.in-addr.arpa', $record->reversDnsName());
+        $this->assertSame($trimmedRDNS, $record->host());
         $this->assertSame(3600, $record->ttl());
         $this->assertSame('IN', $record->class());
         $this->assertSame('PTR', $record->type());
-        $this->assertSame('ae0.452.fra.as205948.creoline.net.', $record->name());
+        $this->assertSame('ae0.452.fra.as205948.creoline.net.', $record->target());
     }
 
-    /** @test */
-    public function it_can_transform_to_string()
+    /** @test @dataProvider rDnsProvider */
+    public function it_can_transform_to_string($rDNS)
     {
-        $record = PTR::parse('1.73.1.5.in-addr.arpa.              3600     IN      PTR       ae0.452.fra.as205948.creoline.net.');
+        $record = PTR::parse($rDNS. '              3600     IN      PTR       ae0.452.fra.as205948.creoline.net.');
 
-        $this->assertSame("1.73.1.5.in-addr.arpa.\t\t3600\tIN\tPTR\tae0.452.fra.as205948.creoline.net.", strval($record));
+        $this->assertSame($rDNS . "\t\t3600\tIN\tPTR\tae0.452.fra.as205948.creoline.net.", strval($record));
     }
 
-    /** @test */
-    public function it_can_be_converted_to_an_array()
+    /** @test @dataProvider rDnsProvider */
+    public function it_can_be_converted_to_an_array($rDNS, $trimmedRDNS)
     {
         $record = PTR::make([
-            'reversDnsName' => '1.73.1.5.in-addr.arpa.',
+            'host' => $rDNS,
             'class' => 'IN',
             'ttl' => 3600,
             'type' => 'PTR',
-            'name' => 'ae0.452.fra.as205948.creoline.net.',
+            'target' => 'ae0.452.fra.as205948.creoline.net.',
         ]);
 
         $data = $record->toArray();
-        $this->assertSame('1.73.1.5.in-addr.arpa', $data['reversDnsName']);
+        $this->assertSame($trimmedRDNS, $data['host']);
         $this->assertSame(3600, $data['ttl']);
         $this->assertSame('IN', $data['class']);
         $this->assertSame('PTR', $data['type']);
-        $this->assertSame('ae0.452.fra.as205948.creoline.net.', $data['name']);
+        $this->assertSame('ae0.452.fra.as205948.creoline.net.', $data['target']);
     }
 
-    /** @test */
-    public function it_return_null_for_to_few_attributes()
+    /** @test @dataProvider rDnsProvider */
+    public function it_return_null_for_to_few_attributes($rDNS)
     {
-        $record = PTR::parse('1.73.1.5.in-addr.arpa.              3600     IN      PTR');
+        $record = PTR::parse($rDNS . '              3600     IN      PTR');
 
         $this->assertNull($record);
     }

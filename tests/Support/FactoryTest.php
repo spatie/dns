@@ -44,6 +44,7 @@ class FactoryTest extends TestCase
             [MX::class, 'spatie.be.              1665    IN      MX      10 ASPMX.L.GOOGLE.COM.'],
             [NS::class, 'spatie.be.              82516   IN      NS      ns1.openprovider.nl.'],
             [PTR::class, '1.73.1.5.in-addr.arpa.              3600     IN      PTR       ae0.452.fra.as205948.creoline.net.'],
+            [PTR::class, '1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.0.0.0.0.c.f.6.7.0.a.2.ip6.arpa              3600     IN      PTR       ae0.452.fra.as205948.creoline.net.'],
             [SOA::class, 'spatie.be.              82393   IN      SOA     ns1.openprovider.nl. dns.openprovider.eu. 2020100801 10800 3600 604800 3600'],
             [SRV::class, '_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.'],
             [TXT::class, 'spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"'],

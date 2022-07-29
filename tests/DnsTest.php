@@ -10,6 +10,7 @@ use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Records\A;
 use Spatie\Dns\Records\MX;
 use Spatie\Dns\Records\NS;
+use Spatie\Dns\Records\PTR;
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Records\SOA;
 use Spatie\Dns\Support\Collection;
@@ -115,6 +116,26 @@ class DnsTest extends TestCase
         $records = $this->dns->getRecords('www.opendor.me', DNS_A);
 
         $this->assertOnlySeeRecordTypes($records, [A::class]);
+    }
+
+    /** @test */
+    public function it_can_fetch_ptr_record()
+    {
+        $records = $this->dns->getRecords('1.73.1.5.in-addr.arpa', DNS_PTR);
+        $record = array_pop($records);
+
+        $ptrRecord = PTR::make([
+            'host' => '1.73.1.5.in-addr.arpa.',
+            'class' => 'IN',
+            'ttl' => 3600,
+            'type' => 'PTR',
+            'target' => 'ae0.452.fra.as205948.creoline.net.',
+        ]);
+
+        $this->assertSame(
+            [$record->host(), $record->class(), $record->type(), $record->target()],
+            [$ptrRecord->host(), $ptrRecord->class(), $ptrRecord->type(), $ptrRecord->target()]
+        );
     }
 
     /** @test */
