@@ -2,6 +2,14 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.5.1 - 2022-07-29
+
+### What's Changed
+
+- Fix PTR property naming. by @lwohn in https://github.com/spatie/dns/pull/96
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.5.0...2.5.1
+
 ## 2.5.0 - 2022-07-14
 
 ### What's Changed
