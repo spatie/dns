@@ -52,6 +52,8 @@ class Dig extends Handler
             'dig',
             '+nocmd',
             '+noall',
+            '+authority',
+            '+answer',
             '+nomultiline',
             '+answer',
             '+tries=2',
