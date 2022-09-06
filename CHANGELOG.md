@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.5.2 - 2022-09-06
+
+### What's Changed
+
+- allow to query NS on root or tld nameservers by @scuben in https://github.com/spatie/dns/pull/98
+
+### New Contributors
+
+- @scuben made their first contribution in https://github.com/spatie/dns/pull/98
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.5.1...2.5.2
+
 ## 2.5.1 - 2022-07-29
 
 ### What's Changed
