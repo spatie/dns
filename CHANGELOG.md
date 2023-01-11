@@ -2,6 +2,20 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.5.3 - 2023-01-11
+
+### What's Changed
+
+- Add PHP 8.2 Support by @patinthehat in https://github.com/spatie/dns/pull/99
+- Make dig also work on Linux/MacOS by @dominikkukacka in https://github.com/spatie/dns/pull/100
+
+### New Contributors
+
+- @patinthehat made their first contribution in https://github.com/spatie/dns/pull/99
+- @dominikkukacka made their first contribution in https://github.com/spatie/dns/pull/100
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.5.2...2.5.3
+
 ## 2.5.2 - 2022-09-06
 
 ### What's Changed
