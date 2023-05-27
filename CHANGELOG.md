@@ -2,6 +2,14 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.5.4 - 2023-05-27
+
+### What's Changed
+
+- Improve security by @freekmurze in https://github.com/spatie/dns/pull/103
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.5.3...2.5.4
+
 ## 2.5.3 - 2023-01-11
 
 ### What's Changed
