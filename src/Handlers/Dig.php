@@ -59,7 +59,9 @@ class Dig extends Handler
             '+tries=2',
             '+time=2',
             $this->prepareNameserver(),
+            '-q',
             $domain,
+            '-t',
             $type,
         ]);
     }
