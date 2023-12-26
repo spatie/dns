@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.5.5 - 2023-12-26
+
+### What's Changed
+
+* Allow Symfony 7.x by @thecaliskan in https://github.com/spatie/dns/pull/104
+
+### New Contributors
+
+* @thecaliskan made their first contribution in https://github.com/spatie/dns/pull/104
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.5.4...2.5.5
+
 ## 2.5.4 - 2023-05-27
 
 ### What's Changed
