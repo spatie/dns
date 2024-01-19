@@ -2,6 +2,20 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.5.6 - 2024-01-19
+
+### What's Changed
+
+* Fix README.md by @lyrixx in https://github.com/spatie/dns/pull/107
+* fix(dig): tell dig to not convert idn to locale string by @joelwurtz in https://github.com/spatie/dns/pull/106
+
+### New Contributors
+
+* @lyrixx made their first contribution in https://github.com/spatie/dns/pull/107
+* @joelwurtz made their first contribution in https://github.com/spatie/dns/pull/106
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.5.5...2.5.6
+
 ## 2.5.5 - 2023-12-26
 
 ### What's Changed
