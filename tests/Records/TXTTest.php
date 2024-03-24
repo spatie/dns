@@ -79,6 +79,7 @@ class TXTTest extends TestCase
 
         $this->assertNull($record);
     }
+
     /** @test */
     public function it_can_parse_a_string_with_double_space()
     {
@@ -90,6 +91,7 @@ class TXTTest extends TestCase
         $this->assertSame('TXT', $record->type());
         $this->assertSame('test 2  7', $record->txt());
     }
+
     /** @test */
     public function it_can_parse_a_string_with_a_double_quote()
     {
