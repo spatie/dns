@@ -79,4 +79,26 @@ class TXTTest extends TestCase
 
         $this->assertNull($record);
     }
+    /** @test */
+    public function it_can_parse_a_string_with_double_space()
+    {
+        $record = TXT::parse('spatie.be.              594     IN      TXT     "test 2  7"');
+
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(594, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('TXT', $record->type());
+        $this->assertSame('test 2  7', $record->txt());
+    }
+    /** @test */
+    public function it_can_parse_a_string_with_a_double_quote()
+    {
+        $record = TXT::parse('spatie.be.              594     IN      TXT     "test \""');
+
+        $this->assertSame('spatie.be', $record->host());
+        $this->assertSame(594, $record->ttl());
+        $this->assertSame('IN', $record->class());
+        $this->assertSame('TXT', $record->type());
+        $this->assertSame('test \\"', $record->txt());
+    }
 }

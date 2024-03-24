@@ -78,11 +78,18 @@ abstract class Record implements Stringable
 
     protected static function lineToArray(string $line, ?int $limit = null): array
     {
-        return explode(
-            ' ',
-            preg_replace('/\s+/', ' ', $line),
-            $limit
-        );
+        // Match non-space characters, escaped quotes within quotes, or characters within quotes
+        preg_match_all('/(?:\\\\["]|[^"\\s]+|"[^"\\\\]*(?:\\\\.[^"\\\\]*)*")+/u', $line, $matches);
+        $parts = $matches[0];
+
+        // If a limit is defined, handle it manually because preg_match_all doesn't support limit
+        if ($limit !== null && count($parts) > $limit) {
+            $lastPart = implode(' ', array_slice($parts, $limit - 1));
+            $parts = array_slice($parts, 0, $limit - 1);
+            $parts[] = $lastPart;
+        }
+
+        return $parts;
     }
 
     protected function cast(string $attribute, $value)
@@ -108,7 +115,11 @@ abstract class Record implements Stringable
 
     protected function prepareText(string $value): string
     {
-        return str_replace('" "', '', trim($value, '"'));
+        if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
+            $value = substr($value, 1, -1);
+        }
+
+        return str_replace('" "', '', $value);
     }
 
     protected function castHost(string $value): string

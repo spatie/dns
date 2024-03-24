@@ -129,7 +129,7 @@ class DnsTest extends TestCase
             'class' => 'IN',
             'ttl' => 3600,
             'type' => 'PTR',
-            'target' => 'ae0.452.fra.as205948.creoline.net.',
+            'target' => 'ae0.452.fra1.de.creoline.net.',
         ]);
 
         $this->assertSame(
