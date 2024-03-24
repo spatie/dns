@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.6.0 - 2024-03-24
+
+### What's Changed
+
+* Fix: TXT parsing by @SRWieZ in https://github.com/spatie/dns/pull/109
+
+### New Contributors
+
+* @SRWieZ made their first contribution in https://github.com/spatie/dns/pull/109
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.5.6...2.6.0
+
 ## 2.5.6 - 2024-01-19
 
 ### What's Changed
