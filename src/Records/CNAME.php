@@ -9,6 +9,11 @@ class CNAME extends Record
 {
     protected string $target;
 
+    public function label(): string
+    {
+        return $this->target;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 5);
@@ -44,6 +49,7 @@ class CNAME extends Record
             'class' => $this->class,
             'type' => $this->type,
             'target' => $this->target,
+            'label' => $this->label(),
         ];
     }
 }

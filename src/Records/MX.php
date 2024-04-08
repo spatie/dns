@@ -11,6 +11,11 @@ class MX extends Record
     protected int $pri;
     protected string $target;
 
+    public function label(): string
+    {
+        return $this->target;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 6);
@@ -53,6 +58,7 @@ class MX extends Record
             'type' => $this->type,
             'pri' => $this->pri,
             'target' => $this->target,
+            'label' => $this->label(),
         ];
     }
 }

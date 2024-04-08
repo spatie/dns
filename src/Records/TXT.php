@@ -9,6 +9,11 @@ class TXT extends Record
 {
     protected string $txt;
 
+    public function label(): string
+    {
+        return $this->txt;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 5);
@@ -44,6 +49,7 @@ class TXT extends Record
             'class' => $this->class,
             'type' => $this->type,
             'txt' => $this->txt,
+            'label' => $this->label(),
         ];
     }
 }

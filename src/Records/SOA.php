@@ -21,6 +21,11 @@ class SOA extends Record
     protected int $expire;
     protected int $minimum_ttl;
 
+    public function label(): string
+    {
+        return $this->mname;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 11);
@@ -98,6 +103,7 @@ class SOA extends Record
             'retry' => $this->retry,
             'expire' => $this->expire,
             'minimum_ttl' => $this->minimum_ttl,
+            'label' => $this->label(),
         ];
     }
 }

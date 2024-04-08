@@ -40,6 +40,20 @@ class MXTest extends TestCase
         $this->assertSame('aspmx.l.google.com', $record->target());
     }
 
+    public function it_can_return_label()
+    {
+        $record = MX::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 1665,
+            'type' => 'MX',
+            'pri' => 10,
+            'target' => 'ASPMX.L.GOOGLE.COM',
+        ]);
+
+        $this->assertSame($record->target(), $record->label());
+    }
+
     /** @test */
     public function it_can_transform_to_string()
     {
@@ -67,6 +81,7 @@ class MXTest extends TestCase
         $this->assertSame('MX', $data['type']);
         $this->assertSame(10, $data['pri']);
         $this->assertSame('aspmx.l.google.com', $data['target']);
+        $this->assertSame('aspmx.l.google.com', $data['label']);
     }
 
     /** @test */

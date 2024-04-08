@@ -37,6 +37,19 @@ class CNAMETest extends TestCase
         $this->assertSame('spatie.be', $record->target());
     }
 
+    public function it_can_return_label()
+    {
+        $record = CNAME::make([
+            'host' => 'www.spatie.be',
+            'class' => 'IN',
+            'ttl' => 300,
+            'type' => 'CNAME',
+            'target' => 'spatie.be',
+        ]);
+
+        $this->assertSame($record->target(), $record->label());
+    }
+
     /** @test */
     public function it_can_transform_to_string()
     {
@@ -62,6 +75,7 @@ class CNAMETest extends TestCase
         $this->assertSame('IN', $data['class']);
         $this->assertSame('CNAME', $data['type']);
         $this->assertSame('spatie.be', $data['target']);
+        $this->assertSame('spatie.be', $data['label']);
     }
 
     /** @test */

@@ -37,6 +37,19 @@ class ATest extends TestCase
         $this->assertSame('138.197.187.74', $record->ip());
     }
 
+    public function it_can_return_label()
+    {
+        $record = A::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 900,
+            'type' => 'A',
+            'ip' => '138.197.187.74',
+        ]);
+
+        $this->assertSame($record->ip(), $record->label());
+    }
+
     /** @test */
     public function it_can_transform_to_string()
     {
@@ -62,6 +75,7 @@ class ATest extends TestCase
         $this->assertSame('IN', $data['class']);
         $this->assertSame('A', $data['type']);
         $this->assertSame('138.197.187.74', $data['ip']);
+        $this->assertSame('138.197.187.74', $data['label']);
     }
 
     /** @test */

@@ -25,6 +25,15 @@ $records = $dns->getRecords('spatie.be')
 $hostNameOfFirstRecord = $records[0]->host();
 ```
 
+You can use `label()` to retrieve a representative label for a record .
+
+```php
+$records = $dns->getRecords('spatie.be')
+
+$hostNameOfFirstRecord = $records[0]->label(); 
+// if this is an A record it returns the ip if its a MX record the target
+```
+
 ## Support us
 
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/dns.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/dns)

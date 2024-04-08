@@ -9,6 +9,11 @@ class A extends Record
 {
     protected string $ip;
 
+    public function label(): string
+    {
+        return $this->ip;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 5);
@@ -39,6 +44,7 @@ class A extends Record
             'class' => $this->class,
             'type' => $this->type,
             'ip' => $this->ip,
+            'label' => $this->label(),
         ];
     }
 }

@@ -44,6 +44,11 @@ abstract class Record implements Stringable
     }
 
     /**
+     * @return string representative string for this record
+     */
+    abstract public function label(): string;
+
+    /**
      * @param array $record
      *
      * @return static

@@ -45,6 +45,13 @@ class PTRTest extends TestCase
         $this->assertSame('ae0.452.fra.as205948.creoline.net.', $record->target());
     }
 
+    public function it_can_return_label($rDNS)
+    {
+        $record = PTR::parse($rDNS . '              3600     IN      PTR       ae0.452.fra.as205948.creoline.net.');
+
+        $this->assertSame($record->target(), $record->label());
+    }
+
     /** @test @dataProvider rDnsProvider */
     public function it_can_transform_to_string($rDNS)
     {
@@ -70,6 +77,7 @@ class PTRTest extends TestCase
         $this->assertSame('IN', $data['class']);
         $this->assertSame('PTR', $data['type']);
         $this->assertSame('ae0.452.fra.as205948.creoline.net.', $data['target']);
+        $this->assertSame('ae0.452.fra.as205948.creoline.net.', $data['label']);
     }
 
     /** @test @dataProvider rDnsProvider */

@@ -15,6 +15,11 @@ class SRV extends Record
     protected string $target;
     protected int $port;
 
+    public function label(): string
+    {
+        return $this->target;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 8);
@@ -71,6 +76,7 @@ class SRV extends Record
             'weight' => $this->weight,
             'port' => $this->port,
             'target' => $this->target,
+            'label' => $this->label(),
         ];
     }
 }

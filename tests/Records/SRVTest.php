@@ -47,6 +47,14 @@ class SRVTest extends TestCase
     }
 
     /** @test */
+    public function it_can_return_label()
+    {
+        $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.');
+
+        $this->assertSame($record->target(), $record->label());
+    }
+
+    /** @test */
     public function it_can_transform_to_string()
     {
         $record = SRV::parse('_http._tcp.mxtoolbox.com. 3600  IN      SRV     10 100 80 mxtoolbox.com.');
@@ -77,6 +85,7 @@ class SRVTest extends TestCase
         $this->assertSame(100, $data['weight']);
         $this->assertSame(80, $data['port']);
         $this->assertSame('mxtoolbox.com', $data['target']);
+        $this->assertSame('mxtoolbox.com', $data['label']);
     }
 
     /** @test */

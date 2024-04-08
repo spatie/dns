@@ -56,6 +56,14 @@ class SOATest extends TestCase
     }
 
     /** @test */
+    public function it_can_return_label()
+    {
+        $record = SOA::parse('spatie.be.              82393   IN      SOA     ns1.openprovider.nl. dns.openprovider.eu. 2020100801 10800 3600 604800 3600');
+
+        $this->assertSame($record->mname(), $record->label());
+    }
+
+    /** @test */
     public function it_can_transform_to_string()
     {
         $record = SOA::parse('spatie.be.              82393   IN      SOA     ns1.openprovider.nl. dns.openprovider.eu. 2020100801 10800 3600 604800 3600');
@@ -86,6 +94,7 @@ class SOATest extends TestCase
         $this->assertSame('IN', $data['class']);
         $this->assertSame('SOA', $data['type']);
         $this->assertSame('ns1.openprovider.nl', $data['mname']);
+        $this->assertSame('ns1.openprovider.nl', $data['label']);
         $this->assertSame('dns.openprovider.eu', $data['rname']);
         $this->assertSame(2020100801, $data['serial']);
         $this->assertSame(10800, $data['refresh']);

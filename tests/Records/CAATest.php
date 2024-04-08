@@ -44,6 +44,22 @@ class CAATest extends TestCase
     }
 
     /** @test */
+    public function it_can_return_label()
+    {
+        $record = CAA::make([
+            'host' => 'google.com',
+            'class' => 'IN',
+            'ttl' => 86400,
+            'type' => 'CAA',
+            'flags' => 0,
+            'tag' => 'issue',
+            'value' => 'pki.goog',
+        ]);
+
+        $this->assertSame($record->value(), $record->label());
+    }
+
+    /** @test */
     public function it_can_transform_to_string()
     {
         $record = CAA::parse('google.com.             86400   IN      CAA     0 issue "pki.goog"');
@@ -72,6 +88,7 @@ class CAATest extends TestCase
         $this->assertSame(0, $data['flags']);
         $this->assertSame('issue', $data['tag']);
         $this->assertSame('pki.goog', $data['value']);
+        $this->assertSame('pki.goog', $data['label']);
     }
 
     /** @test */

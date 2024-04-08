@@ -9,6 +9,11 @@ class AAAA extends Record
 {
     protected string $ipv6;
 
+    public function label(): string
+    {
+        return $this->ipv6;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 5);
@@ -39,6 +44,7 @@ class AAAA extends Record
             'class' => $this->class,
             'type' => $this->type,
             'ipv6' => $this->ipv6,
+            'label' => $this->label(),
         ];
     }
 }

@@ -37,6 +37,19 @@ class NSTest extends TestCase
         $this->assertSame('ns1.openprovider.nl', $record->target());
     }
 
+    public function it_can_return_label()
+    {
+        $record = NS::make([
+            'host' => 'spatie.be',
+            'class' => 'IN',
+            'ttl' => 82516,
+            'type' => 'NS',
+            'target' => 'ns1.openprovider.nl',
+        ]);
+
+        $this->assertSame($record->target(), $record->label());
+    }
+
     /** @test */
     public function it_can_transform_to_string()
     {
@@ -62,6 +75,7 @@ class NSTest extends TestCase
         $this->assertSame('IN', $data['class']);
         $this->assertSame('NS', $data['type']);
         $this->assertSame('ns1.openprovider.nl', $data['target']);
+        $this->assertSame('ns1.openprovider.nl', $data['label']);
     }
 
     /** @test */

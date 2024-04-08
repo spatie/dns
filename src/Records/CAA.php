@@ -13,6 +13,11 @@ class CAA extends Record
     protected string $tag;
     protected string $value;
 
+    public function label(): string
+    {
+        return $this->value;
+    }
+
     public static function parse(string $line): ?self
     {
         $attributes = static::lineToArray($line, 7);
@@ -57,6 +62,7 @@ class CAA extends Record
             'flags' => $this->flags,
             'tag' => $this->tag,
             'value' => $this->value,
+            'label' => $this->label(),
         ];
     }
 }
