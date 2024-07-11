@@ -42,7 +42,7 @@ class DMARC1 extends V {
             }
         }
         else {
-            return "";
+            return array();
         }
         return $emails;
     }
@@ -57,7 +57,7 @@ class DMARC1 extends V {
             }
         }
         else {
-            return "";
+            return array();
         }
         return $emails;
     }
