@@ -2,18 +2,22 @@
 
 namespace Spatie\Dns\Records;
 
+use Spatie\Dns\TXTRecords;
+
 /**
  * @method string txt()
+ * @method object v()
  */
 class TXT extends Record
 {
     protected string $txt;
+    protected object $v;
 
     public static function parse(string $line): ?self
     {
-        $attributes = static::lineToArray($line, 5);
+        $attributes = static::lineToArray($line, 6);
 
-        if (count($attributes) < 5) {
+        if (count($attributes) < 6) {
             return null;
         }
 
@@ -23,17 +27,25 @@ class TXT extends Record
             'class' => $attributes[2],
             'type' => $attributes[3],
             'txt' => $attributes[4],
+            'v' => $attributes[5]
         ]);
     }
 
     public function __toString(): string
     {
-        return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t\"{$this->txt}\"";
+        return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t\"{$this->txt}\t\"{$this->v}\"";
     }
 
-    protected function castTxt(string $value): string
+    protected function castTxt(string $value): array
     {
-        return $this->prepareText($value);
+        return array('txt' => $this->prepareText($value), 'v' => $this->castV($value));
+    }
+
+    protected function castV(string $value): object
+    {
+        preg_match('/v=([a-zA-Z0-9]+);?\W(.*)/', $value, $matches);
+        $v = "Spatie\\Dns\\TXTRecords\\".mb_strtoupper($matches[1]);
+        return new $v($matches[2]);
     }
 
     public function toArray()
@@ -44,6 +56,7 @@ class TXT extends Record
             'class' => $this->class,
             'type' => $this->type,
             'txt' => $this->txt,
+            'v' => $this->v
         ];
     }
 }

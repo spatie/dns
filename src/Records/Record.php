@@ -38,7 +38,14 @@ abstract class Record implements Stringable
             $key = str_replace('-', '_', $key);
 
             if (property_exists($this, $key)) {
-                $this->$key = $this->cast($key, $value);
+                $return = $this->cast($key, $value);
+                if(is_array($return)){
+                    foreach($return as $key => $subvalue){
+                        $this->$key = $subvalue;
+                    }
+                } else {
+                    $this->$key = $return;
+                }
             }
         }
     }
@@ -98,7 +105,7 @@ abstract class Record implements Stringable
 
         if (method_exists($this, $method)) {
             return $this->$method($value);
-        }
+        }   
 
         return $value;
     }
