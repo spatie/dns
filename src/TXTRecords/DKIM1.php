@@ -21,7 +21,7 @@ class DKIM1 extends V {
         if(count($matches) < 2){
             return "";
         }
-        return str_replace(";", "",$matches[1]);
+        return str_replace(";", "",$this->prepareText($matches[1]));
     }
     
     function castP(string $value): string
@@ -30,6 +30,6 @@ class DKIM1 extends V {
         if(count($matches) < 2){
             return "";
         }
-        return str_replace(";", "",$matches[1]);
+        return str_replace(";", "",$this->prepareText($matches[1]));
     }
 }

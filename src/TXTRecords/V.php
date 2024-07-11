@@ -2,9 +2,14 @@
 
 namespace Spatie\Dns\TXTRecords;
 
-class V {
+abstract class V {
     public string $type;
     public string $version;
+
+    protected function prepareInt($value): int
+    {
+        return intval($value);
+    }
 
     protected function prepareText(string $value): string
     {
@@ -27,4 +32,5 @@ class V {
 
         return $value;
     }
+    
 }

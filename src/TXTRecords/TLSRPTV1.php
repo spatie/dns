@@ -18,6 +18,9 @@ class TLSRPTV1 extends V {
         preg_match("/rua=([^;]*)(?:;|$)/i", $value, $matches);
         if (isset($matches[1])) {
             $emails = preg_split("/\s*,/", $matches[1]);
+            foreach ($emails as $key => $email) {
+                $emails[$key] = $this->prepareText($email);
+            }
         }
         else {
             return "";

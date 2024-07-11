@@ -29,7 +29,7 @@ class DMARC1 extends V {
         if(count($matches) < 2){
             return "";
         }
-        return str_replace(";", "",$matches[1]);
+        return str_replace(";", "",$this->prepareText($matches[1]));
     }
     
     function castRua(string $value): array
@@ -37,6 +37,9 @@ class DMARC1 extends V {
         preg_match("/rua=([^;]*)(?:;|$)/i", $value, $matches);
         if (isset($matches[1])) {
             $emails = preg_split("/\s*,/", $matches[1]);
+            foreach ($emails as $key => $email) {
+                $emails[$key] = $this->prepareText($email);
+            }
         }
         else {
             return "";
@@ -49,6 +52,9 @@ class DMARC1 extends V {
         preg_match("/ruf=([^;]*)(?:;|$)/i", $value, $matches);
         if (isset($matches[1])) {
             $emails = preg_split("/\s*,/", $matches[1]);
+            foreach ($emails as $key => $email) {
+                $emails[$key] = $this->prepareText($email);
+            }
         }
         else {
             return "";
@@ -62,16 +68,16 @@ class DMARC1 extends V {
         if(count($matches) < 2){
             return "";
         }
-        return str_replace(";", "",$matches[1]);
+        return str_replace(";", "",$this->prepareText($matches[1]));
     }
 
     function castPct(string $value): int
     {
         preg_match('/pct=([0-9]{1-3}+)/', $value, $matches);
         if(count($matches) < 2){
-            return "";
+            return 100;
         }
-        return str_replace(";", "",$matches[1]);
+        return str_replace(";", "",$this->prepareInt($matches[1]));
     }
 
     function castFo(string $value): string
@@ -80,6 +86,6 @@ class DMARC1 extends V {
         if(count($matches) < 2){
             return "";
         }
-        return str_replace(";", "",$matches[1]);
+        return str_replace(";", "",$this->prepareText($matches[1]));
     }
 }
