@@ -105,7 +105,7 @@ abstract class Record implements Stringable
 
         if (method_exists($this, $method)) {
             return $this->$method($value);
-        }   
+        }
 
         return $value;
     }
