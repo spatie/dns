@@ -8,6 +8,7 @@ class DMARC1 extends V {
     public array $rua;
     public array $ruf;
     public string $sp;
+    public int $pct;
     public string $fo;
 
     function __construct(string $value)
@@ -18,6 +19,7 @@ class DMARC1 extends V {
         $this->rua = $this->cast('rua',$value);
         $this->ruf = $this->cast('ruf',$value);
         $this->sp = $this->cast('sp',$value);
+        $this->pct = $this->cast('pct',$value);
         $this->fo = $this->cast('fo',$value);
     }
 
@@ -57,6 +59,15 @@ class DMARC1 extends V {
     function castSp(string $value): string
     {
         preg_match('/sp=(none|quarantine|reject)/', $value, $matches);
+        if(count($matches) < 2){
+            return "";
+        }
+        return str_replace(";", "",$matches[1]);
+    }
+
+    function castPct(string $value): int
+    {
+        preg_match('/pct=([0-9]{1-3}+)/', $value, $matches);
         if(count($matches) < 2){
             return "";
         }
