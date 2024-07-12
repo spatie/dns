@@ -4,8 +4,8 @@ namespace Spatie\Dns\TXTRecords;
 
 class DKIM1 extends V {
     
-    public string $k;
-    public string $p;
+    protected string $k;
+    protected string $p;
 
     function __construct(string $value)
     {

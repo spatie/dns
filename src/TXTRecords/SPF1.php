@@ -4,7 +4,7 @@ namespace Spatie\Dns\TXTRecords;
 
 class SPF1 extends V {
     
-    public array $value;
+    protected array $value;
 
     function __construct(string $value)
     {

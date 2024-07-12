@@ -4,7 +4,7 @@ namespace Spatie\Dns\TXTRecords;
 
 class TLSRPTV1 extends V {
     
-    public array $rua;
+    protected array $rua;
 
     function __construct(string $value)
     {

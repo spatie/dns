@@ -4,8 +4,8 @@ namespace Spatie\Dns\TXTRecords;
 
 class BIMI1 extends V {
     
-    public string $l;
-    public string $a;
+    protected string $l;
+    protected string $a;
 
     function __construct(string $value)
     {

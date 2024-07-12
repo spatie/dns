@@ -148,4 +148,11 @@ abstract class Record implements Stringable
     {
         return mb_strtoupper($value);
     }
+
+    protected function castV(string $value): object
+    {
+        preg_match('/v=([a-zA-Z0-9]+);?\W(.*)/', $value, $matches);
+        $v = "Spatie\\Dns\\TXTRecords\\".mb_strtoupper($matches[1]);
+        return new $v($matches[2]);
+    }
 }

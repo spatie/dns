@@ -4,12 +4,12 @@ namespace Spatie\Dns\TXTRecords;
 
 class DMARC1 extends V {
     
-    public string $p;
-    public array $rua;
-    public array $ruf;
-    public string $sp;
-    public int $pct;
-    public string $fo;
+    protected string $p;
+    protected array $rua;
+    protected array $ruf;
+    protected string $sp;
+    protected int $pct;
+    protected string $fo;
 
     function __construct(string $value)
     {

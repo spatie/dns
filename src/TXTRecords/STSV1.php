@@ -4,7 +4,7 @@ namespace Spatie\Dns\TXTRecords;
 
 class STSV1 extends V {
     
-    public int $id;
+    protected int $id;
 
     function __construct(string $value)
     {
