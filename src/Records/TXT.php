@@ -15,9 +15,9 @@ class TXT extends Record
 
     public static function parse(string $line): ?self
     {
-        $attributes = static::lineToArray($line, 6);
+        $attributes = static::lineToArray($line, 5);
 
-        if (count($attributes) < 6) {
+        if (count($attributes) < 5) {
             return null;
         }
 
@@ -27,7 +27,6 @@ class TXT extends Record
             'class' => $attributes[2],
             'type' => $attributes[3],
             'txt' => $attributes[4],
-            'v' => $attributes[5]
         ]);
     }
 
@@ -36,9 +35,14 @@ class TXT extends Record
         return "{$this->host}.\t\t{$this->ttl}\t{$this->class}\t{$this->type}\t\"{$this->txt}\"";
     }
 
-    protected function castTxt(string $value): array
+    protected function castTxt(string $value): array|string
     {
-        return array('txt' => $this->prepareText($value), 'v' => $this->castV($value));
+        $txt = $this->prepareText($value);
+        $v = $this->castV($value);
+        if(!is_null($v)){
+            return array('txt' => $txt, 'v' => $v);
+        }
+        return $txt;
     }
 
     protected function castV(string $value): ?object
