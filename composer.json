@@ -1,13 +1,20 @@
 {
-    "name": "spatie/dns",
+    "name": "antedebaas/dns",
     "description": "Retrieve DNS records",
     "keywords": [
         "spatie",
+        "php",
         "dns"
     ],
-    "homepage": "https://github.com/spatie/dns",
+    "homepage": "https://github.com/antedebaas/dns",
     "license": "MIT",
     "authors": [
+        {
+            "name": "Ante de Baas",
+            "email": "antedebaas@users.github.com",
+            "homepage": "https://github.com/antedebaas/dns",
+            "role": "Developer"
+        },
         {
             "name": "Harish Toshniwal",
             "email": "harish@spatie.be",
