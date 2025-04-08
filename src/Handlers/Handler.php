@@ -9,6 +9,8 @@ use Spatie\Dns\Support\Factory;
 abstract class Handler
 {
     protected ?string $nameserver = null;
+    protected ?int $timeout = null;
+    protected ?int $retries = null;
 
     public function __construct(protected Factory $factory)
     {
@@ -17,6 +19,20 @@ abstract class Handler
     public function useNameserver(?string $nameserver): self
     {
         $this->nameserver = $nameserver;
+
+        return $this;
+    }
+
+    public function setTimeout(?int $timeout): self
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    public function setRetries(?int $retries): self
+    {
+        $this->retries = $retries;
 
         return $this;
     }

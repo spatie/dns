@@ -161,6 +161,34 @@ class DnsTest extends TestCase
     }
 
     /** @test */
+    public function it_uses_provided_timeout_if_set()
+    {
+        $this->dns->setTimeout(5);
+
+        $this->assertEquals(5, $this->dns->getTimeout());
+    }
+
+    /** @test */
+    public function it_uses_default_timout_if_not_set()
+    {
+        $this->assertEquals(2, $this->dns->getTimeout());
+    }
+
+    /** @test */
+    public function it_uses_provided_retries_if_set()
+    {
+        $this->dns->setRetries(5);
+
+        $this->assertEquals(5, $this->dns->getRetries());
+    }
+
+    /** @test */
+    public function it_uses_default_retries_if_not_set()
+    {
+        $this->assertEquals(2, $this->dns->getRetries());
+    }
+
+    /** @test */
     public function it_throws_exception_on_failed_to_fetch_dns_record()
     {
         $this->expectException(CouldNotFetchDns::class);

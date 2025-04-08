@@ -15,6 +15,8 @@ use Spatie\Dns\Support\Types;
 class Dns
 {
     protected ?string $nameserver = null;
+    protected ?int $timeout = 2;
+    protected ?int $retries = 2;
 
     /** @var array<int, Handler> */
     protected ?array $customHandlers = null;
@@ -44,6 +46,30 @@ class Dns
         return $this->nameserver;
     }
 
+    public function setTimeout(int $timeout): self
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    public function getTimeout(): ?int
+    {
+        return $this->timeout;
+    }
+
+    public function setRetries(int $retries): self
+    {
+        $this->retries = $retries;
+
+        return $this;
+    }
+
+    public function getRetries(): ?int
+    {
+        return $this->retries;
+    }
+
     public function getRecords(
         Domain | string $search,
         int | string | array $types = DNS_ALL
@@ -51,7 +77,10 @@ class Dns
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
-        $handler = $this->getHandler()->useNameserver($this->nameserver);
+        $handler = $this->getHandler()
+            ->useNameserver($this->nameserver)
+            ->setTimeout($this->timeout)
+            ->setRetries($this->retries);
 
         $records = [];
 
