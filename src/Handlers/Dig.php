@@ -8,6 +8,9 @@ use Symfony\Component\Process\Process;
 
 class Dig extends Handler
 {
+    protected ?int $timeout = 2;
+    protected ?int $retries = 2;
+
     public function __invoke(string $domain, int $flag, string $type): array
     {
         $command = $this->buildCommand($domain, $type);
