@@ -8,6 +8,9 @@ use Symfony\Component\Process\Process;
 
 class Dig extends Handler
 {
+    protected ?int $timeout = 2;
+    protected ?int $retries = 2;
+
     public function __invoke(string $domain, int $flag, string $type): array
     {
         $command = $this->buildCommand($domain, $type);
@@ -57,8 +60,8 @@ class Dig extends Handler
             '+answer',
             '+nomultiline',
             '+answer',
-            '+tries=2',
-            '+time=2',
+            $this->prepareRetries(),
+            $this->prepareTimeout(),
             $this->prepareNameserver(),
             '-q',
             $domain,
@@ -74,6 +77,16 @@ class Dig extends Handler
         }
 
         return "@{$this->nameserver}";
+    }
+
+    protected function prepareRetries(): ?string
+    {
+        return "+tries={$this->retries}";
+    }
+
+    protected function prepareTimeout(): ?string
+    {
+        return "+time={$this->timeout}";
     }
 
     protected function parseOutput(string $output): array

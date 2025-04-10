@@ -97,6 +97,20 @@ use Spatie\Dns\Dns;
     ->getRecords('spatie.be');
 ```
 
+## Specify retries and timeouts for Dig
+
+Dig can be configured to retry a DNS query after a certain timeout. Use `setRetries()` or `setTimeout()` to configure
+those settings. The timeout is specified in seconds.
+
+```php
+use Spatie\Dns\Dns;
+
+(new Dns)
+    ->setRetries(4) // try 4 times
+    ->setTimeout(5) // wait 5 seconds for a reply from the nameserver
+    ->getRecords('spatie.be');
+```
+
 ## Guessing a record
 
 When you have a string that contains a dns record, you can convert it to a `Record`
