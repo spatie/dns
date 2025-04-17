@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.7.0 - 2025-04-17
+
+### What's Changed
+
+* Let users set a custom timeout or number of retries for the Dig handler by @Kovah in https://github.com/spatie/dns/pull/115
+
+### New Contributors
+
+* @Kovah made their first contribution in https://github.com/spatie/dns/pull/115
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.6.0...2.7.0
+
 ## 2.6.0 - 2024-03-24
 
 ### What's Changed
