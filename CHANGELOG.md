@@ -2,6 +2,19 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.7.1 - 2025-11-26
+
+### What's Changed
+
+* Update issue template by @AlexVanderbist in https://github.com/spatie/dns/pull/116
+* Added Symfony 8 support to all symfony/* packages. by @thecaliskan in https://github.com/spatie/dns/pull/119
+
+### New Contributors
+
+* @AlexVanderbist made their first contribution in https://github.com/spatie/dns/pull/116
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.7.0...2.7.1
+
 ## 2.7.0 - 2025-04-17
 
 ### What's Changed
