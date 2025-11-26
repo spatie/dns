@@ -1,9 +1,5 @@
 <?php
 
-namespace Spatie\Dns\Test;
-
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Spatie\Dns\Dns;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Exceptions\InvalidArgument;
@@ -16,256 +12,200 @@ use Spatie\Dns\Records\SOA;
 use Spatie\Dns\Support\Collection;
 use Spatie\Dns\Test\TestClasses\CustomHandler;
 
-class DnsTest extends TestCase
+beforeEach(function () {
+    ray()->newScreen($this->name());
+
+    $this->dns = new Dns();
+});
+
+it('throws an exception if an empty string is passed', function () {
+    $this->dns->getRecords('');
+})->throws(InvalidArgument::class);
+
+it('fetches all records by default', function () {
+    $records = $this->dns->getRecords('spatie.be');
+
+    assertSeeRecordTypes($records, [A::class, NS::class, SOA::class, MX::class]);
+});
+
+it('has a static constructor', function () {
+    $records = DNS::query()->getRecords('spatie.be');
+
+    assertSeeRecordTypes($records, [A::class, NS::class, SOA::class, MX::class]);
+});
+
+it('fetches all records with asterisk', function () {
+    $records = $this->dns->getRecords('spatie.be', '*');
+
+    assertSeeRecordTypes($records, [A::class, NS::class, SOA::class, MX::class]);
+});
+
+it('fetches records for a single type via flag', function () {
+    $records = $this->dns->getRecords('spatie.be', DNS_NS);
+
+    assertOnlySeeRecordTypes($records, [NS::class]);
+});
+
+it('fetches records for a single type via name', function () {
+    $records = $this->dns->getRecords('spatie.be', 'NS');
+
+    assertOnlySeeRecordTypes($records, [NS::class]);
+});
+
+it('fetches records for multiple types via flags', function () {
+    $records = $this->dns->getRecords('spatie.be', DNS_NS | DNS_SOA);
+
+    assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
+});
+
+it('fetches records for multiple types via names', function () {
+    $records = $this->dns->getRecords('spatie.be', ['NS', 'SOA']);
+
+    assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
+});
+
+it('fetches records via name and ignores casing', function () {
+    $records = $this->dns->getRecords('spatie.be', 'ns');
+
+    assertOnlySeeRecordTypes($records, [NS::class]);
+});
+
+it('fetches records for given type and ignores record chain', function () {
+    $records = $this->dns->getRecords('www.opendor.me', DNS_A);
+
+    assertOnlySeeRecordTypes($records, [A::class]);
+});
+
+it('can fetch ptr record', function () {
+    $records = $this->dns->getRecords('1.73.1.5.in-addr.arpa', DNS_PTR);
+    $record = array_pop($records);
+
+    $ptrRecord = PTR::make([
+        'host' => '1.73.1.5.in-addr.arpa.',
+        'class' => 'IN',
+        'ttl' => 3600,
+        'type' => 'PTR',
+        'target' => 'ae0.452.fra1.de.creoline.net.',
+    ]);
+
+    expect([
+        $record->host(),
+        $record->class(),
+        $record->type(),
+        $record->target(),
+    ])->toBe([
+        $ptrRecord->host(),
+        $ptrRecord->class(),
+        $ptrRecord->type(),
+        $ptrRecord->target(),
+    ]);
+});
+
+it('throws an exception if an invalid record type is passed', function () {
+    $this->dns->getRecords('spatie.be', 'xyz');
+})->throws(InvalidArgument::class);
+
+it('uses provided nameserver if set', function () {
+    $this->dns->useNameserver('ns1.openminds.be');
+
+    expect($this->dns->getNameserver())->toBe('ns1.openminds.be');
+});
+
+it('uses default nameserver if not set', function () {
+    expect($this->dns->getNameserver())->toBeNull();
+});
+
+it('uses provided timeout if set', function () {
+    $this->dns->setTimeout(5);
+
+    expect($this->dns->getTimeout())->toBe(5);
+});
+
+it('uses default timeout if not set', function () {
+    expect($this->dns->getTimeout())->toBe(2);
+});
+
+it('uses provided retries if set', function () {
+    $this->dns->setRetries(5);
+
+    expect($this->dns->getRetries())->toBe(5);
+});
+
+it('uses default retries if not set', function () {
+    expect($this->dns->getRetries())->toBe(2);
+});
+
+it('throws exception on failed to fetch dns record', function () {
+    $this->dns
+        ->useNameserver('dns.spatie.be')
+        ->getRecords('spatie.be', DNS_A);
+})->throws(CouldNotFetchDns::class);
+
+it('can use custom handlers', function () {
+    $result = $this->dns
+        ->useHandlers([new CustomHandler()])
+        ->getRecords('spatie.be');
+
+    $handlers = [
+        'custom-handler-results-A',
+        'custom-handler-results-AAAA',
+        'custom-handler-results-CNAME',
+        'custom-handler-results-NS',
+        'custom-handler-results-PTR',
+        'custom-handler-results-SOA',
+        'custom-handler-results-MX',
+        'custom-handler-results-SRV',
+        'custom-handler-results-TXT',
+    ];
+
+    if (defined('DNS_CAA')) {
+        $handlers[] = 'custom-handler-results-CAA';
+    }
+
+    expect($result)->toBe($handlers);
+});
+
+function assertSeeRecordTypes(array $records, array $types): void
 {
-    protected Dns $dns;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        ray()->newScreen($this->getName());
-
-        $this->dns = new Dns();
-    }
-
-    /** @test */
-    public function it_throws_an_exception_if_an_empty_string_is_passed()
-    {
-        $this->expectException(InvalidArgument::class);
-
-        $this->dns->getRecords('');
-    }
-
-    /** @test */
-    public function it_fetches_all_records_by_default()
-    {
-        $records = $this->dns->getRecords('spatie.be');
-
-        $this->assertSeeRecordTypes(
+    foreach ($types as $type) {
+        $foundRecords = array_filter(
             $records,
-            [A::class, NS::class, SOA::class, MX::class]
+            fn (Record $record): bool => is_a($record, $type)
         );
+
+        expect($foundRecords)->not->toBeEmpty();
     }
+}
 
-    /** @test */
-    public function it_has_a_static_constructor()
-    {
-        $records = DNS::query()->getRecords('spatie.be');
-
-        $this->assertSeeRecordTypes(
-            $records,
-            [A::class, NS::class, SOA::class, MX::class]
+function assertDontSeeRecordTypes(Collection $records, array $types): void
+{
+    foreach ($types as $type) {
+        $foundRecords = array_filter(
+            $records->all(),
+            fn (Record $record): bool => is_a($record, $type)
         );
+
+        expect($foundRecords)->toBeEmpty();
     }
+}
 
-    /** @test */
-    public function it_fetches_all_records_with_asterisk()
-    {
-        $records = $this->dns->getRecords('spatie.be', '*');
+function assertOnlySeeRecordTypes(array $records, array $types): void
+{
+    $expectedCount = count($records);
 
-        $this->assertSeeRecordTypes(
-            $records,
-            [A::class, NS::class, SOA::class, MX::class]
-        );
-    }
+    $foundRecords = Collection::make($records)
+        ->filter(fn (Record $record) => recordIsOfType($record, $types));
 
-    /** @test */
-    public function it_fetches_records_for_a_single_type_via_flag()
-    {
-        $records = $this->dns->getRecords('spatie.be', DNS_NS);
+    expect($foundRecords)->toHaveCount($expectedCount);
+}
 
-        $this->assertOnlySeeRecordTypes($records, [NS::class]);
-    }
-
-    /** @test */
-    public function it_fetches_records_for_a_single_type_via_name()
-    {
-        $records = $this->dns->getRecords('spatie.be', 'NS');
-
-        $this->assertOnlySeeRecordTypes($records, [NS::class]);
-    }
-
-    /** @test */
-    public function it_fetches_records_for_multiple_types_via_flags()
-    {
-        $records = $this->dns->getRecords('spatie.be', DNS_NS | DNS_SOA);
-
-        $this->assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
-    }
-
-    /** @test */
-    public function it_fetches_records_for_multiple_types_via_names()
-    {
-        $records = $this->dns->getRecords('spatie.be', ['NS', 'SOA']);
-
-        $this->assertOnlySeeRecordTypes($records, [NS::class, SOA::class]);
-    }
-
-    /** @test */
-    public function it_fetches_records_via_name_and_ignores_casing()
-    {
-        $records = $this->dns->getRecords('spatie.be', 'ns');
-
-        $this->assertOnlySeeRecordTypes($records, [NS::class]);
-    }
-
-    /** @test */
-    public function it_fetches_records_for_given_type_and_ignores_record_chain()
-    {
-        $records = $this->dns->getRecords('www.opendor.me', DNS_A);
-
-        $this->assertOnlySeeRecordTypes($records, [A::class]);
-    }
-
-    /** @test */
-    public function it_can_fetch_ptr_record()
-    {
-        $records = $this->dns->getRecords('1.73.1.5.in-addr.arpa', DNS_PTR);
-        $record = array_pop($records);
-
-        $ptrRecord = PTR::make([
-            'host' => '1.73.1.5.in-addr.arpa.',
-            'class' => 'IN',
-            'ttl' => 3600,
-            'type' => 'PTR',
-            'target' => 'ae0.452.fra1.de.creoline.net.',
-        ]);
-
-        $this->assertSame(
-            [$record->host(), $record->class(), $record->type(), $record->target()],
-            [$ptrRecord->host(), $ptrRecord->class(), $ptrRecord->type(), $ptrRecord->target()]
-        );
-    }
-
-    /** @test */
-    public function it_throws_an_exception_if_an_invalid_record_type_is_passed()
-    {
-        $this->expectException(InvalidArgument::class);
-
-        $this->dns->getRecords('spatie.be', 'xyz');
-    }
-
-    /** @test */
-    public function it_uses_provided_nameserver_if_set()
-    {
-        $this->dns->useNameserver('ns1.openminds.be');
-
-        $this->assertEquals('ns1.openminds.be', $this->dns->getNameserver());
-    }
-
-    /** @test */
-    public function it_uses_default_nameserver_if_not_set()
-    {
-        $this->assertNull($this->dns->getNameserver());
-    }
-
-    /** @test */
-    public function it_uses_provided_timeout_if_set()
-    {
-        $this->dns->setTimeout(5);
-
-        $this->assertEquals(5, $this->dns->getTimeout());
-    }
-
-    /** @test */
-    public function it_uses_default_timout_if_not_set()
-    {
-        $this->assertEquals(2, $this->dns->getTimeout());
-    }
-
-    /** @test */
-    public function it_uses_provided_retries_if_set()
-    {
-        $this->dns->setRetries(5);
-
-        $this->assertEquals(5, $this->dns->getRetries());
-    }
-
-    /** @test */
-    public function it_uses_default_retries_if_not_set()
-    {
-        $this->assertEquals(2, $this->dns->getRetries());
-    }
-
-    /** @test */
-    public function it_throws_exception_on_failed_to_fetch_dns_record()
-    {
-        $this->expectException(CouldNotFetchDns::class);
-
-        $this->dns
-            ->useNameserver('dns.spatie.be')
-            ->getRecords('spatie.be', DNS_A);
-    }
-
-    /** @test */
-    public function it_can_use_custom_handlers()
-    {
-        $result = $this->dns
-            ->useHandlers([new CustomHandler()])
-            ->getRecords('spatie.be');
-
-        $handlers = [
-            'custom-handler-results-A',
-            'custom-handler-results-AAAA',
-            'custom-handler-results-CNAME',
-            'custom-handler-results-NS',
-            'custom-handler-results-PTR',
-            'custom-handler-results-SOA',
-            'custom-handler-results-MX',
-            'custom-handler-results-SRV',
-            'custom-handler-results-TXT',
-        ];
-
-        if (defined('DNS_CAA')) {
-            $handlers[] = 'custom-handler-results-CAA';
-        }
-
-        $this->assertEquals($handlers, $result);
-    }
-
-    protected function assertSeeRecordTypes(array $records, array $types)
-    {
-        foreach ($types as $type) {
-            $foundRecords = array_filter(
-                $records,
-                fn (Record $record): bool => is_a($record, $type)
-            );
-
-            $this->assertNotEmpty($foundRecords);
+function recordIsOfType(Record $record, array $types): bool
+{
+    foreach ($types as $type) {
+        if (is_a($record, $type) && $record->type() === (new ReflectionClass($type))->getShortName()) {
+            return true;
         }
     }
 
-    protected function assertDontSeeRecordTypes(Collection $records, array $types)
-    {
-        foreach ($types as $type) {
-            $foundRecords = array_filter(
-                $records->all(),
-                fn (Record $record): bool => is_a($record, $type)
-            );
-
-            $this->assertEmpty($foundRecords);
-        }
-    }
-
-    protected function assertOnlySeeRecordTypes(array $records, array $types)
-    {
-        $expectedCount = count($records);
-
-        $foundRecords = Collection::make($records)
-            ->filter(fn (Record $record) => $this->recordIsOfType($record, $types));
-
-        $this->assertCount($expectedCount, $foundRecords);
-    }
-
-    protected function recordIsOfType(Record $record, array $types): bool
-    {
-        foreach ($types as $type) {
-            if (is_a($record, $type) && $record->type() === (new ReflectionClass($type))->getShortName()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    return false;
 }

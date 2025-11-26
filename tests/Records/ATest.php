@@ -1,74 +1,58 @@
 <?php
 
-namespace Spatie\Dns\Test\Records;
-
-use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Records\A;
 
-class ATest extends TestCase
-{
-    /** @test */
-    public function it_can_parse_string()
-    {
-        $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
+it('can parse string', function () {
+    $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(900, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('A', $record->type());
-        $this->assertSame('138.197.187.74', $record->ip());
-    }
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(900);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('A');
+    expect($record->ip())->toBe('138.197.187.74');
+});
 
-    /** @test */
-    public function it_can_make_from_array()
-    {
-        $record = A::make([
-            'host' => 'spatie.be',
-            'class' => 'IN',
-            'ttl' => 900,
-            'type' => 'A',
-            'ip' => '138.197.187.74',
-        ]);
+it('can make from array', function () {
+    $record = A::make([
+        'host' => 'spatie.be',
+        'class' => 'IN',
+        'ttl' => 900,
+        'type' => 'A',
+        'ip' => '138.197.187.74',
+    ]);
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(900, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('A', $record->type());
-        $this->assertSame('138.197.187.74', $record->ip());
-    }
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(900);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('A');
+    expect($record->ip())->toBe('138.197.187.74');
+});
 
-    /** @test */
-    public function it_can_transform_to_string()
-    {
-        $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
+it('can transform to string', function () {
+    $record = A::parse('spatie.be.              900     IN      A       138.197.187.74');
 
-        $this->assertSame("spatie.be.\t\t900\tIN\tA\t138.197.187.74", strval($record));
-    }
+    expect(strval($record))->toBe("spatie.be.\t\t900\tIN\tA\t138.197.187.74");
+});
 
-    /** @test */
-    public function it_can_be_converted_to_an_array()
-    {
-        $record = A::make([
-            'host' => 'spatie.be',
-            'class' => 'IN',
-            'ttl' => 900,
-            'type' => 'A',
-            'ip' => '138.197.187.74',
-        ]);
+it('can be converted to an array', function () {
+    $record = A::make([
+        'host' => 'spatie.be',
+        'class' => 'IN',
+        'ttl' => 900,
+        'type' => 'A',
+        'ip' => '138.197.187.74',
+    ]);
 
-        $data = $record->toArray();
-        $this->assertSame('spatie.be', $data['host']);
-        $this->assertSame(900, $data['ttl']);
-        $this->assertSame('IN', $data['class']);
-        $this->assertSame('A', $data['type']);
-        $this->assertSame('138.197.187.74', $data['ip']);
-    }
+    $data = $record->toArray();
+    expect($data['host'])->toBe('spatie.be');
+    expect($data['ttl'])->toBe(900);
+    expect($data['class'])->toBe('IN');
+    expect($data['type'])->toBe('A');
+    expect($data['ip'])->toBe('138.197.187.74');
+});
 
-    /** @test */
-    public function it_return_null_for_to_few_attributes()
-    {
-        $record = A::parse('spatie.be.              900     IN      A');
+it('returns null for too few attributes', function () {
+    $record = A::parse('spatie.be.              900     IN      A');
 
-        $this->assertNull($record);
-    }
-}
+    expect($record)->toBeNull();
+});

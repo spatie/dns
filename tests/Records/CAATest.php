@@ -1,84 +1,68 @@
 <?php
 
-namespace Spatie\Dns\Test\Records;
-
-use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Records\CAA;
 
-class CAATest extends TestCase
-{
-    /** @test */
-    public function it_can_parse_string()
-    {
-        $record = CAA::parse('google.com.             86400   IN      CAA     0 issue "pki.goog"');
+it('can parse string', function () {
+    $record = CAA::parse('google.com.             86400   IN      CAA     0 issue "pki.goog"');
 
-        $this->assertSame('google.com', $record->host());
-        $this->assertSame(86400, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('CAA', $record->type());
-        $this->assertSame(0, $record->flags());
-        $this->assertSame('issue', $record->tag());
-        $this->assertSame('pki.goog', $record->value());
-    }
+    expect($record->host())->toBe('google.com');
+    expect($record->ttl())->toBe(86400);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('CAA');
+    expect($record->flags())->toBe(0);
+    expect($record->tag())->toBe('issue');
+    expect($record->value())->toBe('pki.goog');
+});
 
-    /** @test */
-    public function it_can_make_from_array()
-    {
-        $record = CAA::make([
-            'host' => 'google.com',
-            'class' => 'IN',
-            'ttl' => 86400,
-            'type' => 'CAA',
-            'flags' => 0,
-            'tag' => 'issue',
-            'value' => 'pki.goog',
-        ]);
+it('can make from array', function () {
+    $record = CAA::make([
+        'host' => 'google.com',
+        'class' => 'IN',
+        'ttl' => 86400,
+        'type' => 'CAA',
+        'flags' => 0,
+        'tag' => 'issue',
+        'value' => 'pki.goog',
+    ]);
 
-        $this->assertSame('google.com', $record->host());
-        $this->assertSame(86400, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('CAA', $record->type());
-        $this->assertSame(0, $record->flags());
-        $this->assertSame('issue', $record->tag());
-        $this->assertSame('pki.goog', $record->value());
-    }
+    expect($record->host())->toBe('google.com');
+    expect($record->ttl())->toBe(86400);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('CAA');
+    expect($record->flags())->toBe(0);
+    expect($record->tag())->toBe('issue');
+    expect($record->value())->toBe('pki.goog');
+});
 
-    /** @test */
-    public function it_can_transform_to_string()
-    {
-        $record = CAA::parse('google.com.             86400   IN      CAA     0 issue "pki.goog"');
+it('can transform to string', function () {
+    $record = CAA::parse('google.com.             86400   IN      CAA     0 issue "pki.goog"');
 
-        $this->assertSame("google.com.\t\t86400\tIN\tCAA\t0\tissue\t\"pki.goog\"", strval($record));
-    }
+    expect(strval($record))->toBe("google.com.\t\t86400\tIN\tCAA\t0\tissue\t\"pki.goog\"");
+});
 
-    /** @test */
-    public function it_can_be_converted_to_an_array()
-    {
-        $record = CAA::make([
-            'host' => 'google.com',
-            'class' => 'IN',
-            'ttl' => 86400,
-            'type' => 'CAA',
-            'flags' => 0,
-            'tag' => 'issue',
-            'value' => 'pki.goog',
-        ]);
+it('can be converted to an array', function () {
+    $record = CAA::make([
+        'host' => 'google.com',
+        'class' => 'IN',
+        'ttl' => 86400,
+        'type' => 'CAA',
+        'flags' => 0,
+        'tag' => 'issue',
+        'value' => 'pki.goog',
+    ]);
 
-        $data = $record->toArray();
-        $this->assertSame('google.com', $data['host']);
-        $this->assertSame(86400, $data['ttl']);
-        $this->assertSame('IN', $data['class']);
-        $this->assertSame('CAA', $data['type']);
-        $this->assertSame(0, $data['flags']);
-        $this->assertSame('issue', $data['tag']);
-        $this->assertSame('pki.goog', $data['value']);
-    }
+    $data = $record->toArray();
+    expect($data['host'])->toBe('google.com');
+    expect($data['ttl'])->toBe(86400);
+    expect($data['class'])->toBe('IN');
+    expect($data['type'])->toBe('CAA');
+    expect($data['flags'])->toBe(0);
+    expect($data['tag'])->toBe('issue');
+    expect($data['value'])->toBe('pki.goog');
+});
 
-    /** @test */
-    public function it_return_null_for_to_few_attributes()
-    {
-        $record = CAA::parse('google.com.             86400   IN      CAA     0 issue');
+it('returns null for too few attributes', function () {
+    $record = CAA::parse('google.com.             86400   IN      CAA     0 issue');
 
-        $this->assertNull($record);
-    }
-}
+    expect($record)->toBeNull();
+});

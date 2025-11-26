@@ -1,74 +1,58 @@
 <?php
 
-namespace Spatie\Dns\Test\Records;
-
-use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Records\NS;
 
-class NSTest extends TestCase
-{
-    /** @test */
-    public function it_can_parse_string()
-    {
-        $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
+it('can parse string', function () {
+    $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(82516, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('NS', $record->type());
-        $this->assertSame('ns1.openprovider.nl', $record->target());
-    }
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(82516);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('NS');
+    expect($record->target())->toBe('ns1.openprovider.nl');
+});
 
-    /** @test */
-    public function it_can_make_from_array()
-    {
-        $record = NS::make([
-            'host' => 'spatie.be',
-            'class' => 'IN',
-            'ttl' => 82516,
-            'type' => 'NS',
-            'target' => 'ns1.openprovider.nl',
-        ]);
+it('can make from array', function () {
+    $record = NS::make([
+        'host' => 'spatie.be',
+        'class' => 'IN',
+        'ttl' => 82516,
+        'type' => 'NS',
+        'target' => 'ns1.openprovider.nl',
+    ]);
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(82516, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('NS', $record->type());
-        $this->assertSame('ns1.openprovider.nl', $record->target());
-    }
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(82516);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('NS');
+    expect($record->target())->toBe('ns1.openprovider.nl');
+});
 
-    /** @test */
-    public function it_can_transform_to_string()
-    {
-        $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
+it('can transform to string', function () {
+    $record = NS::parse('spatie.be.              82516   IN      NS      ns1.openprovider.nl.');
 
-        $this->assertSame("spatie.be.\t\t82516\tIN\tNS\tns1.openprovider.nl.", strval($record));
-    }
+    expect(strval($record))->toBe("spatie.be.\t\t82516\tIN\tNS\tns1.openprovider.nl.");
+});
 
-    /** @test */
-    public function it_can_be_converted_to_an_array()
-    {
-        $record = NS::make([
-            'host' => 'spatie.be',
-            'class' => 'IN',
-            'ttl' => 82516,
-            'type' => 'NS',
-            'target' => 'ns1.openprovider.nl',
-        ]);
+it('can be converted to an array', function () {
+    $record = NS::make([
+        'host' => 'spatie.be',
+        'class' => 'IN',
+        'ttl' => 82516,
+        'type' => 'NS',
+        'target' => 'ns1.openprovider.nl',
+    ]);
 
-        $data = $record->toArray();
-        $this->assertSame('spatie.be', $data['host']);
-        $this->assertSame(82516, $data['ttl']);
-        $this->assertSame('IN', $data['class']);
-        $this->assertSame('NS', $data['type']);
-        $this->assertSame('ns1.openprovider.nl', $data['target']);
-    }
+    $data = $record->toArray();
+    expect($data['host'])->toBe('spatie.be');
+    expect($data['ttl'])->toBe(82516);
+    expect($data['class'])->toBe('IN');
+    expect($data['type'])->toBe('NS');
+    expect($data['target'])->toBe('ns1.openprovider.nl');
+});
 
-    /** @test */
-    public function it_return_null_for_to_few_attributes()
-    {
-        $record = NS::parse('spatie.be.              82516   IN      NS');
+it('returns null for too few attributes', function () {
+    $record = NS::parse('spatie.be.              82516   IN      NS');
 
-        $this->assertNull($record);
-    }
-}
+    expect($record)->toBeNull();
+});

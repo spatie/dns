@@ -1,106 +1,84 @@
 <?php
 
-namespace Spatie\Dns\Test\Records;
-
-use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Records\TXT;
 
-class TXTTest extends TestCase
-{
-    /** @test */
-    public function it_can_parse_string()
-    {
-        $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"');
+it('can parse string', function () {
+    $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"');
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(594, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('TXT', $record->type());
-        $this->assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $record->txt());
-    }
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(594);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('TXT');
+    expect($record->txt())->toBe('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all');
+});
 
-    /** @test */
-    public function it_can_parse_long_txt_string()
-    {
-        $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 a mx ip4:100.101.102.103 ip4:104.105.106.107 ip4:108.109.110.111 ip6:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a include:_spf.google.com include:_spf.c" "reatesend.com ~all"');
+it('can parse long txt string', function () {
+    $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 a mx ip4:100.101.102.103 ip4:104.105.106.107 ip4:108.109.110.111 ip6:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a include:_spf.google.com include:_spf.c" "reatesend.com ~all"');
 
-        $this->assertSame('v=spf1 a mx ip4:100.101.102.103 ip4:104.105.106.107 ip4:108.109.110.111 ip6:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a include:_spf.google.com include:_spf.createsend.com ~all', $record->txt());
-    }
+    expect($record->txt())->toBe('v=spf1 a mx ip4:100.101.102.103 ip4:104.105.106.107 ip4:108.109.110.111 ip6:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a:1a1a include:_spf.google.com include:_spf.createsend.com ~all');
+});
 
-    /** @test */
-    public function it_can_make_from_array()
-    {
-        $record = TXT::make([
-            'host' => 'spatie.be',
-            'class' => 'IN',
-            'ttl' => 594,
-            'type' => 'TXT',
-            'txt' => 'v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all',
-        ]);
+it('can make from array', function () {
+    $record = TXT::make([
+        'host' => 'spatie.be',
+        'class' => 'IN',
+        'ttl' => 594,
+        'type' => 'TXT',
+        'txt' => 'v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all',
+    ]);
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(594, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('TXT', $record->type());
-        $this->assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $record->txt());
-    }
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(594);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('TXT');
+    expect($record->txt())->toBe('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all');
+});
 
-    /** @test */
-    public function it_can_transform_to_string()
-    {
-        $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"');
+it('can transform to string', function () {
+    $record = TXT::parse('spatie.be.              594     IN      TXT     "v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all"');
 
-        $this->assertSame("spatie.be.\t\t594\tIN\tTXT\t\"v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all\"", strval($record));
-    }
+    expect(strval($record))->toBe("spatie.be.\t\t594\tIN\tTXT\t\"v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all\"");
+});
 
-    /** @test */
-    public function it_can_be_converted_to_an_array()
-    {
-        $record = TXT::make([
-            'host' => 'spatie.be',
-            'class' => 'IN',
-            'ttl' => 594,
-            'type' => 'TXT',
-            'txt' => 'v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all',
-        ]);
+it('can be converted to an array', function () {
+    $record = TXT::make([
+        'host' => 'spatie.be',
+        'class' => 'IN',
+        'ttl' => 594,
+        'type' => 'TXT',
+        'txt' => 'v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all',
+    ]);
 
-        $data = $record->toArray();
-        $this->assertSame('spatie.be', $data['host']);
-        $this->assertSame(594, $data['ttl']);
-        $this->assertSame('IN', $data['class']);
-        $this->assertSame('TXT', $data['type']);
-        $this->assertSame('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all', $data['txt']);
-    }
+    $data = $record->toArray();
+    expect($data['host'])->toBe('spatie.be');
+    expect($data['ttl'])->toBe(594);
+    expect($data['class'])->toBe('IN');
+    expect($data['type'])->toBe('TXT');
+    expect($data['txt'])->toBe('v=spf1 include:eu.mailgun.org include:spf.factuursturen.be include:sendgrid.net a mx ~all');
+});
 
-    /** @test */
-    public function it_return_null_for_to_few_attributes()
-    {
-        $record = TXT::parse('spatie.be.              594     IN      TXT');
+it('returns null for too few attributes', function () {
+    $record = TXT::parse('spatie.be.              594     IN      TXT');
 
-        $this->assertNull($record);
-    }
+    expect($record)->toBeNull();
+});
 
-    /** @test */
-    public function it_can_parse_a_string_with_double_space()
-    {
-        $record = TXT::parse('spatie.be.              594     IN      TXT     "test 2  7"');
+it('can parse a string with double space', function () {
+    $record = TXT::parse('spatie.be.              594     IN      TXT     "test 2  7"');
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(594, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('TXT', $record->type());
-        $this->assertSame('test 2  7', $record->txt());
-    }
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(594);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('TXT');
+    expect($record->txt())->toBe('test 2  7');
+});
 
-    /** @test */
-    public function it_can_parse_a_string_with_a_double_quote()
-    {
-        $record = TXT::parse('spatie.be.              594     IN      TXT     "test \""');
+it('can parse a string with a double quote', function () {
+    $record = TXT::parse('spatie.be.              594     IN      TXT     "test \""');
 
-        $this->assertSame('spatie.be', $record->host());
-        $this->assertSame(594, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('TXT', $record->type());
-        $this->assertSame('test \\"', $record->txt());
-    }
-}
+    expect($record->host())->toBe('spatie.be');
+    expect($record->ttl())->toBe(594);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('TXT');
+    expect($record->txt())->toBe('test \\"');
+});

@@ -1,74 +1,58 @@
 <?php
 
-namespace Spatie\Dns\Test\Records;
-
-use PHPUnit\Framework\TestCase;
 use Spatie\Dns\Records\CNAME;
 
-class CNAMETest extends TestCase
-{
-    /** @test */
-    public function it_can_parse_string()
-    {
-        $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
+it('can parse string', function () {
+    $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
 
-        $this->assertSame('www.spatie.be', $record->host());
-        $this->assertSame(300, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('CNAME', $record->type());
-        $this->assertSame('spatie.be', $record->target());
-    }
+    expect($record->host())->toBe('www.spatie.be');
+    expect($record->ttl())->toBe(300);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('CNAME');
+    expect($record->target())->toBe('spatie.be');
+});
 
-    /** @test */
-    public function it_can_make_from_array()
-    {
-        $record = CNAME::make([
-            'host' => 'www.spatie.be',
-            'class' => 'IN',
-            'ttl' => 300,
-            'type' => 'CNAME',
-            'target' => 'spatie.be',
-        ]);
+it('can make from array', function () {
+    $record = CNAME::make([
+        'host' => 'www.spatie.be',
+        'class' => 'IN',
+        'ttl' => 300,
+        'type' => 'CNAME',
+        'target' => 'spatie.be',
+    ]);
 
-        $this->assertSame('www.spatie.be', $record->host());
-        $this->assertSame(300, $record->ttl());
-        $this->assertSame('IN', $record->class());
-        $this->assertSame('CNAME', $record->type());
-        $this->assertSame('spatie.be', $record->target());
-    }
+    expect($record->host())->toBe('www.spatie.be');
+    expect($record->ttl())->toBe(300);
+    expect($record->class())->toBe('IN');
+    expect($record->type())->toBe('CNAME');
+    expect($record->target())->toBe('spatie.be');
+});
 
-    /** @test */
-    public function it_can_transform_to_string()
-    {
-        $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
+it('can transform to string', function () {
+    $record = CNAME::parse('www.spatie.be.       300     IN      CNAME   spatie.be.');
 
-        $this->assertSame("www.spatie.be.\t\t300\tIN\tCNAME\tspatie.be.", strval($record));
-    }
+    expect(strval($record))->toBe("www.spatie.be.\t\t300\tIN\tCNAME\tspatie.be.");
+});
 
-    /** @test */
-    public function it_can_be_converted_to_an_array()
-    {
-        $record = CNAME::make([
-            'host' => 'www.spatie.be',
-            'class' => 'IN',
-            'ttl' => 300,
-            'type' => 'CNAME',
-            'target' => 'spatie.be',
-        ]);
+it('can be converted to an array', function () {
+    $record = CNAME::make([
+        'host' => 'www.spatie.be',
+        'class' => 'IN',
+        'ttl' => 300,
+        'type' => 'CNAME',
+        'target' => 'spatie.be',
+    ]);
 
-        $data = $record->toArray();
-        $this->assertSame('www.spatie.be', $data['host']);
-        $this->assertSame(300, $data['ttl']);
-        $this->assertSame('IN', $data['class']);
-        $this->assertSame('CNAME', $data['type']);
-        $this->assertSame('spatie.be', $data['target']);
-    }
+    $data = $record->toArray();
+    expect($data['host'])->toBe('www.spatie.be');
+    expect($data['ttl'])->toBe(300);
+    expect($data['class'])->toBe('IN');
+    expect($data['type'])->toBe('CNAME');
+    expect($data['target'])->toBe('spatie.be');
+});
 
-    /** @test */
-    public function it_return_null_for_to_few_attributes()
-    {
-        $record = CNAME::parse('www.spatie.be.       300     IN      CNAME');
+it('returns null for too few attributes', function () {
+    $record = CNAME::parse('www.spatie.be.       300     IN      CNAME');
 
-        $this->assertNull($record);
-    }
-}
+    expect($record)->toBeNull();
+});
