@@ -7,11 +7,11 @@ use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Handlers\Dig;
 use Spatie\Dns\Handlers\DnsGetRecord;
 use Spatie\Dns\Handlers\Handler;
-use Spatie\Dns\Testing\DnsFake;
 use Spatie\Dns\Support\Collection;
 use Spatie\Dns\Support\Domain;
 use Spatie\Dns\Support\Factory;
 use Spatie\Dns\Support\Types;
+use Spatie\Dns\Testing\DnsFake;
 
 class Dns
 {

@@ -35,16 +35,19 @@ class DnsFake extends Dns
             foreach ((array) $items as $item) {
                 if ($item instanceof Record) {
                     $records[] = $item;
+
                     continue;
                 }
 
                 if (is_string($item)) {
                     $records[] = $this->factory->parse($typeName, $item);
+
                     continue;
                 }
 
                 if (is_array($item)) {
                     $records[] = $this->factory->make($typeName, $item);
+
                     continue;
                 }
             }
