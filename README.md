@@ -99,7 +99,7 @@ use Spatie\Dns\Dns;
 
 ## Faking DNS lookups (for testing)
 
-Similar to Laravel's `Http::fake()`, you can fake DNS lookups globally during a test.
+Using `Dns::fake()`, you can fake DNS lookups globally during a test.
 
 ```php
 use Spatie\Dns\Dns;
