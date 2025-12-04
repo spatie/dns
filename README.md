@@ -97,6 +97,35 @@ use Spatie\Dns\Dns;
     ->getRecords('spatie.be');
 ```
 
+## Faking DNS lookups (for testing)
+
+Similar to Laravel's `Http::fake()`, you can fake DNS lookups globally during a test.
+
+```php
+use Spatie\Dns\Dns;
+
+Dns::fake([
+    'example.com' => [
+        'A' => [
+            'example.com.\t300\tIN\tA\t203.0.113.10',
+            ['host' => 'example.com.', 'ttl' => 300, 'class' => 'IN', 'type' => 'A', 'ip' => '203.0.113.11'],
+        ],
+    ],
+]);
+
+$records = (new Dns())->getRecords('example.com', 'A');
+
+Dns::fake(function (string $domain, array $types, $factory) {
+    return [
+        'A' => [
+            $factory->make('A', ['host' => $domain.'.', 'ttl' => 60, 'class' => 'IN', 'type' => 'A', 'ip' => '127.0.0.1']),
+        ],
+    ];
+});
+
+Dns::restore();
+```
+
 ## Specify retries and timeouts for Dig
 
 Dig can be configured to retry a DNS query after a certain timeout. Use `setRetries()` or `setTimeout()` to configure

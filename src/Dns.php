@@ -7,6 +7,7 @@ use Spatie\Dns\Exceptions\InvalidArgument;
 use Spatie\Dns\Handlers\Dig;
 use Spatie\Dns\Handlers\DnsGetRecord;
 use Spatie\Dns\Handlers\Handler;
+use Spatie\Dns\Testing\DnsFake;
 use Spatie\Dns\Support\Collection;
 use Spatie\Dns\Support\Domain;
 use Spatie\Dns\Support\Factory;
@@ -14,6 +15,8 @@ use Spatie\Dns\Support\Types;
 
 class Dns
 {
+    protected static ?Dns $fake = null;
+
     protected ?string $nameserver = null;
     protected ?int $timeout = 2;
     protected ?int $retries = 2;
@@ -21,9 +24,24 @@ class Dns
     /** @var array<int, Handler> */
     protected ?array $customHandlers = null;
 
+    public static function fake(array|callable|null $callback = null): DnsFake
+    {
+        return static::$fake = new DnsFake(null, null, $callback);
+    }
+
+    public static function isFaked(): bool
+    {
+        return static::$fake instanceof self;
+    }
+
     public static function query(?Types $types = null, ?Factory $factory = null): self
     {
         return new static($types, $factory);
+    }
+
+    public static function restore(): void
+    {
+        static::$fake = null;
     }
 
     public function __construct(
@@ -74,6 +92,10 @@ class Dns
         Domain | string $search,
         int | string | array $types = DNS_ALL
     ): array {
+        if (static::$fake instanceof self) {
+            return static::$fake->getRecords($search, $types);
+        }
+
         $domain = $this->sanitizeDomain(strval($search));
         $types = $this->resolveTypes($types);
 
