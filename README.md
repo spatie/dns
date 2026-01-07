@@ -128,15 +128,15 @@ A `Handler` is responsible for fetching DNS records of a certain type.
 
 By default, these handlers that ship with the package are used:
 
-- `Spatie\Dns\Handler\Dig`
-- `Spatie\Dns\Handler\DnsGetRecord`
+- `Spatie\Dns\Handlers\Dig`
+- `Spatie\Dns\Handlers\DnsGetRecord`
 
-You can create custom handlers. A valid handler is any class that extends from `Spatie\Dns\Handler\Handler`.
+You can create custom handlers. A valid handler is any class that extends from `Spatie\Dns\Handlers\Handler`.
 
 A custom handler class can be used by passing it to `useHandlers` on `Spatie\Dns\Dns`.
 
 ```php
-$results = $this->dns
+$results = (new Dns)
     ->useHandlers([new YourCustomHandler()])
     ->getRecords('spatie.be');
 ```
