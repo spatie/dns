@@ -2,6 +2,19 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.8.0 - 2026-05-22
+
+### What's Changed
+
+* Fix namespace typos in README.md by @bessone in https://github.com/spatie/dns/pull/122
+* Provide dig exit code in CouldNotFetchDns exception by @freekmurze in https://github.com/spatie/dns/pull/124
+
+### New Contributors
+
+* @bessone made their first contribution in https://github.com/spatie/dns/pull/122
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.7.1...2.8.0
+
 ## 2.7.1 - 2025-11-26
 
 ### What's Changed
