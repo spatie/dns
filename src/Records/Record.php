@@ -21,8 +21,11 @@ abstract class Record implements Stringable
     }
 
     protected string $host;
+
     protected int $ttl;
+
     protected string $class;
+
     protected string $type;
 
     public function __construct(array $attributes)
@@ -44,8 +47,6 @@ abstract class Record implements Stringable
     }
 
     /**
-     * @param array $record
-     *
      * @return static
      */
     public static function make(array $record): self
@@ -54,8 +55,6 @@ abstract class Record implements Stringable
     }
 
     /**
-     * @param string $line
-     *
      * @return static
      */
     abstract public static function parse(string $line): ?self;

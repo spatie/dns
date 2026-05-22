@@ -35,11 +35,11 @@ dataset('dnsRecords', function () {
 });
 
 it('can guess the record type', function (string $className, string $line) {
-    $record = (new Factory())->guess($line);
+    $record = (new Factory)->guess($line);
 
     expect($record)->toBeInstanceOf($className);
 })->with('dnsRecords');
 
 it('will return null when it cannot guess the record', function () {
-    expect((new Factory())->guess('invalid-record'))->toBeNull();
+    expect((new Factory)->guess('invalid-record'))->toBeNull();
 });

@@ -9,6 +9,7 @@ use Symfony\Component\Process\Process;
 class Dig extends Handler
 {
     protected ?int $timeout = 2;
+
     protected ?int $retries = 2;
 
     public function __invoke(string $domain, int $flag, string $type): array
@@ -35,7 +36,7 @@ class Dig extends Handler
 
     public function canHandle(): bool
     {
-        if (! $digPath = (new ExecutableFinder())->find('dig', null, ['/usr/bin'])) {
+        if (! $digPath = (new ExecutableFinder)->find('dig', null, ['/usr/bin'])) {
             return false;
         }
 

@@ -11,8 +11,11 @@ namespace Spatie\Dns\Records;
 class SRV extends Record
 {
     protected int $pri;
+
     protected int $weight;
+
     protected string $target;
+
     protected int $port;
 
     public static function parse(string $line): ?self

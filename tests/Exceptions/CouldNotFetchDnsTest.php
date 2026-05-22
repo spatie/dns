@@ -58,11 +58,11 @@ function failedDigProcess(int $exitCode, string $stderr = '', string $stdout = '
     $script = '';
 
     if ($stdout !== '') {
-        $script .= 'printf %s ' . escapeshellarg($stdout) . '; ';
+        $script .= 'printf %s '.escapeshellarg($stdout).'; ';
     }
 
     if ($stderr !== '') {
-        $script .= 'printf %s ' . escapeshellarg($stderr) . ' >&2; ';
+        $script .= 'printf %s '.escapeshellarg($stderr).' >&2; ';
     }
 
     $script .= "exit {$exitCode}";

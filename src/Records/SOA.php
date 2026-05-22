@@ -14,11 +14,17 @@ namespace Spatie\Dns\Records;
 class SOA extends Record
 {
     protected string $mname;
+
     protected string $rname;
+
     protected int $serial;
+
     protected int $refresh;
+
     protected int $retry;
+
     protected int $expire;
+
     protected int $minimum_ttl;
 
     public static function parse(string $line): ?self

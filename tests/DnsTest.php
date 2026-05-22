@@ -15,7 +15,7 @@ use Spatie\Dns\Test\TestClasses\CustomHandler;
 beforeEach(function () {
     ray()->newScreen($this->name());
 
-    $this->dns = new Dns();
+    $this->dns = new Dns;
 });
 
 it('throws an exception if an empty string is passed', function () {
@@ -29,7 +29,7 @@ it('fetches all records by default', function () {
 });
 
 it('has a static constructor', function () {
-    $records = DNS::query()->getRecords('spatie.be');
+    $records = Dns::query()->getRecords('spatie.be');
 
     assertSeeRecordTypes($records, [A::class, NS::class, SOA::class, MX::class]);
 });
@@ -143,7 +143,7 @@ it('throws exception on failed to fetch dns record', function () {
 
 it('can use custom handlers', function () {
     $result = $this->dns
-        ->useHandlers([new CustomHandler()])
+        ->useHandlers([new CustomHandler])
         ->getRecords('spatie.be');
 
     $handlers = [

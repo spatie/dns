@@ -9,6 +9,7 @@ namespace Spatie\Dns\Records;
 class MX extends Record
 {
     protected int $pri;
+
     protected string $target;
 
     public static function parse(string $line): ?self
