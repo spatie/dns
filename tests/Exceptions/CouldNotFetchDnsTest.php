@@ -3,26 +3,6 @@
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Symfony\Component\Process\Process;
 
-function failedDigProcess(int $exitCode, string $stderr = '', string $stdout = ''): Process
-{
-    $script = '';
-
-    if ($stdout !== '') {
-        $script .= 'printf %s ' . escapeshellarg($stdout) . '; ';
-    }
-
-    if ($stderr !== '') {
-        $script .= 'printf %s ' . escapeshellarg($stderr) . ' >&2; ';
-    }
-
-    $script .= "exit {$exitCode}";
-
-    $process = new Process(['sh', '-c', $script]);
-    $process->run();
-
-    return $process;
-}
-
 it('exposes the dig exit code on the exception', function () {
     $process = failedDigProcess(exitCode: 9, stderr: ';; IDN output support not enabled');
 
@@ -72,3 +52,23 @@ it('omits the trailing context when dig produced no output', function () {
         ->toContain('failed with exit code 10')
         ->not->toContain('``');
 });
+
+function failedDigProcess(int $exitCode, string $stderr = '', string $stdout = ''): Process
+{
+    $script = '';
+
+    if ($stdout !== '') {
+        $script .= 'printf %s ' . escapeshellarg($stdout) . '; ';
+    }
+
+    if ($stderr !== '') {
+        $script .= 'printf %s ' . escapeshellarg($stderr) . ' >&2; ';
+    }
+
+    $script .= "exit {$exitCode}";
+
+    $process = new Process(['sh', '-c', $script]);
+    $process->run();
+
+    return $process;
+}
