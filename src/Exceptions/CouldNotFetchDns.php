@@ -10,7 +10,7 @@ class CouldNotFetchDns extends RuntimeException
 {
     public function __construct(
         string $message,
-        public readonly ?int $exitCode = null,
+        public ?int $exitCode = null,
         ?Throwable $previous = null,
     ) {
         parent::__construct($message, 0, $previous);
