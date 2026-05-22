@@ -8,14 +8,6 @@ use Throwable;
 
 class CouldNotFetchDns extends RuntimeException
 {
-    /** @var array<int, string> */
-    protected const DIG_EXIT_CODES = [
-        1 => 'usage error',
-        8 => 'could not open batch file',
-        9 => 'no reply from server',
-        10 => 'internal error',
-    ];
-
     public function __construct(
         string $message,
         public readonly ?int $exitCode = null,
@@ -41,9 +33,9 @@ class CouldNotFetchDns extends RuntimeException
 
         $message = "Dig command `{$command}` failed with exit code {$exitCode}";
 
-        if (isset(static::DIG_EXIT_CODES[$exitCode])) {
-            $reason = static::DIG_EXIT_CODES[$exitCode];
+        $reason = static::digExitCodeReason($exitCode);
 
+        if ($reason !== null) {
             $message = "{$message} ({$reason})";
         }
 
@@ -52,6 +44,17 @@ class CouldNotFetchDns extends RuntimeException
         }
 
         return new static($message, $exitCode);
+    }
+
+    protected static function digExitCodeReason(?int $exitCode): ?string
+    {
+        return match ($exitCode) {
+            1 => 'usage error',
+            8 => 'could not open batch file',
+            9 => 'no reply from server',
+            10 => 'internal error',
+            default => null,
+        };
     }
 
     public static function dnsGetRecordReturnedWithError(string $error): self
