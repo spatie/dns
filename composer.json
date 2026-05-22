@@ -34,6 +34,7 @@
         "symfony/process": "^6.0|^7.0|^8.0"
     },
     "require-dev": {
+        "laravel/pint": "^1.0",
         "pestphp/pest": "^3.0|^4.0",
         "spatie/ray": "^1.30"
     },
@@ -54,6 +55,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/pest"
+        "test": "vendor/bin/pest",
+        "format": "vendor/bin/pint"
     }
 }

@@ -3,7 +3,7 @@
 use Spatie\Dns\Support\Types;
 
 beforeEach(function () {
-    $this->types = new Types();
+    $this->types = new Types;
 });
 
 it('can transform flag to name', function () {

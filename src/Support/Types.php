@@ -18,7 +18,7 @@ class Types
             DNS_TXT => 'TXT',
             // DNS_NAPTR => 'NAPTR',
         ];
-        //@see https://bugs.php.net/bug.php?id=75909
+        // @see https://bugs.php.net/bug.php?id=75909
         if (defined('DNS_CAA')) {
             $dnsTypes[DNS_CAA] = 'CAA';
         }
