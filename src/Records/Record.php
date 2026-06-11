@@ -107,7 +107,7 @@ abstract class Record implements Stringable
         // The root label "." is a valid target for a null MX (RFC 7505) and for an
         // SRV record that declines a service (RFC 2782). Stored dot-stripped like every
         // other domain, the root becomes an empty string and __toString re-appends the dot.
-        if (trim($value, '.') === '') {
+        if ($value === '.') {
             return '';
         }
 
