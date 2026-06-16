@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.8.1 - 2026-06-16
+
+### What's Changed
+
+* Support null MX and SRV records that use the root label by @mattiasgeniar in https://github.com/spatie/dns/pull/125
+
+### New Contributors
+
+* @mattiasgeniar made their first contribution in https://github.com/spatie/dns/pull/125
+
+**Full Changelog**: https://github.com/spatie/dns/compare/2.8.0...2.8.1
+
 ## 2.8.0 - 2026-05-22
 
 ### What's Changed
