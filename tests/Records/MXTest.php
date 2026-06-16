@@ -61,3 +61,16 @@ it('returns null for too few attributes', function () {
 
     expect($record)->toBeNull();
 });
+
+it('can parse a null MX record', function () {
+    $record = MX::parse('spatie.be.              1665    IN      MX      0 .');
+
+    expect($record->pri())->toBe(0);
+    expect($record->target())->toBe('');
+});
+
+it('can transform a null MX record to string', function () {
+    $record = MX::parse('spatie.be.              1665    IN      MX      0 .');
+
+    expect(strval($record))->toBe("spatie.be.\t\t1665\tIN\tMX\t0\t.");
+});

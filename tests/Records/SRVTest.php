@@ -71,3 +71,18 @@ it('returns null for too few attributes', function () {
 
     expect($record)->toBeNull();
 });
+
+it('can parse an SRV record that declines a service', function () {
+    $record = SRV::parse('_sip._tcp.spatie.be.      3600  IN      SRV     0 0 0 .');
+
+    expect($record->pri())->toBe(0);
+    expect($record->weight())->toBe(0);
+    expect($record->port())->toBe(0);
+    expect($record->target())->toBe('');
+});
+
+it('can transform a declined SRV record to string', function () {
+    $record = SRV::parse('_sip._tcp.spatie.be.      3600  IN      SRV     0 0 0 .');
+
+    expect(strval($record))->toBe("_sip._tcp.spatie.be.\t\t3600\tIN\tSRV\t0\t0\t0\t.");
+});

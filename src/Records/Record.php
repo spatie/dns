@@ -104,6 +104,13 @@ abstract class Record implements Stringable
 
     protected function prepareDomain(string $value): string
     {
+        // The root label "." is a valid target for a null MX (RFC 7505) and for an
+        // SRV record that declines a service (RFC 2782). Stored dot-stripped like every
+        // other domain, the root becomes an empty string and __toString re-appends the dot.
+        if ($value === '.') {
+            return '';
+        }
+
         return strval(new Domain(trim($value, '.')));
     }
 
