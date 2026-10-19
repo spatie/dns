@@ -9,6 +9,12 @@ class DnsGetRecord extends Handler
 {
     public function __invoke(string $domain, int $flag, string $type): array
     {
+        if (in_array(mb_strtoupper($type), ['DS', 'DNSKEY'], true)) {
+            throw CouldNotFetchDns::dnsGetRecordReturnedWithError(
+                "The native PHP handler does not support fetching {$type} records. Please ensure 'dig' is installed."
+            );
+        }
+
         $records = false;
         $error = '';
 

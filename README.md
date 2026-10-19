@@ -35,6 +35,8 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Installation
 
+This package requires PHP 8.4 or higher.
+
 If you do not have [dig](https://linux.die.net/man/1/dig) installed you will need it.
 
 You can install the package via composer:
@@ -45,7 +47,9 @@ composer require spatie/dns
 
 ## Usage
 
-The class can get these record types: `A`, `AAAA`, `CNAME`, `NS`, `PTR`, `SOA`, `MX`, `SRV`, `TXT`, `DNSKEY`, `CAA`, `NAPTR`.
+The class can get these record types: `A`, `AAAA`, `CNAME`, `NS`, `PTR`, `SOA`, `MX`, `SRV`, `TXT`, `DS`, `DNSKEY`, `CAA`, `NAPTR`.
+
+`DS` and `DNSKEY` require [dig](#under-the-hood) and must be requested explicitly; they are not included in the default query, `DNS_ALL`, or `'*'`. The native PHP handler throws a `CouldNotFetchDns` exception when either type is requested.
 
 ```php
 use Spatie\Dns\Dns;
@@ -58,6 +62,15 @@ $dns->getRecords('spatie.be', 'A'); // returns only A records
 $dns->getRecords('spatie.be', ['A', 'CNAME']); // returns both A and CNAME records
 $dns->getRecords('spatie.be', DNS_MX); // returns only MX records
 $dns->getRecords('spatie.be', DNS_A | DNS_AAAA); // returns both A and AAAA records
+```
+
+DNSSEC records can be requested by name or using the package's bit flags (these are not native PHP constants or IANA type codes):
+
+```php
+use Spatie\Dns\Support\Types;
+
+$dns->getRecords('icann.com', ['DS', 'DNSKEY']);
+$dns->getRecords('icann.com', Types::DNS_DS | Types::DNS_DNSKEY);
 ```
 
 `getRecords` will return an array with objects that implement the `Spatie\Dns\Records\Record` interface.

@@ -4,6 +4,11 @@ namespace Spatie\Dns\Support;
 
 class Types
 {
+    // Package-only flags, not IANA type codes or native dns_get_record flags.
+    public const int DNS_DS = 2097152;
+
+    public const int DNS_DNSKEY = 4194304;
+
     public static function getTypes()
     {
         $dnsTypes = [
@@ -16,6 +21,8 @@ class Types
             DNS_MX => 'MX',
             DNS_SRV => 'SRV',
             DNS_TXT => 'TXT',
+            self::DNS_DS => 'DS',
+            self::DNS_DNSKEY => 'DNSKEY',
             // DNS_NAPTR => 'NAPTR',
         ];
         // @see https://bugs.php.net/bug.php?id=75909
