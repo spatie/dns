@@ -48,7 +48,18 @@ class DS extends Record
         return str_replace(' ', '', $value);
     }
 
-    /** @return array<string, int|string> */
+    /**
+     * @return array{
+     *     host: string,
+     *     ttl: int,
+     *     class: string,
+     *     type: string,
+     *     keytag: int,
+     *     algorithm: int,
+     *     digesttype: int,
+     *     digest: string,
+     * }
+     */
     public function toArray(): array
     {
         return [

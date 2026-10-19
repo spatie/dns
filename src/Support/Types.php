@@ -5,9 +5,9 @@ namespace Spatie\Dns\Support;
 class Types
 {
     // Package-only flags, not IANA type codes or native dns_get_record flags.
-    public const DNS_DS = 2097152;
+    public const int DNS_DS = 2097152;
 
-    public const DNS_DNSKEY = 4194304;
+    public const int DNS_DNSKEY = 4194304;
 
     public static function getTypes()
     {

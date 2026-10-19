@@ -48,7 +48,18 @@ class DNSKEY extends Record
         return str_replace(' ', '', $value);
     }
 
-    /** @return array<string, int|string> */
+    /**
+     * @return array{
+     *     host: string,
+     *     ttl: int,
+     *     class: string,
+     *     type: string,
+     *     flags: int,
+     *     protocol: int,
+     *     algorithm: int,
+     *     publickey: string,
+     * }
+     */
     public function toArray(): array
     {
         return [
