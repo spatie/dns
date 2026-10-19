@@ -2,13 +2,13 @@
 
 namespace Spatie\Dns\Support;
 
-// Define DNS type constants not available in PHP by default
-// @see https://bugs.php.net/bug.php?id=65343
-const DNS_DS = 2097152; // IANA 43
-const DNS_DNSKEY = 4194304; // IANA 48
-
 class Types
 {
+    // Package-only flags, not IANA type codes or native dns_get_record flags.
+    public const DNS_DS = 2097152;
+
+    public const DNS_DNSKEY = 4194304;
+
     public static function getTypes()
     {
         $dnsTypes = [
@@ -21,8 +21,8 @@ class Types
             DNS_MX => 'MX',
             DNS_SRV => 'SRV',
             DNS_TXT => 'TXT',
-            DNS_DS => 'DS',
-            DNS_DNSKEY => 'DNSKEY',
+            self::DNS_DS => 'DS',
+            self::DNS_DNSKEY => 'DNSKEY',
             // DNS_NAPTR => 'NAPTR',
         ];
         // @see https://bugs.php.net/bug.php?id=75909

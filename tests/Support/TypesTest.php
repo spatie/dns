@@ -2,13 +2,6 @@
 
 use Spatie\Dns\Support\Types;
 
-beforeAll(function () {
-    // Define DNS type constants not available in PHP by default
-    // @see https://bugs.php.net/bug.php?id=65343
-    define('DNS_DS', 2097152);
-    define('DNS_DNSKEY', 4194304);
-});
-
 beforeEach(function () {
     $this->types = new Types;
 });
@@ -26,8 +19,8 @@ it('can transform flag to name', function () {
     expect($this->types->toNames(DNS_SOA))->toBe([DNS_SOA => 'SOA']);
     expect($this->types->toNames(DNS_SRV))->toBe([DNS_SRV => 'SRV']);
     expect($this->types->toNames(DNS_TXT))->toBe([DNS_TXT => 'TXT']);
-    expect($this->types->toNames(DNS_DS))->toBe([DNS_DS => 'DS']);
-    expect($this->types->toNames(DNS_DNSKEY))->toBe([DNS_DNSKEY => 'DNSKEY']);
+    expect($this->types->toNames(Types::DNS_DS))->toBe([Types::DNS_DS => 'DS']);
+    expect($this->types->toNames(Types::DNS_DNSKEY))->toBe([Types::DNS_DNSKEY => 'DNSKEY']);
 });
 
 it('can transform flags to names', function () {
@@ -48,8 +41,8 @@ it('can transform name to flag', function () {
     expect($this->types->toFlags(['SOA']))->toBe(DNS_SOA);
     expect($this->types->toFlags(['SRV']))->toBe(DNS_SRV);
     expect($this->types->toFlags(['TXT']))->toBe(DNS_TXT);
-    expect($this->types->toFlags(['DS']))->toBe(DNS_DS);
-    expect($this->types->toFlags(['DNSKEY']))->toBe(DNS_DNSKEY);
+    expect($this->types->toFlags(['DS']))->toBe(Types::DNS_DS);
+    expect($this->types->toFlags(['DNSKEY']))->toBe(Types::DNS_DNSKEY);
 });
 
 it('can transform names to flags', function () {

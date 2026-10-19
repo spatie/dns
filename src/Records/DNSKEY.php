@@ -3,9 +3,9 @@
 namespace Spatie\Dns\Records;
 
 /**
- * @method string flags()
- * @method string protocol()
- * @method string algorithm()
+ * @method int flags()
+ * @method int protocol()
+ * @method int algorithm()
  * @method string publickey()
  */
 class DNSKEY extends Record
@@ -48,7 +48,8 @@ class DNSKEY extends Record
         return str_replace(' ', '', $value);
     }
 
-    public function toArray()
+    /** @return array<string, int|string> */
+    public function toArray(): array
     {
         return [
             'host' => $this->host,

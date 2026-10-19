@@ -3,9 +3,9 @@
 namespace Spatie\Dns\Records;
 
 /**
- * @method string keytag()
- * @method string algorithm()
- * @method string digesttype()
+ * @method int keytag()
+ * @method int algorithm()
+ * @method int digesttype()
  * @method string digest()
  */
 class DS extends Record
@@ -48,7 +48,8 @@ class DS extends Record
         return str_replace(' ', '', $value);
     }
 
-    public function toArray()
+    /** @return array<string, int|string> */
+    public function toArray(): array
     {
         return [
             'host' => $this->host,
