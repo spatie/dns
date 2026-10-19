@@ -74,20 +74,20 @@ it('fetches records via name and ignores casing', function () {
     assertOnlySeeRecordTypes($records, [NS::class]);
 });
 
-it('fetches DNSSEC records with dig', function (string $type, string $recordClass) {
+it('transforms DNSSEC dig output into records', function (string $type, string $recordClass, string $output) {
     $records = $this->dns
-        ->useHandlers([new Dig(new Factory)])
+        ->useHandlers([new FixtureDig($output)])
         ->getRecords('icann.com', $type);
 
-    expect($records)->not->toBeEmpty();
+    expect($records)->toHaveCount(1);
 
     foreach ($records as $record) {
         expect($record)->toBeInstanceOf($recordClass)
             ->and($record->host())->toBe('icann.com');
     }
 })->with([
-    ['DS', DS::class],
-    ['DNSKEY', DNSKEY::class],
+    ['DS', DS::class, 'icann.com. 21600 IN DS 50326 13 2 48DBDF26A611338821CBC565EF046F48AD1B92D5DE15DA95BB9D1ABD C6F88DC9'],
+    ['DNSKEY', DNSKEY::class, 'icann.com. 3600 IN DNSKEY 256 3 13 Up+opSl3nHqfqgOgWKBduzNY/18thL7BcDRIxtkdDl3C/LVIOyjy5lEj dbdUrRHYYec/ke+5YTHvhX7pkIffjg=='],
 ]);
 
 it('resolves DNSSEC names and flags without selecting other record types', function (int|string|array $types, array $expected) {
@@ -255,4 +255,18 @@ function recordIsOfType(Record $record, array $types): bool
     }
 
     return false;
+}
+
+class FixtureDig extends Dig
+{
+    public function __construct(protected string $output)
+    {
+        parent::__construct(new Factory);
+    }
+
+    /** @return array<int, string> */
+    protected function buildCommand(string $domain, string $type): array
+    {
+        return [PHP_BINARY, '-r', 'echo '.var_export($this->output, true).';'];
+    }
 }
