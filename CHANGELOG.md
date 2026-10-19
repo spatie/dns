@@ -2,6 +2,27 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.9.0 - 2026-10-19
+
+### New features
+
+- Add DS and DNSKEY record support through dig, with parsing, serialization, and typed package flags: `Types::DNS_DS` and `Types::DNS_DNSKEY`.
+- Request DNSSEC records explicitly by name or package flags. Existing default, `DNS_ALL`, and wildcard queries remain unchanged. The native PHP handler reports a clear error for these unsupported types.
+
+### Tooling and compatibility
+
+- Require PHP 8.4 or higher.
+- Update Pest and Pint, test PHP 8.4 and 8.5 against lowest/latest dependencies, and enforce deprecation-free tests.
+- Add deterministic DNSSEC handler coverage without depending on public DNSSEC availability in CI.
+
+This is a feature release with no existing runtime API behavior changes. Projects using PHP 8.2 or 8.3 must upgrade PHP before installing this version.
+
+### Credits
+
+Thanks to @bessone for the original contribution in #126, continued and refined in #127.
+
+**Full changelog:** https://github.com/spatie/dns/compare/2.8.1...2.9.0
+
 ## 2.8.1 - 2026-06-16
 
 ### What's Changed
