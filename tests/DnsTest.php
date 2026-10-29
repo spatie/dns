@@ -233,6 +233,15 @@ it('throws exception on failed to fetch dns record', function () {
         ->getRecords('spatie.be', DNS_A);
 })->throws(CouldNotFetchDns::class);
 
+it('throws when a real nameserver refuses the query', function () {
+    $dns = $this->dns
+        ->useNameserver('ns1.digitalocean.com')
+        ->throwOnErrorResponse();
+
+    expect(fn () => $dns->getRecords('google.com', DNS_A))
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe('REFUSED'));
+});
+
 it('can use custom handlers without implicitly requesting DNSSEC records', function (int|string $types) {
     $result = $this->dns
         ->useHandlers([new CustomHandler])
