@@ -2,6 +2,28 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.10.0 - 2026-10-29
+
+### New features
+
+- Add opt-in `Dns::throwOnErrorResponse()` to distinguish DNS error responses such as `REFUSED` and `SERVFAIL` from empty answers when using dig.
+- Expose the nameserver response status through `CouldNotFetchDns::$responseStatus`. `NOERROR` and `NXDOMAIN` remain valid responses. An error for any requested record type makes the entire lookup throw.
+
+### Compatibility
+
+- Default lookup behavior, existing exception constructor arguments, and PHP/dependency requirements are unchanged. This is a backward-compatible minor release.
+- The native PHP handler retains its existing failure handling and reports no response status (`null`).
+
+### Tests
+
+- Cover empty answers, additional error statuses, TXT data that resembles a response header, and failures after a successful record type.
+
+### Credits
+
+Thanks to @mattiasgeniar for the contribution in #128.
+
+**Full changelog:** https://github.com/spatie/dns/compare/2.9.0...2.10.0
+
 ## 2.9.0 - 2026-10-19
 
 ### New features
