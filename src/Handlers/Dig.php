@@ -127,21 +127,11 @@ class Dig extends Handler
     }
 
     /**
-     * Keeps only the record lines. Lines that start with a semicolon are dig's comments,
-     * such as the header and the EDNS pseudo-section, and are never records.
+     * Keeps only the record lines. dig prints its comments, such as the response header, on
+     * lines that start with a semicolon.
      */
     protected function parseOutput(string $output): array
     {
-        $lines = array_filter(
-            explode(PHP_EOL, trim($output)),
-            fn (string $line): bool => trim($line) !== '',
-        );
-
-        $records = array_filter(
-            $lines,
-            fn (string $line): bool => ! str_starts_with($line, ';'),
-        );
-
-        return array_values($records);
+        return array_values(preg_grep('/^[^;]/', explode(PHP_EOL, $output)));
     }
 }
