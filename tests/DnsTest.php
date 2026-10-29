@@ -107,7 +107,7 @@ it('throws when the nameserver answers with an error status', function (string $
 
     expect(fn () => $dns->getRecords('spatie.be', DNS_A))
         ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe($status));
-})->with(['REFUSED', 'SERVFAIL']);
+})->with(['REFUSED', 'SERVFAIL', 'FORMERR', 'NOTIMP', 'BADCOOKIE', 'RESERVED15']);
 
 it('returns no records for an error status when not asked to throw', function () {
     $records = $this->dns
@@ -117,22 +117,38 @@ it('returns no records for an error status when not asked to throw', function ()
     expect($records)->toBe([]);
 });
 
-it('treats NXDOMAIN as an answer rather than an error', function () {
+it('returns no records for a successful empty answer', function (string $status) {
     $records = $this->dns
         ->throwOnErrorResponse()
-        ->useHandlers([new FixtureDig(digResponse('NXDOMAIN'))])
+        ->useHandlers([new FixtureDig(digResponse($status))])
         ->getRecords('missing.spatie.be', DNS_A);
 
     expect($records)->toBe([]);
-});
+})->with(['NOERROR', 'NXDOMAIN']);
 
-it('reads the status from the header and not from record data', function () {
+it('does not mistake record data for a response header', function (bool $withHeader) {
+    $text = ';; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: 1';
+    $output = "spatie.be. 300 IN TXT \"{$text}\"";
+
     $records = $this->dns
         ->throwOnErrorResponse()
-        ->useHandlers([new FixtureDig(digResponse('NOERROR', 'spatie.be.		300	IN	TXT	"->>HEADER<<- opcode: QUERY, status: REFUSED, id: 1"'))])
+        ->useHandlers([new FixtureDig($withHeader ? digResponse('NOERROR', $output) : $output)])
         ->getRecords('spatie.be', DNS_TXT);
 
-    expect($records)->toHaveCount(1);
+    expect($records)->toHaveCount(1)
+        ->and($records[0]->txt())->toBe($text);
+})->with([true, false]);
+
+it('throws instead of returning partial records when a later record type fails', function () {
+    $dns = $this->dns
+        ->throwOnErrorResponse()
+        ->useHandlers([new FixtureDig([
+            'A' => digResponse('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+            'AAAA' => digResponse('SERVFAIL'),
+        ])]);
+
+    expect(fn () => $dns->getRecords('spatie.be', ['A', 'AAAA']))
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe('SERVFAIL'));
 });
 
 it('resolves DNSSEC names and flags without selecting other record types', function (int|string|array $types, array $expected) {
@@ -328,7 +344,8 @@ function digResponse(string $status, string $records = ''): string
 
 class FixtureDig extends Dig
 {
-    public function __construct(protected string $output)
+    /** @param string|array<string, string> $output */
+    public function __construct(protected string|array $output)
     {
         parent::__construct(new Factory);
     }
@@ -336,6 +353,8 @@ class FixtureDig extends Dig
     /** @return array<int, string> */
     protected function buildCommand(string $domain, string $type): array
     {
-        return [PHP_BINARY, '-r', 'echo '.var_export($this->output, true).';'];
+        $output = is_array($this->output) ? $this->output[$type] : $this->output;
+
+        return [PHP_BINARY, '-r', 'echo '.var_export($output, true).';'];
     }
 }
