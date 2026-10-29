@@ -124,6 +124,28 @@ use Spatie\Dns\Dns;
     ->getRecords('spatie.be');
 ```
 
+## Handling error responses
+
+A nameserver can answer a query with an error status instead of records. For example, it answers `REFUSED` when it rate limits you, or `SERVFAIL` when it cannot resolve the name. By default those queries return no records, the same as a name that has no records of that type.
+
+Call `throwOnErrorResponse()` to tell the two apart. A `CouldNotFetchDns` exception is then thrown for any status other than `NOERROR` and `NXDOMAIN`. Its `responseStatus` property holds the status the nameserver sent.
+
+```php
+use Spatie\Dns\Dns;
+use Spatie\Dns\Exceptions\CouldNotFetchDns;
+
+try {
+    $records = (new Dns)
+        ->useNameserver('ns1.openminds.be')
+        ->throwOnErrorResponse()
+        ->getRecords('spatie.be');
+} catch (CouldNotFetchDns $exception) {
+    $exception->responseStatus; // e.g. 'REFUSED'
+}
+```
+
+When you query several record types at once, one error response throws for the whole call. Only the dig handler can read the response status. The native `dns_get_record()` handler does not expose it.
+
 ## Guessing a record
 
 When you have a string that contains a dns record, you can convert it to a `Record`
