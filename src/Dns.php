@@ -79,9 +79,9 @@ class Dns
      * such as REFUSED or SERVFAIL, instead of returning no records. Only the dig handler
      * can read the response status.
      */
-    public function throwOnErrorResponse(bool $throwOnErrorResponse = true): self
+    public function throwOnErrorResponse(): self
     {
-        $this->throwOnErrorResponse = $throwOnErrorResponse;
+        $this->throwOnErrorResponse = true;
 
         return $this;
     }

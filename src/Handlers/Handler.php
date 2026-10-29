@@ -39,7 +39,7 @@ abstract class Handler
         return $this;
     }
 
-    public function throwOnErrorResponse(bool $throwOnErrorResponse = true): self
+    public function throwOnErrorResponse(bool $throwOnErrorResponse): self
     {
         $this->throwOnErrorResponse = $throwOnErrorResponse;
 
