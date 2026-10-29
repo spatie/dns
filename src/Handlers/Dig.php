@@ -109,32 +109,21 @@ class Dig extends Handler
      * anchored to the start of a line, so text inside a record, such as a TXT value, cannot
      * pose as the header.
      */
-    protected function responseStatus(string $output): ?string
-    {
-        if (! preg_match('/^;; ->>HEADER<<-.*?status: ([A-Z0-9]+)/m', $output, $matches)) {
-            return null;
-        }
-
-        return $matches[1];
-    }
-
     protected function guardAgainstErrorResponse(string $output, array $command): void
     {
         if (! $this->throwOnErrorResponse) {
             return;
         }
 
-        $status = $this->responseStatus($output);
-
-        if ($status === null) {
+        if (! preg_match('/^;; ->>HEADER<<-.*?status: ([A-Z0-9]+)/m', $output, $matches)) {
             return;
         }
 
-        if (in_array($status, $this->successfulResponseStatuses, true)) {
+        if (in_array($matches[1], $this->successfulResponseStatuses, true)) {
             return;
         }
 
-        throw CouldNotFetchDns::digReturnedErrorResponse($status, implode(' ', $command));
+        throw CouldNotFetchDns::digReturnedErrorResponse($matches[1], implode(' ', $command));
     }
 
     /**
