@@ -120,7 +120,7 @@ it('returns no records for an error status when not asked to throw', function ()
 it('treats NXDOMAIN as an answer rather than an error', function () {
     $records = $this->dns
         ->throwOnErrorResponse()
-        ->useHandlers([new FixtureDig(digResponse('NXDOMAIN', 'spatie.be.		1800	IN	SOA	ns1.digitalocean.com. hostmaster.spatie.be. 0 10800 3600 604800 1800'))])
+        ->useHandlers([new FixtureDig(digResponse('NXDOMAIN'))])
         ->getRecords('missing.spatie.be', DNS_A);
 
     expect($records)->toBe([]);
