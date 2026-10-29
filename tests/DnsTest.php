@@ -134,15 +134,13 @@ it('treats NXDOMAIN as an answer rather than an error', function () {
     expect($records)->toBe([]);
 });
 
-it('uses the status of the last attempt when dig retries over TCP', function () {
-    $output = ";; Truncated, retrying in TCP mode.\n".digResponse('NOERROR')."\n".digResponse('REFUSED');
-
-    $dns = $this->dns
+it('reads the status from the header and not from record data', function () {
+    $records = $this->dns
         ->throwOnErrorResponse()
-        ->useHandlers([new FixtureDig($output)]);
+        ->useHandlers([new FixtureDig(digResponse('NOERROR', 'spatie.be.		300	IN	TXT	"->>HEADER<<- opcode: QUERY, status: REFUSED, id: 1"'))])
+        ->getRecords('spatie.be', DNS_TXT);
 
-    expect(fn () => $dns->getRecords('spatie.be', DNS_A))
-        ->toThrow(CouldNotFetchDns::class, 'received response status REFUSED');
+    expect($records)->toHaveCount(1);
 });
 
 it('resolves DNSSEC names and flags without selecting other record types', function (int|string|array $types, array $expected) {

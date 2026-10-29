@@ -105,17 +105,17 @@ class Dig extends Handler
     }
 
     /**
-     * Reads the status from the header that `+comments` adds to the output. When dig retries
-     * a truncated answer over TCP it prints a header per attempt, so the last one is the
-     * answer that was used.
+     * Reads the status from the header that `+comments` adds to the output. The pattern is
+     * anchored to the start of a line, so text inside a record, such as a TXT value, cannot
+     * pose as the header.
      */
     protected function responseStatus(string $output): ?string
     {
-        if (! preg_match_all('/->>HEADER<<-.*?status: ([A-Z0-9]+)/', $output, $matches)) {
+        if (! preg_match('/^;; ->>HEADER<<-.*?status: ([A-Z0-9]+)/m', $output, $matches)) {
             return null;
         }
 
-        return end($matches[1]);
+        return $matches[1];
     }
 
     protected function guardAgainstErrorResponse(string $output, array $command): void
