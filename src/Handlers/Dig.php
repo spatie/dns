@@ -12,6 +12,14 @@ class Dig extends Handler
 
     protected ?int $retries = 2;
 
+    /**
+     * Response statuses that are real answers. NXDOMAIN means the name does not exist, so
+     * returning no records is correct.
+     *
+     * @var array<int, string>
+     */
+    protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
+
     public function __invoke(string $domain, int $flag, string $type): array
     {
         $command = $this->buildCommand($domain, $type);
@@ -28,9 +36,13 @@ class Dig extends Handler
             throw CouldNotFetchDns::digReturnedWithError($process, $command);
         }
 
+        $output = $process->getOutput();
+
+        $this->guardAgainstErrorResponse($output, $command);
+
         return $this->transform(
             $type,
-            $this->parseOutput($process->getOutput())
+            $this->parseOutput($output)
         );
     }
 
@@ -59,6 +71,7 @@ class Dig extends Handler
             '+noidnout',
             '+authority',
             '+answer',
+            '+comments',
             '+nomultiline',
             '+answer',
             $this->prepareRetries(),
@@ -90,14 +103,34 @@ class Dig extends Handler
         return "+time={$this->timeout}";
     }
 
-    protected function parseOutput(string $output): array
+    /**
+     * Reads the status from the header that `+comments` adds to the output. The pattern is
+     * anchored to the start of a line, so text inside a record, such as a TXT value, cannot
+     * pose as the header.
+     */
+    protected function guardAgainstErrorResponse(string $output, array $command): void
     {
-        $output = trim($output);
-
-        if (empty($output)) {
-            return [];
+        if (! $this->throwOnErrorResponse) {
+            return;
         }
 
-        return explode(PHP_EOL, $output);
+        if (! preg_match('/^;; ->>HEADER<<-.*?status: ([A-Z0-9]+)/m', $output, $matches)) {
+            return;
+        }
+
+        if (in_array($matches[1], $this->successfulResponseStatuses, true)) {
+            return;
+        }
+
+        throw CouldNotFetchDns::digReturnedErrorResponse($matches[1], implode(' ', $command));
+    }
+
+    /**
+     * Keeps only the record lines. dig prints its comments, such as the response header, on
+     * lines that start with a semicolon.
+     */
+    protected function parseOutput(string $output): array
+    {
+        return array_values(preg_grep('/^[^;]/', explode(PHP_EOL, $output)));
     }
 }

@@ -14,6 +14,8 @@ abstract class Handler
 
     protected ?int $retries = null;
 
+    protected bool $throwOnErrorResponse = false;
+
     public function __construct(protected Factory $factory) {}
 
     public function useNameserver(?string $nameserver): self
@@ -33,6 +35,13 @@ abstract class Handler
     public function setRetries(?int $retries): self
     {
         $this->retries = $retries;
+
+        return $this;
+    }
+
+    public function throwOnErrorResponse(bool $throwOnErrorResponse): self
+    {
+        $this->throwOnErrorResponse = $throwOnErrorResponse;
 
         return $this;
     }

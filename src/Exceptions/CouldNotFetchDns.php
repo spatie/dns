@@ -12,6 +12,7 @@ class CouldNotFetchDns extends RuntimeException
         string $message,
         public ?int $exitCode = null,
         ?Throwable $previous = null,
+        public ?string $responseStatus = null,
     ) {
         parent::__construct($message, 0, $previous);
     }
@@ -44,6 +45,14 @@ class CouldNotFetchDns extends RuntimeException
         }
 
         return new static($message, $exitCode);
+    }
+
+    public static function digReturnedErrorResponse(string $responseStatus, string $command): self
+    {
+        return new static(
+            "Dig command `{$command}` received response status {$responseStatus} from the nameserver",
+            responseStatus: $responseStatus,
+        );
     }
 
     protected static function digExitCodeReason(?int $exitCode): ?string

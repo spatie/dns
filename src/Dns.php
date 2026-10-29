@@ -20,6 +20,8 @@ class Dns
 
     protected ?int $retries = 2;
 
+    protected bool $throwOnErrorResponse = false;
+
     /** @var array<int, Handler> */
     protected ?array $customHandlers = null;
 
@@ -72,6 +74,18 @@ class Dns
         return $this->retries;
     }
 
+    /**
+     * Makes `getRecords()` throw a `CouldNotFetchDns` exception when the nameserver answers
+     * with an error status, such as REFUSED or SERVFAIL, instead of returning no records.
+     * Only the dig handler can read the response status.
+     */
+    public function throwOnErrorResponse(): self
+    {
+        $this->throwOnErrorResponse = true;
+
+        return $this;
+    }
+
     public function getRecords(
         Domain|string $search,
         int|string|array $types = DNS_ALL
@@ -82,7 +96,8 @@ class Dns
         $handler = $this->getHandler()
             ->useNameserver($this->nameserver)
             ->setTimeout($this->timeout)
-            ->setRetries($this->retries);
+            ->setRetries($this->retries)
+            ->throwOnErrorResponse($this->throwOnErrorResponse);
 
         $records = [];
 

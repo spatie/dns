@@ -90,6 +90,67 @@ it('transforms DNSSEC dig output into records', function (string $type, string $
     ['DNSKEY', DNSKEY::class, 'icann.com. 3600 IN DNSKEY 256 3 13 Up+opSl3nHqfqgOgWKBduzNY/18thL7BcDRIxtkdDl3C/LVIOyjy5lEj dbdUrRHYYec/ke+5YTHvhX7pkIffjg=='],
 ]);
 
+it('ignores dig comments when parsing records', function () {
+    $records = $this->dns
+        ->useHandlers([new FixtureDig(digResponse('NOERROR', 'spatie.be.		949	IN	A	103.133.1.1'))])
+        ->getRecords('spatie.be', DNS_A);
+
+    expect($records)->toHaveCount(1)
+        ->and($records[0])->toBeInstanceOf(A::class)
+        ->and($records[0]->ip())->toBe('103.133.1.1');
+});
+
+it('throws when the nameserver answers with an error status', function (string $status) {
+    $dns = $this->dns
+        ->throwOnErrorResponse()
+        ->useHandlers([new FixtureDig(digResponse($status))]);
+
+    expect(fn () => $dns->getRecords('spatie.be', DNS_A))
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe($status));
+})->with(['REFUSED', 'SERVFAIL', 'FORMERR', 'NOTIMP', 'BADCOOKIE', 'RESERVED15']);
+
+it('returns no records for an error status when not asked to throw', function () {
+    $records = $this->dns
+        ->useHandlers([new FixtureDig(digResponse('REFUSED'))])
+        ->getRecords('spatie.be', DNS_A);
+
+    expect($records)->toBe([]);
+});
+
+it('returns no records for a successful empty answer', function (string $status) {
+    $records = $this->dns
+        ->throwOnErrorResponse()
+        ->useHandlers([new FixtureDig(digResponse($status))])
+        ->getRecords('missing.spatie.be', DNS_A);
+
+    expect($records)->toBe([]);
+})->with(['NOERROR', 'NXDOMAIN']);
+
+it('does not mistake record data for a response header', function (bool $withHeader) {
+    $text = ';; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: 1';
+    $output = "spatie.be. 300 IN TXT \"{$text}\"";
+
+    $records = $this->dns
+        ->throwOnErrorResponse()
+        ->useHandlers([new FixtureDig($withHeader ? digResponse('NOERROR', $output) : $output)])
+        ->getRecords('spatie.be', DNS_TXT);
+
+    expect($records)->toHaveCount(1)
+        ->and($records[0]->txt())->toBe($text);
+})->with([true, false]);
+
+it('throws instead of returning partial records when a later record type fails', function () {
+    $dns = $this->dns
+        ->throwOnErrorResponse()
+        ->useHandlers([new FixtureDig([
+            'A' => digResponse('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+            'AAAA' => digResponse('SERVFAIL'),
+        ])]);
+
+    expect(fn () => $dns->getRecords('spatie.be', ['A', 'AAAA']))
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe('SERVFAIL'));
+});
+
 it('resolves DNSSEC names and flags without selecting other record types', function (int|string|array $types, array $expected) {
     $records = $this->dns
         ->useHandlers([new CustomHandler])
@@ -188,6 +249,15 @@ it('throws exception on failed to fetch dns record', function () {
         ->getRecords('spatie.be', DNS_A);
 })->throws(CouldNotFetchDns::class);
 
+it('throws when a real nameserver refuses the query', function () {
+    $dns = $this->dns
+        ->useNameserver('ns1.digitalocean.com')
+        ->throwOnErrorResponse();
+
+    expect(fn () => $dns->getRecords('google.com', DNS_A))
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe('REFUSED'));
+});
+
 it('can use custom handlers without implicitly requesting DNSSEC records', function (int|string $types) {
     $result = $this->dns
         ->useHandlers([new CustomHandler])
@@ -257,9 +327,25 @@ function recordIsOfType(Record $record, array $types): bool
     return false;
 }
 
+function digResponse(string $status, string $records = ''): string
+{
+    return implode(PHP_EOL, [
+        ';; Got answer:',
+        ";; ->>HEADER<<- opcode: QUERY, status: {$status}, id: 3514",
+        ';; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1',
+        '',
+        ';; OPT PSEUDOSECTION:',
+        '; EDNS: version: 0, flags:; udp: 1232',
+        ';; ANSWER SECTION:',
+        $records,
+        '',
+    ]);
+}
+
 class FixtureDig extends Dig
 {
-    public function __construct(protected string $output)
+    /** @param string|array<string, string> $output */
+    public function __construct(protected string|array $output)
     {
         parent::__construct(new Factory);
     }
@@ -267,6 +353,8 @@ class FixtureDig extends Dig
     /** @return array<int, string> */
     protected function buildCommand(string $domain, string $type): array
     {
-        return [PHP_BINARY, '-r', 'echo '.var_export($this->output, true).';'];
+        $output = is_array($this->output) ? $this->output[$type] : $this->output;
+
+        return [PHP_BINARY, '-r', 'echo '.var_export($output, true).';'];
     }
 }
