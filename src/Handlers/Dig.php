@@ -14,8 +14,7 @@ class Dig extends Handler
 
     /**
      * Response statuses that are real answers. NXDOMAIN means the name does not exist, so
-     * returning no records is correct. Any other status, such as REFUSED or SERVFAIL, means
-     * the nameserver did not answer the question.
+     * returning no records is correct.
      *
      * @var array<int, string>
      */
