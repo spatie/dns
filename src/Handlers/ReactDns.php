@@ -72,8 +72,8 @@ class ReactDns extends Handler
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
 
     /**
-     * Holds the IP addresses of each nameserver this handler has used, so a hostname is only
-     * looked up once. The empty key holds the system nameservers.
+     * Holds the IP addresses of each nameserver hostname this handler has used, so a
+     * hostname is only looked up once.
      *
      * @var array<string, array<int, string>>
      */
@@ -213,29 +213,50 @@ class ReactDns extends Handler
     {
         $nameserver = (string) $this->nameserver;
 
+        if ($nameserver === '') {
+            return $this->systemNameservers();
+        }
+
         return $this->resolvedNameservers[$nameserver] ??= $this->resolveNameserver($nameserver);
     }
 
     /**
+     * Reads the system nameservers on every lookup, like dig, so a change to them is used
+     * straight away.
+     *
+     * @return array<int, string>
+     */
+    protected function systemNameservers(): array
+    {
+        $nameservers = Config::loadSystemConfigBlocking()->nameservers;
+
+        if ($nameservers !== []) {
+            return $nameservers;
+        }
+
+        // react/dns finds the Windows nameservers with wmic, which newer Windows versions no
+        // longer include. Elsewhere the list is empty when resolv.conf names no nameserver,
+        // and dig then sends the query to the local host.
+        if (PHP_OS_FAMILY === 'Windows') {
+            throw CouldNotFetchDns::noSystemNameserver();
+        }
+
+        return ['127.0.0.1'];
+    }
+
+    /**
+     * Returns every IPv4 address of a hostname, so the next one is asked when the first
+     * does not reply, like dig does.
+     *
      * @return array<int, string>
      */
     protected function resolveNameserver(string $nameserver): array
     {
-        if ($nameserver === '') {
-            return Config::loadSystemConfigBlocking()->nameservers ?: throw CouldNotFetchDns::noSystemNameserver();
-        }
-
         if (filter_var($nameserver, FILTER_VALIDATE_IP) !== false) {
             return [$nameserver];
         }
 
-        $address = gethostbyname($nameserver);
-
-        if (filter_var($address, FILTER_VALIDATE_IP) === false) {
-            throw CouldNotFetchDns::nameserverNotFound($nameserver);
-        }
-
-        return [$address];
+        return gethostbynamel($nameserver) ?: throw CouldNotFetchDns::nameserverNotFound($nameserver);
     }
 
     protected function guardAgainstErrorResponse(Message $response, string $description): void

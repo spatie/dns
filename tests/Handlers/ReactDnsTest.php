@@ -89,7 +89,7 @@ it('throws without a response status after the configured number of tries', func
 it('asks the next system nameserver when the first one does not reply', function () {
     $handler = new class(new Factory) extends ReactDns
     {
-        protected function resolveNameserver(string $nameserver): array
+        protected function systemNameservers(): array
         {
             return ['192.0.2.1', '1.1.1.1'];
         }
