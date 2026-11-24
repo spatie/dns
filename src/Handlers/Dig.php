@@ -21,8 +21,9 @@ class Dig extends Handler
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
 
     /**
-     * Remembers whether each dig binary works, keyed by its path. Checking starts a process,
-     * and every lookup asks again, so the answer is kept for the rest of the PHP process.
+     * Remembers whether each dig binary passed its check, keyed by its path. The check starts
+     * a process, and `Dns` runs it before every lookup. Only a passed check is trusted. A
+     * failed one runs again on the next lookup, so a dig that recovers is used again.
      *
      * @var array<string, bool>
      */
@@ -60,20 +61,18 @@ class Dig extends Handler
             return false;
         }
 
-        if (isset(static::$digIsUsable[$digPath])) {
-            return static::$digIsUsable[$digPath];
+        if (static::$digIsUsable[$digPath] ?? false) {
+            return true;
         }
 
         $process = new Process([$digPath, '-v', '2>&1']);
         $process->run();
 
-        static::$digIsUsable[$digPath] = $process->isSuccessful();
-
         if (str_contains($process->getOutput(), 'not found')) {
-            static::$digIsUsable[$digPath] = false;
+            return false;
         }
 
-        return static::$digIsUsable[$digPath];
+        return static::$digIsUsable[$digPath] = $process->isSuccessful();
     }
 
     protected function buildCommand(string $domain, string $type): array

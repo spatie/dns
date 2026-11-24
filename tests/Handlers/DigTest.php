@@ -30,3 +30,15 @@ it('checks a dig binary only once per process', function () {
 
     expect(file($this->invocationLog))->toHaveCount(1);
 });
+
+it('checks a failing dig binary again on the next lookup', function (string $failure) {
+    file_put_contents("{$this->binDirectory}/dig", "#!/bin/sh\necho \"\$@\" >> {$this->invocationLog}\n{$failure}\n");
+
+    expect((new Dig(new Factory))->canHandle())->toBeFalse();
+    expect((new Dig(new Factory))->canHandle())->toBeFalse();
+
+    expect(file($this->invocationLog))->toHaveCount(2);
+})->with([
+    'exit 1',
+    'echo "dig: not found"',
+]);
