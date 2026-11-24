@@ -306,27 +306,13 @@ class ReactDns extends Handler
      */
     protected function formatCharacterString(string $value): string
     {
-        $formatted = '';
+        $escaped = preg_replace_callback(
+            '/[^\x20-\x7E]/',
+            fn (array $match): string => sprintf('\\%03d', ord($match[0])),
+            addcslashes($value, '"\\'),
+        );
 
-        foreach (str_split($value) as $character) {
-            $byte = ord($character);
-
-            if (in_array($character, ['"', '\\'], true)) {
-                $formatted .= "\\{$character}";
-
-                continue;
-            }
-
-            if ($byte < 32 || $byte > 126) {
-                $formatted .= sprintf('\\%03d', $byte);
-
-                continue;
-            }
-
-            $formatted .= $character;
-        }
-
-        return "\"{$formatted}\"";
+        return "\"{$escaped}\"";
     }
 
     /**
