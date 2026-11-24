@@ -39,10 +39,10 @@ it('returns the same records as fetching each type on its own', function () {
 
 it('fetches the first type on its own and all other types with one process', function () {
     $dig = new ScriptedDig([
-        'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
-        'NS' => digAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
-        'MX' => digAnswer('NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
-        'TXT' => digAnswer('NOERROR', 'spatie.be. 300 IN TXT "v=spf1 -all"'),
+        'A' => digAnswer('A', 'NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+        'NS' => digAnswer('NS', 'NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
+        'MX' => digAnswer('MX', 'NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
+        'TXT' => digAnswer('TXT', 'NOERROR', 'spatie.be. 300 IN TXT "v=spf1 -all"'),
     ]);
 
     $records = Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX', 'TXT']);
@@ -53,10 +53,10 @@ it('fetches the first type on its own and all other types with one process', fun
 
 it('throws with the status and command of the first type that failed', function () {
     $dig = new ScriptedDig([
-        'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
-        'NS' => digAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
-        'MX' => digAnswer('REFUSED'),
-        'TXT' => digAnswer('SERVFAIL'),
+        'A' => digAnswer('A', 'NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+        'NS' => digAnswer('NS', 'NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
+        'MX' => digAnswer('MX', 'REFUSED'),
+        'TXT' => digAnswer('TXT', 'SERVFAIL'),
     ]);
 
     $dns = Dns::query()->throwOnErrorResponse()->useHandlers([$dig]);
@@ -69,9 +69,9 @@ it('throws with the status and command of the first type that failed', function 
 
 it('fetches each type on its own when a query got no reply', function (string $unanswered, array $processes) {
     $dig = new ScriptedDig([
-        'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
-        'NS' => digAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
-        'MX' => digAnswer('NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
+        'A' => digAnswer('A', 'NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+        'NS' => digAnswer('NS', 'NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
+        'MX' => digAnswer('MX', 'NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
         $unanswered => null,
     ]);
 
@@ -83,8 +83,20 @@ it('fetches each type on its own when a query got no reply', function (string $u
     'the last query' => ['MX', ['A', 'NS MX', 'NS', 'MX']],
 ]);
 
+it('fetches each type on its own when an answer is for another type', function () {
+    $dig = new ScriptedDig([
+        'A' => digAnswer('A', 'NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+        'NS' => null,
+        'MX' => digAnswer('MX', 'BADVERS').digAnswer('MX', 'NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
+    ]);
+
+    expect(fn () => Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']))
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->exitCode)->toBe(9))
+        ->and($dig->processes())->toBe(['A', 'NS MX', 'NS']);
+});
+
 it('keeps one process per type when buildCommand() differs per type', function () {
-    $dig = new class(['A' => digAnswer('NOERROR'), 'NS' => digAnswer('NOERROR'), 'MX' => digAnswer('NOERROR')]) extends ScriptedDig
+    $dig = new class(['A' => digAnswer('A', 'NOERROR'), 'NS' => digAnswer('NS', 'NOERROR'), 'MX' => digAnswer('MX', 'NOERROR')]) extends ScriptedDig
     {
         protected function buildCommand(string $domain, string $type): array
         {
@@ -102,7 +114,7 @@ it('keeps one process per type when buildCommand() differs per type', function (
 });
 
 it('runs an overridden __invoke() for every type', function () {
-    $dig = new class(['A' => digAnswer('NOERROR'), 'NS' => digAnswer('NOERROR'), 'MX' => digAnswer('NOERROR')]) extends ScriptedDig
+    $dig = new class(['A' => digAnswer('A', 'NOERROR'), 'NS' => digAnswer('NS', 'NOERROR'), 'MX' => digAnswer('MX', 'NOERROR')]) extends ScriptedDig
     {
         public array $invokedTypes = [];
 
@@ -128,12 +140,15 @@ it('fails after a single timeout when the nameserver does not answer', function 
         ->and(microtime(true) - $start)->toBeLessThan(3);
 });
 
-function digAnswer(string $status, string $records = ''): string
+function digAnswer(string $type, string $status, string $records = ''): string
 {
     return implode(PHP_EOL, [
         ';; Got answer:',
         ";; ->>HEADER<<- opcode: QUERY, status: {$status}, id: 3514",
         ';; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1',
+        '',
+        ';; QUESTION SECTION:',
+        ";spatie.be.\t\t\tIN\t{$type}",
         '',
         ';; ANSWER SECTION:',
         $records,

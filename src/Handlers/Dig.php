@@ -164,8 +164,10 @@ class Dig extends Handler
 
     /**
      * Fetches several types with one dig process. When the types cannot share one command,
-     * or the output does not hold one answer per type, each type is fetched again with
-     * `__invoke()`. A failure then throws the same exception as a lookup of that type alone.
+     * or the output does not hold one answer per type in the order of `$types`, each type is
+     * fetched again with `__invoke()`. The order matters because dig can print an extra
+     * answer for one query, such as a BADVERS reply before its retry, while another query
+     * gets no reply at all. The count of answers then still matches. A failure then throws the same exception as a lookup of that type alone.
      *
      * A nameserver that does not answer some of the types makes dig wait out the timeout of
      * each of them, and `__invoke()` then waits once more. So such a lookup takes longer to
@@ -193,6 +195,10 @@ class Dig extends Handler
         $records = [];
 
         foreach (array_combine($types, $answers) as $type => $answer) {
+            if (! preg_match("/^;\S+\s+IN\s+{$type}$/m", $answer)) {
+                return parent::getRecordsForTypes($domain, $types);
+            }
+
             $this->guardAgainstErrorResponse($answer, $this->buildCommand($domain, $type));
 
             $records = array_merge($records, $this->transform($type, $this->parseOutput($answer)));
@@ -206,7 +212,8 @@ class Dig extends Handler
      * command, each written as `-q <domain> -t <type>`. This only works when
      * `buildCommand()` returns the same options for every type, followed by that type's
      * query. Otherwise this returns null and each type keeps its own process. That keeps a
-     * subclass that overrides `buildCommand()` working.
+     * subclass that overrides `buildCommand()` working. The `+question` option makes dig
+     * print which type each answer is for.
      *
      * @param  array<int, string>  $types
      * @return array<int, string>|null
@@ -214,7 +221,7 @@ class Dig extends Handler
     protected function buildCombinedCommand(string $domain, array $types): ?array
     {
         $options = array_slice($this->buildCommand($domain, reset($types)), 0, -4);
-        $command = $options;
+        $command = [...$options, '+question'];
 
         foreach ($types as $type) {
             $query = ['-q', $domain, '-t', $type];
