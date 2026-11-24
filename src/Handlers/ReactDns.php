@@ -9,6 +9,7 @@ use React\Dns\Query\Query;
 use React\Dns\Query\RetryExecutor;
 use React\Dns\Query\SelectiveTransportExecutor;
 use React\Dns\Query\TcpTransportExecutor;
+use React\Dns\Query\TimeoutException;
 use React\Dns\Query\TimeoutExecutor;
 use React\Dns\Query\UdpTransportExecutor;
 use React\EventLoop\StreamSelectLoop;
@@ -148,7 +149,7 @@ class ReactDns extends Handler
         }
 
         if ($error !== null) {
-            throw CouldNotFetchDns::queryFailed($description, $error->getMessage(), $error);
+            throw CouldNotFetchDns::queryFailed($description, $this->failureReason($error), $error);
         }
 
         if ($response === null) {
@@ -156,6 +157,23 @@ class ReactDns extends Handler
         }
 
         return $response;
+    }
+
+    /**
+     * The retry executor wraps the last timeout in an exception of its own, whose message
+     * repeats the query. The timeout is the actual reason.
+     */
+    protected function failureReason(Throwable $error): string
+    {
+        if ($error instanceof TimeoutException) {
+            return 'no reply from the nameserver';
+        }
+
+        if ($error->getPrevious() instanceof TimeoutException) {
+            return 'no reply from the nameserver';
+        }
+
+        return $error->getMessage();
     }
 
     /**
