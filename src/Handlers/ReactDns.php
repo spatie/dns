@@ -118,12 +118,18 @@ class ReactDns extends Handler
      */
     protected function query(Query $query, array $nameservers, string $description): Message
     {
+        // Like dig, a number of tries below 1 counts as 1. dig spends the extra tries on the
+        // first nameserver and asks every other nameserver once.
+        $tries = max(1, (int) $this->retries);
+
         foreach ($nameservers as $nameserver) {
-            $result = $this->queryNameserver($query, $nameserver);
+            $result = $this->queryNameserver($query, $nameserver, $tries);
 
             if ($result instanceof Message) {
                 return $result;
             }
+
+            $tries = 1;
         }
 
         throw CouldNotFetchDns::queryFailed($description, $this->failureReason($result), $result);
@@ -136,12 +142,12 @@ class ReactDns extends Handler
      * The loop is not stopped when the answer arrives. It runs until it is empty, so react/dns
      * can still close the TCP connection it opens for an answer that was too large for UDP.
      */
-    protected function queryNameserver(Query $query, string $nameserver): Message|Throwable
+    protected function queryNameserver(Query $query, string $nameserver, int $tries): Message|Throwable
     {
         $loop = new StreamSelectLoop;
 
-        // Like dig, a timeout or a number of tries below 1 counts as 1. The tries include the
-        // first attempt, and RetryExecutor only counts the attempts after it.
+        // Like dig, a timeout below 1 counts as 1. The tries include the first attempt, and
+        // RetryExecutor only counts the attempts after it.
         $executor = new RetryExecutor(
             new TimeoutExecutor(
                 new SelectiveTransportExecutor(
@@ -151,7 +157,7 @@ class ReactDns extends Handler
                 max(1, (int) $this->timeout),
                 $loop,
             ),
-            max(1, (int) $this->retries) - 1,
+            $tries - 1,
         );
 
         $result = null;

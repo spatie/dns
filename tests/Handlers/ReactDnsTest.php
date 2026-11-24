@@ -100,6 +100,22 @@ it('asks the next system nameserver when the first one does not reply', function
     expect($records)->not->toBeEmpty();
 });
 
+it('spends the extra tries on the first nameserver and asks the others once', function () {
+    $handler = new class(new Factory) extends ReactDns
+    {
+        protected function systemNameservers(): array
+        {
+            return ['192.0.2.1', '192.0.2.2'];
+        }
+    };
+
+    $start = microtime(true);
+
+    expect(fn () => $handler->setTimeout(1)->setRetries(2)('spatie.be', DNS_A, 'A'))->toThrow(CouldNotFetchDns::class);
+
+    expect(microtime(true) - $start)->toBeGreaterThanOrEqual(3.0)->toBeLessThan(4.0);
+});
+
 it('throws when the nameserver hostname does not resolve', function () {
     $handler = (new ReactDns(new Factory))->useNameserver('nameserver.invalid');
 
@@ -182,7 +198,7 @@ function reactDnsAnswering(Message $response): ReactDns
     {
         public Message $response;
 
-        protected function queryNameserver(Query $query, string $nameserver): Message
+        protected function queryNameserver(Query $query, string $nameserver, int $tries): Message
         {
             return $this->response;
         }
