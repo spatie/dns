@@ -43,10 +43,10 @@ it('fetches the first type on its own and all other types with one process', fun
     $records = Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX', 'TXT']);
 
     expect(array_map(fn (Record $record) => $record->type(), $records))->toBe(['A', 'NS', 'MX', 'TXT'])
-        ->and($dig->processCount())->toBe(2);
+        ->and($dig->processes())->toBe(['A', 'NS MX TXT']);
 });
 
-it('throws with the status of the first answer that failed', function () {
+it('throws with the status and command of the first type that failed', function () {
     $dig = new ScriptedDig([
         'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
         'NS' => digAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
@@ -58,12 +58,11 @@ it('throws with the status of the first answer that failed', function () {
 
     expect(fn () => $dns->getRecords('spatie.be', ['A', 'NS', 'MX', 'TXT']))
         ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe('REFUSED')
-            ->and($exception->getMessage())->toContain('-t MX`'));
-
-    expect($dig->processCount())->toBe(2);
+            ->and($exception->getMessage())->toContain('-t MX`'))
+        ->and($dig->processes())->toBe(['A', 'NS MX TXT']);
 });
 
-it('fetches each type on its own when dig did not answer every query', function () {
+it('fetches each type on its own when a query got no reply', function () {
     $dig = new ScriptedDig([
         'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
         'NS' => null,
@@ -71,9 +70,8 @@ it('fetches each type on its own when dig did not answer every query', function 
     ]);
 
     expect(fn () => Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']))
-        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->exitCode)->toBe(9));
-
-    expect($dig->processCount())->toBe(3);
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->exitCode)->toBe(9))
+        ->and($dig->processes())->toBe(['A', 'NS MX', 'NS']);
 });
 
 it('runs an overridden __invoke() for every type', function () {
@@ -120,7 +118,7 @@ class ScriptedDig extends Dig
 {
     protected string $log;
 
-    /** @param array<string, ?string> $answers */
+    /** @param array<string, ?string> $answers dig's output per type, or null when the type gets no reply */
     public function __construct(protected array $answers)
     {
         parent::__construct(new Factory);
@@ -133,24 +131,23 @@ class ScriptedDig extends Dig
         unlink($this->log);
     }
 
-    public function processCount(): int
+    /** @return array<int, string> */
+    public function processes(): array
     {
-        return substr_count(file_get_contents($this->log), 'run');
+        return file($this->log, FILE_IGNORE_NEW_LINES);
     }
 
     /** @return array<int, string> */
     protected function buildCommand(string $domain, string $type): array
     {
         $script = implode(PHP_EOL, [
-            'file_put_contents('.var_export($this->log, true).', "run\n", FILE_APPEND);',
+            '$types = array_map(fn ($index) => $argv[$index + 1], array_keys($argv, "-t"));',
+            'file_put_contents('.var_export($this->log, true).', implode(" ", $types).PHP_EOL, FILE_APPEND);',
             '$answers = '.var_export($this->answers, true).';',
-            '$exitCode = 0;',
-            'foreach (array_keys($argv, "-t") as $index) {',
-            '    $answer = $answers[$argv[$index + 1]];',
-            '    echo $answer ?? ";; no servers could be reached\n";',
-            '    $exitCode = $answer === null ? 9 : 0;',
+            'foreach ($types as $type) {',
+            '    echo $answers[$type] ?? ";; no servers could be reached\n";',
             '}',
-            'exit($exitCode);',
+            'exit($answers[end($types)] === null ? 9 : 0);',
         ]);
 
         return [PHP_BINARY, '-r', $script, '--', '-q', $domain, '-t', $type];
