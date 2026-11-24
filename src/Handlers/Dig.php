@@ -246,9 +246,7 @@ class Dig extends Handler
         $process = new Process($command);
 
         try {
-            $process
-                ->enableOutput()
-                ->run();
+            $process->run();
         } catch (ProcessTimedOutException) {
             return [];
         }
