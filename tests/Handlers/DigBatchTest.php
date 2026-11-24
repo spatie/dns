@@ -57,7 +57,8 @@ it('throws with the status of the first answer that failed', function () {
     $dns = Dns::query()->throwOnErrorResponse()->useHandlers([$dig]);
 
     expect(fn () => $dns->getRecords('spatie.be', ['A', 'NS', 'MX', 'TXT']))
-        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe('REFUSED'));
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe('REFUSED')
+            ->and($exception->getMessage())->toContain('-t MX`'));
 
     expect($dig->processCount())->toBe(2);
 });

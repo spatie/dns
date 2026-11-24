@@ -187,7 +187,7 @@ class Dig extends Handler
         $records = [];
 
         foreach (array_values($types) as $index => $type) {
-            $this->guardAgainstErrorResponse($answers[$index], $command);
+            $this->guardAgainstErrorResponse($answers[$index], $this->buildCommand($domain, $type));
 
             $records = array_merge(
                 $records,
