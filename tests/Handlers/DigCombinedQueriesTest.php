@@ -8,7 +8,16 @@ use Spatie\Dns\Support\Factory;
 use Spatie\Dns\Support\Types;
 
 it('returns the same records as fetching each type on its own', function () {
-    $dig = (new Dig(new Factory))->useNameserver('ns1.digitalocean.com');
+    $dig = (new class(new Factory) extends Dig
+    {
+        public array $answers = [];
+
+        protected function runCombinedCommand(array $command): array
+        {
+            return $this->answers = parent::runCombinedCommand($command);
+        }
+    })->useNameserver('ns1.digitalocean.com');
+
     $types = (new Types)->toNames(DNS_ALL);
 
     $perType = [];
@@ -23,6 +32,7 @@ it('returns the same records as fetching each type on its own', function () {
     $withoutTtl = fn (array $records) => array_map(fn (Record $record) => json_encode([...$record->toArray(), 'ttl' => null]), $records);
 
     expect($combined)->not->toBeEmpty()
+        ->and($dig->answers)->toHaveCount(count($types) - 1)
         ->and($typesOf($combined))->toBe($typesOf($perType))
         ->and($withoutTtl($combined))->toEqualCanonicalizing($withoutTtl($perType));
 });
