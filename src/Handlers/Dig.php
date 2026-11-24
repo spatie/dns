@@ -236,8 +236,9 @@ class Dig extends Handler
      * such line, and dig still runs the next query. That is why the caller compares the
      * number of answers with the number of types.
      *
-     * Symfony stops a process after 60 seconds, and a few timeouts in a row can reach that
-     * limit. No answers are returned then, so the caller falls back as well.
+     * Like `__invoke()`, this only trusts a process that exits with 0. A process that fails,
+     * or that runs into Symfony's timeout of 60 seconds, returns no answers. The caller then
+     * falls back to one process per type.
      *
      * @return array<int, string>
      */
@@ -248,6 +249,10 @@ class Dig extends Handler
         try {
             $process->run();
         } catch (ProcessTimedOutException) {
+            return [];
+        }
+
+        if (! $process->isSuccessful()) {
             return [];
         }
 
