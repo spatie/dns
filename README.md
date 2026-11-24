@@ -49,7 +49,7 @@ composer require spatie/dns
 
 The class can get these record types: `A`, `AAAA`, `CNAME`, `NS`, `PTR`, `SOA`, `MX`, `SRV`, `TXT`, `DS`, `DNSKEY`, `CAA`, `NAPTR`.
 
-`DS` and `DNSKEY` require [dig](#under-the-hood) and must be requested explicitly; they are not included in the default query, `DNS_ALL`, or `'*'`. The native PHP handler throws a `CouldNotFetchDns` exception when either type is requested.
+`DS` and `DNSKEY` require [dig](#under-the-hood) or the [`ReactDns` handler](#querying-without-starting-dig) and must be requested explicitly; they are not included in the default query, `DNS_ALL`, or `'*'`. The native PHP handler throws a `CouldNotFetchDns` exception when either type is requested.
 
 ```php
 use Spatie\Dns\Dns;
