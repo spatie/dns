@@ -157,8 +157,8 @@ class Dig extends Handler
         }
 
         return array_merge(
-            parent::getRecordsForTypes($domain, array_slice($types, 0, 1, true)),
-            $this->getRecordsInOneProcess($domain, array_slice($types, 1, null, true)),
+            parent::getRecordsForTypes($domain, array_slice($types, 0, 1, preserve_keys: true)),
+            $this->getRecordsInOneProcess($domain, array_slice($types, 1, preserve_keys: true)),
         );
     }
 
