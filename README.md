@@ -180,7 +180,7 @@ $results = (new Dns)
 
 ## Querying without starting dig
 
-The dig handler starts one `dig` process for every record type it fetches. When you run many lookups, starting those processes costs more CPU time than the lookups themselves.
+The dig handler starts a `dig` process to fetch records. When you run many lookups, starting those processes costs more CPU time than the lookups themselves.
 
 The `ReactDns` handler sends the queries from inside PHP instead, so no process is started. It returns the same records as the dig handler, and it supports `useNameserver()`, `setTimeout()`, `setRetries()` and `throwOnErrorResponse()` in the same way. It needs the [react/dns](https://github.com/reactphp/dns) package.
 
