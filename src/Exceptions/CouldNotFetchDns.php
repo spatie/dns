@@ -73,6 +73,11 @@ class CouldNotFetchDns extends RuntimeException
         return new static("Could not find the IP address of nameserver `{$nameserver}`");
     }
 
+    public static function noSystemNameserver(): self
+    {
+        return new static('Could not find the nameservers of this system. Pass one with `useNameserver()`.');
+    }
+
     protected static function digExitCodeReason(?int $exitCode): ?string
     {
         return match ($exitCode) {
