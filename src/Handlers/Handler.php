@@ -65,7 +65,7 @@ abstract class Handler
      * @param  array<int, string>  $types
      * @return Record[]
      */
-    public function getRecords(string $domain, array $types): array
+    public function getRecordsForTypes(string $domain, array $types): array
     {
         $records = [];
 

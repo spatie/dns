@@ -99,7 +99,7 @@ class Dns
             ->setRetries($this->retries)
             ->throwOnErrorResponse($this->throwOnErrorResponse);
 
-        return $handler->getRecords($domain, $types);
+        return $handler->getRecordsForTypes($domain, $types);
     }
 
     /**

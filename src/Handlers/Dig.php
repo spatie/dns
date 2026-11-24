@@ -146,18 +146,18 @@ class Dig extends Handler
      * @param  array<int, string>  $types
      * @return Record[]
      */
-    public function getRecords(string $domain, array $types): array
+    public function getRecordsForTypes(string $domain, array $types): array
     {
         if (count($types) < 3) {
-            return parent::getRecords($domain, $types);
+            return parent::getRecordsForTypes($domain, $types);
         }
 
         if ((new ReflectionMethod($this, '__invoke'))->class !== self::class) {
-            return parent::getRecords($domain, $types);
+            return parent::getRecordsForTypes($domain, $types);
         }
 
         return array_merge(
-            parent::getRecords($domain, array_slice($types, 0, 1, true)),
+            parent::getRecordsForTypes($domain, array_slice($types, 0, 1, true)),
             $this->getRecordsInOneProcess($domain, array_slice($types, 1, null, true)),
         );
     }
@@ -180,13 +180,13 @@ class Dig extends Handler
         $command = $this->buildBatchCommand($domain, $types);
 
         if ($command === null) {
-            return parent::getRecords($domain, $types);
+            return parent::getRecordsForTypes($domain, $types);
         }
 
         $answers = $this->runBatchCommand($command, count($types));
 
         if ($answers === null) {
-            return parent::getRecords($domain, $types);
+            return parent::getRecordsForTypes($domain, $types);
         }
 
         $records = [];

@@ -17,7 +17,7 @@ it('returns the same records as fetching each type on its own', function () {
         $perType = array_merge($perType, $dig('spatie.be', $flag, $type));
     }
 
-    $batched = $dig->getRecords('spatie.be', $types);
+    $batched = $dig->getRecordsForTypes('spatie.be', $types);
 
     $typesOf = fn (array $records) => array_map(fn (Record $record) => $record->type(), $records);
     $sorted = function (array $records) {
