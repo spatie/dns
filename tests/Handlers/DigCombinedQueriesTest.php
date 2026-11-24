@@ -20,16 +20,11 @@ it('returns the same records as fetching each type on its own', function () {
     $combined = $dig->getRecordsForTypes('spatie.be', $types);
 
     $typesOf = fn (array $records) => array_map(fn (Record $record) => $record->type(), $records);
-    $sorted = function (array $records) {
-        $lines = array_map(fn (Record $record) => json_encode([...$record->toArray(), 'ttl' => null]), $records);
-        sort($lines);
-
-        return $lines;
-    };
+    $withoutTtl = fn (array $records) => array_map(fn (Record $record) => json_encode([...$record->toArray(), 'ttl' => null]), $records);
 
     expect($combined)->not->toBeEmpty()
         ->and($typesOf($combined))->toBe($typesOf($perType))
-        ->and($sorted($combined))->toBe($sorted($perType));
+        ->and($withoutTtl($combined))->toEqualCanonicalizing($withoutTtl($perType));
 });
 
 it('fetches the first type on its own and all other types with one process', function () {
