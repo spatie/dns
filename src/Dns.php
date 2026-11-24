@@ -99,16 +99,7 @@ class Dns
             ->setRetries($this->retries)
             ->throwOnErrorResponse($this->throwOnErrorResponse);
 
-        $records = [];
-
-        foreach ($types as $flag => $type) {
-            $records = array_merge(
-                $records,
-                $handler($domain, $flag, $type)
-            );
-        }
-
-        return $records;
+        return $handler->getRecords($domain, $types);
     }
 
     /**

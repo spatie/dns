@@ -53,6 +53,29 @@ abstract class Handler
 
     abstract public function canHandle(): bool;
 
+    /**
+     * Fetches the records for several types. `$types` maps each flag to its type name, the
+     * way `Dns::resolveTypes()` returns it. The records come back grouped by type, in the
+     * order of `$types`.
+     *
+     * This default calls `__invoke()` once per type. A handler that can fetch several types
+     * in one go can override it. The override has to return the same records in the same
+     * order, and throw where `__invoke()` would throw.
+     *
+     * @param  array<int, string>  $types
+     * @return Record[]
+     */
+    public function getRecords(string $domain, array $types): array
+    {
+        $records = [];
+
+        foreach ($types as $flag => $type) {
+            $records = array_merge($records, $this($domain, $flag, $type));
+        }
+
+        return $records;
+    }
+
     protected function transform(string $type, array $records): array
     {
         return array_filter(array_map(
