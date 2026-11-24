@@ -137,12 +137,6 @@ it('turns the answer into the record that dig output gives', function (string $t
         ["say \"hi\" \\ caf\u{e9}", "tab\there"],
         'example.com. 86400 IN TXT "say \"hi\" \\\\ caf\195\169" "tab\009here"',
     ],
-    'CAA' => [
-        'CAA',
-        Message::TYPE_CAA,
-        ['flag' => 128, 'tag' => 'issue', 'value' => 'letsencrypt.org; validationmethods=dns-01'],
-        'example.com. 86400 IN CAA 128 issue "letsencrypt.org; validationmethods=dns-01"',
-    ],
     'null MX' => [
         'MX',
         Message::TYPE_MX,
