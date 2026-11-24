@@ -183,9 +183,9 @@ class Dig extends Handler
             return parent::getRecordsForTypes($domain, $types);
         }
 
-        $answers = $this->runBatchCommand($command, count($types));
+        $answers = $this->runBatchCommand($command);
 
-        if ($answers === null) {
+        if (count($answers) !== count($types)) {
             return parent::getRecordsForTypes($domain, $types);
         }
 
@@ -236,13 +236,12 @@ class Dig extends Handler
     }
 
     /**
-     * Returns the output of each query, or null when dig failed or did not answer every
-     * query. Symfony stops a process after 60 seconds. One query stays far below that, but
-     * a batch of queries that all time out can reach it. That also counts as a failure.
+     * Returns the output of each query that dig answered, in query order. A process that
+     * runs into Symfony's timeout of 60 seconds returns no answers.
      *
-     * @return array<int, string>|null
+     * @return array<int, string>
      */
-    protected function runBatchCommand(array $command, int $queryCount): ?array
+    protected function runBatchCommand(array $command): array
     {
         $process = new Process($command);
 
@@ -251,19 +250,9 @@ class Dig extends Handler
                 ->enableOutput()
                 ->run();
         } catch (ProcessTimedOutException) {
-            return null;
+            return [];
         }
 
-        if (! $process->isSuccessful()) {
-            return null;
-        }
-
-        $answers = array_slice(preg_split('/^(?=;; ->>HEADER<<-)/m', $process->getOutput()), 1);
-
-        if (count($answers) !== $queryCount) {
-            return null;
-        }
-
-        return $answers;
+        return array_slice(preg_split('/^(?=;; ->>HEADER<<-)/m', $process->getOutput()), 1);
     }
 }
