@@ -62,17 +62,21 @@ it('throws with the status and command of the first type that failed', function 
         ->and($dig->processes())->toBe(['A', 'NS MX TXT']);
 });
 
-it('fetches each type on its own when a query got no reply', function () {
+it('fetches each type on its own when a query got no reply', function (string $unanswered, array $processes) {
     $dig = new ScriptedDig([
         'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
-        'NS' => null,
+        'NS' => digAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
         'MX' => digAnswer('NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
+        $unanswered => null,
     ]);
 
     expect(fn () => Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']))
         ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->exitCode)->toBe(9))
-        ->and($dig->processes())->toBe(['A', 'NS MX', 'NS']);
-});
+        ->and($dig->processes())->toBe($processes);
+})->with([
+    'a query in the middle' => ['NS', ['A', 'NS MX', 'NS']],
+    'the last query' => ['MX', ['A', 'NS MX', 'NS', 'MX']],
+]);
 
 it('runs an overridden __invoke() for every type', function () {
     $dig = new class(['A' => digAnswer('NOERROR'), 'NS' => digAnswer('NOERROR'), 'MX' => digAnswer('NOERROR')]) extends ScriptedDig
