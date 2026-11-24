@@ -163,11 +163,14 @@ class Dig extends Handler
     }
 
     /**
-     * Fetches several types with one dig process. When the types cannot share one command,
-     * or the output does not hold one answer per type in the order of `$types`, each type is
-     * fetched again with `__invoke()`. The order matters because dig can print an extra
-     * answer for one query, such as a BADVERS reply before its retry, while another query
-     * gets no reply at all. The count of answers then still matches. A failure then throws the same exception as a lookup of that type alone.
+     * Fetches several types with one dig process. Each type is fetched again with
+     * `__invoke()` when the types cannot share one command, or when the output does not hold
+     * exactly one answer per type, in the order of `$types`. A failure then throws the same
+     * exception as a lookup of that type alone.
+     *
+     * The order is checked, not only the count. dig can print an extra answer for one query,
+     * such as a BADVERS reply before its retry, while another query gets no reply. The number
+     * of answers then still matches.
      *
      * A nameserver that does not answer some of the types makes dig wait out the timeout of
      * each of them, and `__invoke()` then waits once more. So such a lookup takes longer to
