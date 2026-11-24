@@ -68,6 +68,11 @@ class CouldNotFetchDns extends RuntimeException
         return new static("DNS query `{$query}` failed: {$reason}", previous: $previous);
     }
 
+    public static function nameserverNotFound(string $nameserver): self
+    {
+        return new static("Could not find the IP address of nameserver `{$nameserver}`");
+    }
+
     protected static function digExitCodeReason(?int $exitCode): ?string
     {
         return match ($exitCode) {

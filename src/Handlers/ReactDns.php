@@ -200,8 +200,8 @@ class ReactDns extends Handler
     protected function resolveNameserver(string $nameserver): string
     {
         if ($nameserver === '') {
-            return Config::loadSystemConfigBlocking()->nameservers[0]
-                ?? throw CouldNotFetchDns::queryFailed('system nameserver', 'no nameserver is configured on this system');
+            // dig sends the query to the local host when the system lists no nameserver.
+            return Config::loadSystemConfigBlocking()->nameservers[0] ?? '127.0.0.1';
         }
 
         if (filter_var($nameserver, FILTER_VALIDATE_IP) !== false) {
@@ -211,7 +211,7 @@ class ReactDns extends Handler
         $address = gethostbyname($nameserver);
 
         if (filter_var($address, FILTER_VALIDATE_IP) === false) {
-            throw CouldNotFetchDns::queryFailed("nameserver {$nameserver}", 'its IP address could not be found');
+            throw CouldNotFetchDns::nameserverNotFound($nameserver);
         }
 
         return $address;
