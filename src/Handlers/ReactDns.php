@@ -72,12 +72,12 @@ class ReactDns extends Handler
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
 
     /**
-     * Holds the IP address of each nameserver this handler has used, so a hostname is only
-     * looked up once. The empty key holds the system nameserver.
+     * Holds the IP addresses of each nameserver this handler has used, so a hostname is only
+     * looked up once. The empty key holds the system nameservers.
      *
-     * @var array<string, string>
+     * @var array<string, array<int, string>>
      */
-    protected array $nameserverAddresses = [];
+    protected array $resolvedNameservers = [];
 
     public function __invoke(string $domain, int $flag, string $type): array
     {
@@ -87,16 +87,16 @@ class ReactDns extends Handler
             throw UnsupportedRecordType::make($type);
         }
 
-        $nameserver = $this->nameserverAddress();
+        $nameservers = $this->nameserverAddresses();
 
-        $description = "{$domain} {$type} @{$nameserver}";
+        $description = "{$domain} {$type} @".implode(',', $nameservers);
 
         // react/dns adds the root dot itself, so a name that already ends in one would end twice.
         $domain = $this->toAscii(rtrim($domain, '.'), $description);
 
         $response = $this->query(
             new Query($domain, $this->typeCodes[$type], Message::CLASS_IN),
-            $nameserver,
+            $nameservers,
             $description,
         );
 
@@ -111,13 +111,32 @@ class ReactDns extends Handler
     }
 
     /**
+     * Asks each nameserver in turn until one answers, the way dig tries each system
+     * nameserver. An error status is an answer too, so like dig it does not move on then.
+     *
+     * @param  array<int, string>  $nameservers
+     */
+    protected function query(Query $query, array $nameservers, string $description): Message
+    {
+        foreach ($nameservers as $nameserver) {
+            $result = $this->queryNameserver($query, $nameserver);
+
+            if ($result instanceof Message) {
+                return $result;
+            }
+        }
+
+        throw CouldNotFetchDns::queryFailed($description, $this->failureReason($result), $result);
+    }
+
+    /**
      * Runs a private event loop until the query has an answer or has failed. A private loop
      * cannot start or stop timers that the application put on the global loop.
      *
      * The loop is not stopped when the answer arrives. It runs until it is empty, so react/dns
      * can still close the TCP connection it opens for an answer that was too large for UDP.
      */
-    protected function query(Query $query, string $nameserver, string $description): Message
+    protected function queryNameserver(Query $query, string $nameserver): Message|Throwable
     {
         $loop = new StreamSelectLoop;
 
@@ -144,10 +163,6 @@ class ReactDns extends Handler
         $executor->query($query)->then($settle, $settle);
 
         $loop->run();
-
-        if ($result instanceof Throwable) {
-            throw CouldNotFetchDns::queryFailed($description, $this->failureReason($result), $result);
-        }
 
         return $result;
     }
@@ -189,25 +204,30 @@ class ReactDns extends Handler
     }
 
     /**
-     * Returns the IP address to send the query to. dig accepts a hostname, but react/dns
-     * needs an IP address.
+     * Returns the IP addresses to send the query to, in order. dig accepts a hostname, but
+     * react/dns needs an IP address.
+     *
+     * @return array<int, string>
      */
-    protected function nameserverAddress(): string
+    protected function nameserverAddresses(): array
     {
         $nameserver = (string) $this->nameserver;
 
-        return $this->nameserverAddresses[$nameserver] ??= $this->resolveNameserver($nameserver);
+        return $this->resolvedNameservers[$nameserver] ??= $this->resolveNameserver($nameserver);
     }
 
-    protected function resolveNameserver(string $nameserver): string
+    /**
+     * @return array<int, string>
+     */
+    protected function resolveNameserver(string $nameserver): array
     {
         if ($nameserver === '') {
             // dig sends the query to the local host when the system lists no nameserver.
-            return Config::loadSystemConfigBlocking()->nameservers[0] ?? '127.0.0.1';
+            return Config::loadSystemConfigBlocking()->nameservers ?: ['127.0.0.1'];
         }
 
         if (filter_var($nameserver, FILTER_VALIDATE_IP) !== false) {
-            return $nameserver;
+            return [$nameserver];
         }
 
         $address = gethostbyname($nameserver);
@@ -216,7 +236,7 @@ class ReactDns extends Handler
             throw CouldNotFetchDns::nameserverNotFound($nameserver);
         }
 
-        return $address;
+        return [$address];
     }
 
     protected function guardAgainstErrorResponse(Message $response, string $description): void

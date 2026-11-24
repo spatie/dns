@@ -86,6 +86,20 @@ it('throws without a response status after the configured number of tries', func
     expect(microtime(true) - $start)->toBeGreaterThanOrEqual(2.0)->toBeLessThan(3.0);
 });
 
+it('asks the next system nameserver when the first one does not reply', function () {
+    $handler = new class(new Factory) extends ReactDns
+    {
+        protected function resolveNameserver(string $nameserver): array
+        {
+            return ['192.0.2.1', '1.1.1.1'];
+        }
+    };
+
+    $records = $handler->setTimeout(1)->setRetries(1)('cloudflare.com', DNS_A, 'A');
+
+    expect($records)->not->toBeEmpty();
+});
+
 it('throws when the nameserver hostname does not resolve', function () {
     $handler = (new ReactDns(new Factory))->useNameserver('nameserver.invalid');
 
@@ -168,7 +182,7 @@ function reactDnsAnswering(Message $response): ReactDns
     {
         public Message $response;
 
-        protected function query(Query $query, string $nameserver, string $description): Message
+        protected function queryNameserver(Query $query, string $nameserver): Message
         {
             return $this->response;
         }
