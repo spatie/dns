@@ -105,9 +105,12 @@ class ReactDns extends Handler
         return $this->transform($type, $this->toLines($response, $type));
     }
 
+    /**
+     * SelectiveTransportExecutor arrived in react/dns 1.2, so an older install is not used.
+     */
     public function canHandle(): bool
     {
-        return class_exists(UdpTransportExecutor::class);
+        return class_exists(SelectiveTransportExecutor::class);
     }
 
     /**

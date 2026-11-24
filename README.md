@@ -185,7 +185,7 @@ The dig handler starts a `dig` process to fetch records. When you run many looku
 The `ReactDns` handler sends the queries from inside PHP instead, so no process is started. It returns the same records as the dig handler, and it supports `useNameserver()`, `setTimeout()`, `setRetries()` and `throwOnErrorResponse()` in the same way. It needs the [react/dns](https://github.com/reactphp/dns) package.
 
 ```bash
-composer require react/dns
+composer require react/dns:^1.14
 ```
 
 ```php
