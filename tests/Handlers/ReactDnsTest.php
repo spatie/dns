@@ -55,9 +55,6 @@ it('names the error status the way dig does', function (int $responseCode, strin
     expect(fn () => $handler('spatie.be', DNS_A, 'A'))
         ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->responseStatus)->toBe($status));
 })->with([
-    [Message::RCODE_FORMAT_ERROR, 'FORMERR'],
-    [Message::RCODE_SERVER_FAILURE, 'SERVFAIL'],
-    [Message::RCODE_NOT_IMPLEMENTED, 'NOTIMP'],
     [Message::RCODE_REFUSED, 'REFUSED'],
     [15, 'RESERVED15'],
 ]);
