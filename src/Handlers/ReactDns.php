@@ -121,6 +121,8 @@ class ReactDns extends Handler
     {
         $loop = new StreamSelectLoop;
 
+        // Like dig, a timeout or a number of tries below 1 counts as 1. The tries include the
+        // first attempt, and RetryExecutor only counts the attempts after it.
         $executor = new RetryExecutor(
             new TimeoutExecutor(
                 new SelectiveTransportExecutor(
