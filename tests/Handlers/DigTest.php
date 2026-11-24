@@ -23,10 +23,8 @@ afterEach(function () {
 });
 
 it('checks a dig binary only once per process', function () {
-    $factory = new Factory;
-
-    expect((new Dig($factory))->canHandle())->toBeTrue();
-    expect((new Dig($factory))->canHandle())->toBeTrue();
+    expect((new Dig(new Factory))->canHandle())->toBeTrue();
+    expect((new Dig(new Factory))->canHandle())->toBeTrue();
 
     expect(file($this->invocationLog))->toHaveCount(1);
 });
