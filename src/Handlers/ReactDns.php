@@ -91,6 +91,8 @@ class ReactDns extends Handler
 
         $description = "{$domain} {$type} @{$nameserver}";
 
+        $domain = $this->toAscii($domain, $description);
+
         $response = $this->query(
             new Query($domain, $this->typeCodes[$type], Message::CLASS_IN),
             $nameserver,
@@ -157,6 +159,29 @@ class ReactDns extends Handler
         }
 
         return $response;
+    }
+
+    /**
+     * Converts a Unicode domain name to its punycode form, the way dig does before it sends
+     * the query. react/dns would send the UTF-8 bytes as they are.
+     */
+    protected function toAscii(string $domain, string $description): string
+    {
+        if (mb_check_encoding($domain, 'ASCII')) {
+            return $domain;
+        }
+
+        if (! function_exists('idn_to_ascii')) {
+            throw CouldNotFetchDns::queryFailed($description, 'a Unicode domain name needs the intl extension');
+        }
+
+        $ascii = idn_to_ascii($domain, IDNA_NONTRANSITIONAL_TO_ASCII, INTL_IDNA_VARIANT_UTS46);
+
+        if ($ascii === false) {
+            throw CouldNotFetchDns::queryFailed($description, 'the domain name cannot be converted to punycode');
+        }
+
+        return $ascii;
     }
 
     /**

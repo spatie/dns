@@ -26,6 +26,7 @@ it('returns the same records as dig', function (string $domain, string $nameserv
     ['cloudflare.com', 'a.gtld-servers.net', 'DS'],
     ['spatie.be', 'ns1.openminds.be', 'MX'],
     ['spatie.be', 'ns1.openminds.be', 'TXT'],
+    ['münchen.de', 'a.nic.de', 'NS'],
 ]);
 
 it('throws when a real nameserver refuses the query', function () {
