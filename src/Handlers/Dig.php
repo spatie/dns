@@ -167,6 +167,12 @@ class Dig extends Handler
      * or the output does not hold one answer per type, each type is fetched again with
      * `__invoke()`. A failure then throws the same exception as a lookup of that type alone.
      *
+     * A nameserver that does not answer some of the types makes dig wait out the timeout of
+     * each of them, and `__invoke()` then waits once more. So such a lookup takes longer to
+     * fail than one process per type, which stops at the first type without an answer. dig
+     * buffers its output when it writes to a pipe, so a missing answer only shows once the
+     * process has ended. That is why the process cannot be stopped at the first one.
+     *
      * @param  array<int, string>  $types
      * @return Record[]
      */
