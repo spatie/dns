@@ -93,13 +93,23 @@ it('throws when the nameserver hostname does not resolve', function () {
 })->throws(CouldNotFetchDns::class);
 
 it('only returns records of the requested type, from the answer and the authority section', function () {
+    $soa = [
+        'mname' => 'ns1.example.com',
+        'rname' => 'hostmaster.example.com',
+        'serial' => 2026112401,
+        'refresh' => 10800,
+        'retry' => 3600,
+        'expire' => 604800,
+        'minimum' => 3600,
+    ];
+
     $handler = reactDnsAnswering(dnsMessage(
         answers: [
             new ResourceRecord('www.spatie.be', Message::TYPE_CNAME, Message::CLASS_IN, 300, 'spatie.be'),
-            new ResourceRecord('spatie.be', Message::TYPE_SOA, Message::CLASS_IN, 300, soaData()),
+            new ResourceRecord('spatie.be', Message::TYPE_SOA, Message::CLASS_IN, 300, $soa),
         ],
         authority: [
-            new ResourceRecord('be', Message::TYPE_SOA, Message::CLASS_IN, 600, soaData()),
+            new ResourceRecord('be', Message::TYPE_SOA, Message::CLASS_IN, 600, $soa),
         ],
     ));
 
@@ -177,17 +187,4 @@ function dnsMessage(int $responseCode = Message::RCODE_OK, array $answers = [], 
     $message->authority = $authority;
 
     return $message;
-}
-
-function soaData(): array
-{
-    return [
-        'mname' => 'ns1.example.com',
-        'rname' => 'hostmaster.example.com',
-        'serial' => 2026112401,
-        'refresh' => 10800,
-        'retry' => 3600,
-        'expire' => 604800,
-        'minimum' => 3600,
-    ];
 }
