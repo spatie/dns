@@ -112,6 +112,9 @@ class ReactDns extends Handler
     /**
      * Runs a private event loop until the query has an answer or has failed. A private loop
      * cannot start or stop timers that the application put on the global loop.
+     *
+     * The loop is not stopped when the answer arrives. It runs until it is empty, so react/dns
+     * can still close the TCP connection it opens for an answer that was too large for UDP.
      */
     protected function query(Query $query, string $nameserver, string $description): Message
     {
@@ -129,36 +132,21 @@ class ReactDns extends Handler
             max(1, (int) $this->retries) - 1,
         );
 
-        $settled = false;
-        $response = null;
-        $error = null;
+        $result = null;
 
-        $executor->query($query)->then(
-            function (Message $message) use (&$settled, &$response, $loop) {
-                $settled = true;
-                $response = $message;
-                $loop->stop();
-            },
-            function (Throwable $exception) use (&$settled, &$error, $loop) {
-                $settled = true;
-                $error = $exception;
-                $loop->stop();
-            },
-        );
+        $settle = function (Message|Throwable $outcome) use (&$result): void {
+            $result = $outcome;
+        };
 
-        if (! $settled) {
-            $loop->run();
+        $executor->query($query)->then($settle, $settle);
+
+        $loop->run();
+
+        if ($result instanceof Throwable) {
+            throw CouldNotFetchDns::queryFailed($description, $this->failureReason($result), $result);
         }
 
-        if ($error !== null) {
-            throw CouldNotFetchDns::queryFailed($description, $this->failureReason($error), $error);
-        }
-
-        if ($response === null) {
-            throw CouldNotFetchDns::queryFailed($description, 'the query never finished');
-        }
-
-        return $response;
+        return $result;
     }
 
     /**

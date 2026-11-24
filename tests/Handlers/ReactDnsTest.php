@@ -29,6 +29,16 @@ it('returns the same records as dig', function (string $domain, string $nameserv
     ['münchen.de', 'a.nic.de', 'NS'],
 ]);
 
+it('closes the connection of an answer that was too large for UDP', function () {
+    $handler = (new ReactDns(new Factory))->useNameserver('ns3.cloudflare.com');
+
+    $openStreams = count(get_resources('stream'));
+
+    $handler('cloudflare.com', DNS_TXT, 'TXT');
+
+    expect(get_resources('stream'))->toHaveCount($openStreams);
+});
+
 it('throws when a real nameserver refuses the query', function () {
     $handler = (new ReactDns(new Factory))
         ->useNameserver('ns1.digitalocean.com')
