@@ -243,9 +243,11 @@ class Dig extends Handler
      * such line, and dig still runs the next query. That is why the caller compares the
      * number of answers with the number of types.
      *
-     * Like `__invoke()`, this only trusts a process that exits with 0. A process that fails,
-     * or that runs into Symfony's timeout of 60 seconds, returns no answers. The caller then
-     * falls back to one process per type.
+     * Like `__invoke()`, this only trusts a process that exits with 0. dig's exit code only
+     * covers the last query, so a query before it that finally failed is found through the
+     * "no servers could be reached" line dig prints for it. Such a process returns no
+     * answers, and so does one that runs into Symfony's timeout of 60 seconds. The caller
+     * then falls back to one process per type.
      *
      * @return array<int, string>
      */
@@ -260,6 +262,10 @@ class Dig extends Handler
         }
 
         if (! $process->isSuccessful()) {
+            return [];
+        }
+
+        if (preg_match('/^;; .*no servers could be reached/m', $process->getOutput())) {
             return [];
         }
 

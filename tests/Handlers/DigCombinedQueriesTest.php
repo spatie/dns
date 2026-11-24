@@ -95,6 +95,18 @@ it('fetches each type on its own when an answer is for another type', function (
         ->and($dig->processes())->toBe(['A', 'NS MX', 'NS']);
 });
 
+it('fetches each type on its own when a query failed after printing an answer', function () {
+    $dig = new ScriptedDig([
+        'A' => digAnswer('A', 'NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+        'NS' => digAnswer('NS', 'NOERROR', 'spatie.be. 300 IN NS ns1.example.com.').";; no servers could be reached\n",
+        'MX' => digAnswer('MX', 'NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
+    ]);
+
+    expect(fn () => Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']))
+        ->toThrow(fn (CouldNotFetchDns $exception) => expect($exception->exitCode)->toBe(9))
+        ->and($dig->processes())->toBe(['A', 'NS MX', 'NS']);
+});
+
 it('keeps one process per type when buildCommand() differs per type', function () {
     $dig = new class(['A' => digAnswer('A', 'NOERROR'), 'NS' => digAnswer('NS', 'NOERROR'), 'MX' => digAnswer('MX', 'NOERROR')]) extends ScriptedDig
     {
@@ -186,10 +198,9 @@ class ScriptedDig extends Dig
             '$types = array_map(fn ($index) => $argv[$index + 1], array_keys($argv, "-t"));',
             'file_put_contents('.var_export($this->log, true).', implode(" ", $types).PHP_EOL, FILE_APPEND);',
             '$answers = '.var_export($this->answers, true).';',
-            'foreach ($types as $type) {',
-            '    echo $answers[$type] ?? ";; no servers could be reached\n";',
-            '}',
-            'exit($answers[end($types)] === null ? 9 : 0);',
+            '$outputs = array_map(fn ($type) => $answers[$type] ?? ";; no servers could be reached\n", $types);',
+            'echo implode($outputs);',
+            'exit(str_contains(end($outputs), "no servers could be reached") ? 9 : 0);',
         ]);
 
         return [PHP_BINARY, '-r', $script, '--', '-q', $domain, '-t', $type];
