@@ -179,10 +179,6 @@ class ReactDns extends Handler
      */
     protected function failureReason(Throwable $error): string
     {
-        if ($error instanceof TimeoutException) {
-            return 'no reply from the nameserver';
-        }
-
         if ($error->getPrevious() instanceof TimeoutException) {
             return 'no reply from the nameserver';
         }
