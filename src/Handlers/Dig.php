@@ -3,6 +3,7 @@
 namespace Spatie\Dns\Handlers;
 
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
+use Spatie\Dns\Records\Record;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -132,5 +133,126 @@ class Dig extends Handler
     protected function parseOutput(string $output): array
     {
         return array_values(preg_grep('/^[^;]/', explode(PHP_EOL, $output)));
+    }
+
+    /**
+     * Fetches several types with two dig processes instead of one process per type. The
+     * first type is fetched on its own, the same way as before. So an unreachable
+     * nameserver fails after one timeout and throws the same exception as before. The
+     * other types are then fetched with one process.
+     *
+     * @param  array<int, string>  $types
+     * @return Record[]
+     */
+    public function getRecords(string $domain, array $types): array
+    {
+        if (count($types) < 3) {
+            return parent::getRecords($domain, $types);
+        }
+
+        return array_merge(
+            parent::getRecords($domain, array_slice($types, 0, 1, true)),
+            $this->getRecordsInOneProcess($domain, array_slice($types, 1, null, true)),
+        );
+    }
+
+    /**
+     * dig answers the queries one after another, and `+comments` puts a response header in
+     * front of each answer. The output is split on those headers, and each part is read
+     * the same way as the output of a single query.
+     *
+     * When the output cannot be split into one answer per type, the types are fetched
+     * again one at a time. That path throws the same exceptions as before. This matters
+     * because a query that gets no answer has no header, and dig then carries on with the
+     * next query. Its exit code only reflects the last query.
+     *
+     * @param  array<int, string>  $types
+     * @return Record[]
+     */
+    protected function getRecordsInOneProcess(string $domain, array $types): array
+    {
+        $command = $this->buildBatchCommand($domain, $types);
+
+        if ($command === null) {
+            return parent::getRecords($domain, $types);
+        }
+
+        $answers = $this->runBatchCommand($command, count($types));
+
+        if ($answers === null) {
+            return parent::getRecords($domain, $types);
+        }
+
+        $records = [];
+
+        foreach (array_values($types) as $index => $type) {
+            $this->guardAgainstErrorResponse($answers[$index], $command);
+
+            $records = array_merge(
+                $records,
+                $this->transform($type, $this->parseOutput($answers[$index]))
+            );
+        }
+
+        return $records;
+    }
+
+    /**
+     * Puts the query of every type behind the options of a single command. The commands
+     * can only be combined when they differ in nothing but the query at the end. A
+     * subclass that builds other commands gets null here and keeps one process per type.
+     *
+     * @param  array<int, string>  $types
+     */
+    protected function buildBatchCommand(string $domain, array $types): ?array
+    {
+        $options = null;
+        $queries = [];
+
+        foreach ($types as $type) {
+            $command = array_values($this->buildCommand($domain, $type));
+            $query = array_splice($command, -4);
+
+            if ($query !== ['-q', $domain, '-t', $type]) {
+                return null;
+            }
+
+            $options ??= $command;
+
+            if ($command !== $options) {
+                return null;
+            }
+
+            array_push($queries, ...$query);
+        }
+
+        return [...$options, ...$queries];
+    }
+
+    /**
+     * Returns the output of each query, or null when dig failed or did not answer every
+     * query.
+     *
+     * @return array<int, string>|null
+     */
+    protected function runBatchCommand(array $command, int $queryCount): ?array
+    {
+        $process = new Process($command);
+
+        $process
+            ->enableOutput()
+            ->run();
+
+        if (! $process->isSuccessful()) {
+            return null;
+        }
+
+        $answers = array_slice(preg_split('/^(?=;; ->>HEADER<<-)/m', $process->getOutput()), 1);
+
+        if (count($answers) !== $queryCount) {
+            return null;
+        }
+
+        return $answers;
     }
 }
