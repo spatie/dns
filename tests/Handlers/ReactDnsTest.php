@@ -172,7 +172,6 @@ function reactDnsAnswering(Message $response): ReactDns
 function dnsMessage(int $responseCode = Message::RCODE_OK, array $answers = [], array $authority = []): Message
 {
     $message = new Message;
-    $message->qr = true;
     $message->rcode = $responseCode;
     $message->answers = $answers;
     $message->authority = $authority;
