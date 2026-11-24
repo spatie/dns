@@ -209,30 +209,24 @@ class Dig extends Handler
      * subclass that builds other commands gets null here and keeps one process per type.
      *
      * @param  array<int, string>  $types
+     * @return array<int, string>|null
      */
     protected function buildBatchCommand(string $domain, array $types): ?array
     {
-        $options = null;
-        $queries = [];
+        $options = array_slice($this->buildCommand($domain, reset($types)), 0, -4);
+        $command = $options;
 
         foreach ($types as $type) {
-            $command = array_values($this->buildCommand($domain, $type));
-            $query = array_splice($command, -4);
+            $query = ['-q', $domain, '-t', $type];
 
-            if ($query !== ['-q', $domain, '-t', $type]) {
+            if (array_values($this->buildCommand($domain, $type)) !== [...$options, ...$query]) {
                 return null;
             }
 
-            $options ??= $command;
-
-            if ($command !== $options) {
-                return null;
-            }
-
-            array_push($queries, ...$query);
+            array_push($command, ...$query);
         }
 
-        return [...$options, ...$queries];
+        return $command;
     }
 
     /**
