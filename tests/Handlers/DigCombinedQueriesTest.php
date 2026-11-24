@@ -78,6 +78,24 @@ it('fetches each type on its own when a query got no reply', function (string $u
     'the last query' => ['MX', ['A', 'NS MX', 'NS', 'MX']],
 ]);
 
+it('keeps one process per type when buildCommand() differs per type', function () {
+    $dig = new class(['A' => digAnswer('NOERROR'), 'NS' => digAnswer('NOERROR'), 'MX' => digAnswer('NOERROR')]) extends ScriptedDig
+    {
+        protected function buildCommand(string $domain, string $type): array
+        {
+            $command = parent::buildCommand($domain, $type);
+
+            array_splice($command, -4, 0, ["+{$type}"]);
+
+            return $command;
+        }
+    };
+
+    Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']);
+
+    expect($dig->processes())->toBe(['A', 'NS', 'MX']);
+});
+
 it('runs an overridden __invoke() for every type', function () {
     $dig = new class(['A' => digAnswer('NOERROR'), 'NS' => digAnswer('NOERROR'), 'MX' => digAnswer('NOERROR')]) extends ScriptedDig
     {
