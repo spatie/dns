@@ -76,6 +76,24 @@ it('fetches each type on its own when dig did not answer every query', function 
     expect($dig->processCount())->toBe(3);
 });
 
+it('runs an overridden __invoke() for every type', function () {
+    $dig = new class(['A' => batchDigAnswer('NOERROR'), 'NS' => batchDigAnswer('NOERROR'), 'MX' => batchDigAnswer('NOERROR')]) extends BatchFixtureDig
+    {
+        public array $invokedTypes = [];
+
+        public function __invoke(string $domain, int $flag, string $type): array
+        {
+            $this->invokedTypes[] = $type;
+
+            return parent::__invoke($domain, $flag, $type);
+        }
+    };
+
+    Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']);
+
+    expect($dig->invokedTypes)->toBe(['A', 'NS', 'MX']);
+});
+
 it('fails after a single timeout when the nameserver does not answer', function () {
     $dns = Dns::query()->useNameserver('192.0.2.1')->setTimeout(1)->setRetries(1);
 

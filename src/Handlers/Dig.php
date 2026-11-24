@@ -2,6 +2,7 @@
 
 namespace Spatie\Dns\Handlers;
 
+use ReflectionMethod;
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Records\Record;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -148,6 +149,10 @@ class Dig extends Handler
     public function getRecords(string $domain, array $types): array
     {
         if (count($types) < 3) {
+            return parent::getRecords($domain, $types);
+        }
+
+        if ((new ReflectionMethod($this, '__invoke'))->class !== self::class) {
             return parent::getRecords($domain, $types);
         }
 
