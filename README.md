@@ -146,7 +146,7 @@ try {
 
 When you query several record types at once, one error response makes the whole call throw.
 
-Only the dig handler can read the response status. The native `dns_get_record()` handler already throws a `CouldNotFetchDns` exception when a lookup fails, with or without this option, and `responseStatus` is then `null`.
+The dig and `ReactDns` handlers can read the response status. The native `dns_get_record()` handler already throws a `CouldNotFetchDns` exception when a lookup fails, with or without this option, and `responseStatus` is then `null`.
 
 ## Guessing a record
 
