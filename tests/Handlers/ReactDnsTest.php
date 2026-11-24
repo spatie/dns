@@ -72,7 +72,7 @@ it('returns no records for an error status when not asked to throw', function ()
     expect($handler('spatie.be', DNS_A, 'A'))->toBe([]);
 });
 
-it('throws without a response status when the nameserver does not reply', function () {
+it('throws without a response status after the configured number of tries', function () {
     $handler = (new ReactDns(new Factory))
         ->useNameserver('192.0.2.1')
         ->setTimeout(1)
