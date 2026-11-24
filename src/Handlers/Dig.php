@@ -20,6 +20,14 @@ class Dig extends Handler
      */
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
 
+    /**
+     * Remembers whether each dig binary works, keyed by its path. Checking starts a process,
+     * and every lookup asks again, so the answer is kept for the rest of the PHP process.
+     *
+     * @var array<string, bool>
+     */
+    protected static array $digIsUsable = [];
+
     public function __invoke(string $domain, int $flag, string $type): array
     {
         $command = $this->buildCommand($domain, $type);
@@ -52,14 +60,20 @@ class Dig extends Handler
             return false;
         }
 
+        if (isset(static::$digIsUsable[$digPath])) {
+            return static::$digIsUsable[$digPath];
+        }
+
         $process = new Process([$digPath, '-v', '2>&1']);
         $process->run();
 
+        static::$digIsUsable[$digPath] = $process->isSuccessful();
+
         if (str_contains($process->getOutput(), 'not found')) {
-            return false;
+            static::$digIsUsable[$digPath] = false;
         }
 
-        return $process->isSuccessful();
+        return static::$digIsUsable[$digPath];
     }
 
     protected function buildCommand(string $domain, string $type): array
