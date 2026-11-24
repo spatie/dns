@@ -2,6 +2,7 @@
 
 namespace Spatie\Dns\Handlers;
 
+use Composer\InstalledVersions;
 use React\Dns\Config\Config;
 use React\Dns\Model\Message;
 use React\Dns\Model\Record as ResourceRecord;
@@ -106,11 +107,17 @@ class ReactDns extends Handler
     }
 
     /**
-     * SelectiveTransportExecutor arrived in react/dns 1.2, so an older install is not used.
+     * Requires the react/dns version this handler is tested with. An application can have an
+     * older one locked, because require-dev does not apply there. Versions before 1.5 can run
+     * out of memory on a malformed reply.
      */
     public function canHandle(): bool
     {
-        return class_exists(SelectiveTransportExecutor::class);
+        if (! InstalledVersions::isInstalled('react/dns')) {
+            return false;
+        }
+
+        return version_compare((string) InstalledVersions::getVersion('react/dns'), '1.14.0', '>=');
     }
 
     /**
