@@ -177,13 +177,13 @@ class Dig extends Handler
      */
     protected function getRecordsInOneProcess(string $domain, array $types): array
     {
-        $command = $this->buildBatchCommand($domain, $types);
+        $command = $this->buildCombinedCommand($domain, $types);
 
         if ($command === null) {
             return parent::getRecordsForTypes($domain, $types);
         }
 
-        $answers = $this->runBatchCommand($command);
+        $answers = $this->runCombinedCommand($command);
 
         if (count($answers) !== count($types)) {
             return parent::getRecordsForTypes($domain, $types);
@@ -211,7 +211,7 @@ class Dig extends Handler
      * @param  array<int, string>  $types
      * @return array<int, string>|null
      */
-    protected function buildBatchCommand(string $domain, array $types): ?array
+    protected function buildCombinedCommand(string $domain, array $types): ?array
     {
         $options = array_slice($this->buildCommand($domain, reset($types)), 0, -4);
         $command = $options;
@@ -235,7 +235,7 @@ class Dig extends Handler
      *
      * @return array<int, string>
      */
-    protected function runBatchCommand(array $command): array
+    protected function runCombinedCommand(array $command): array
     {
         $process = new Process($command);
 

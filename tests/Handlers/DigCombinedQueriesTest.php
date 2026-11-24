@@ -17,7 +17,7 @@ it('returns the same records as fetching each type on its own', function () {
         $perType = array_merge($perType, $dig('spatie.be', $flag, $type));
     }
 
-    $batched = $dig->getRecordsForTypes('spatie.be', $types);
+    $combined = $dig->getRecordsForTypes('spatie.be', $types);
 
     $typesOf = fn (array $records) => array_map(fn (Record $record) => $record->type(), $records);
     $sorted = function (array $records) {
@@ -27,17 +27,17 @@ it('returns the same records as fetching each type on its own', function () {
         return $lines;
     };
 
-    expect($batched)->not->toBeEmpty()
-        ->and($typesOf($batched))->toBe($typesOf($perType))
-        ->and($sorted($batched))->toBe($sorted($perType));
+    expect($combined)->not->toBeEmpty()
+        ->and($typesOf($combined))->toBe($typesOf($perType))
+        ->and($sorted($combined))->toBe($sorted($perType));
 });
 
 it('fetches the first type on its own and all other types with one process', function () {
-    $dig = new BatchFixtureDig([
-        'A' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
-        'NS' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
-        'MX' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
-        'TXT' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN TXT "v=spf1 -all"'),
+    $dig = new ScriptedDig([
+        'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+        'NS' => digAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
+        'MX' => digAnswer('NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
+        'TXT' => digAnswer('NOERROR', 'spatie.be. 300 IN TXT "v=spf1 -all"'),
     ]);
 
     $records = Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX', 'TXT']);
@@ -47,11 +47,11 @@ it('fetches the first type on its own and all other types with one process', fun
 });
 
 it('throws with the status of the first answer that failed', function () {
-    $dig = new BatchFixtureDig([
-        'A' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
-        'NS' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
-        'MX' => batchDigAnswer('REFUSED'),
-        'TXT' => batchDigAnswer('SERVFAIL'),
+    $dig = new ScriptedDig([
+        'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+        'NS' => digAnswer('NOERROR', 'spatie.be. 300 IN NS ns1.example.com.'),
+        'MX' => digAnswer('REFUSED'),
+        'TXT' => digAnswer('SERVFAIL'),
     ]);
 
     $dns = Dns::query()->throwOnErrorResponse()->useHandlers([$dig]);
@@ -64,10 +64,10 @@ it('throws with the status of the first answer that failed', function () {
 });
 
 it('fetches each type on its own when dig did not answer every query', function () {
-    $dig = new BatchFixtureDig([
-        'A' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
+    $dig = new ScriptedDig([
+        'A' => digAnswer('NOERROR', 'spatie.be. 300 IN A 192.0.2.10'),
         'NS' => null,
-        'MX' => batchDigAnswer('NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
+        'MX' => digAnswer('NOERROR', 'spatie.be. 300 IN MX 10 mail.example.com.'),
     ]);
 
     expect(fn () => Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']))
@@ -77,7 +77,7 @@ it('fetches each type on its own when dig did not answer every query', function 
 });
 
 it('runs an overridden __invoke() for every type', function () {
-    $dig = new class(['A' => batchDigAnswer('NOERROR'), 'NS' => batchDigAnswer('NOERROR'), 'MX' => batchDigAnswer('NOERROR')]) extends BatchFixtureDig
+    $dig = new class(['A' => digAnswer('NOERROR'), 'NS' => digAnswer('NOERROR'), 'MX' => digAnswer('NOERROR')]) extends ScriptedDig
     {
         public array $invokedTypes = [];
 
@@ -103,7 +103,7 @@ it('fails after a single timeout when the nameserver does not answer', function 
         ->and(microtime(true) - $start)->toBeLessThan(3);
 });
 
-function batchDigAnswer(string $status, string $records = ''): string
+function digAnswer(string $status, string $records = ''): string
 {
     return implode(PHP_EOL, [
         ';; Got answer:',
@@ -116,7 +116,7 @@ function batchDigAnswer(string $status, string $records = ''): string
     ]);
 }
 
-class BatchFixtureDig extends Dig
+class ScriptedDig extends Dig
 {
     protected string $log;
 
