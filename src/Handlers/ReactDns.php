@@ -72,8 +72,8 @@ class ReactDns extends Handler
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
 
     /**
-     * The IP address for each nameserver that was given as a hostname, so the hostname is
-     * only looked up once. The empty key holds the system nameserver.
+     * Holds the IP address of each nameserver this handler has used, so a hostname is only
+     * looked up once. The empty key holds the system nameserver.
      *
      * @var array<string, string>
      */
@@ -194,11 +194,7 @@ class ReactDns extends Handler
     {
         $nameserver = (string) $this->nameserver;
 
-        if (isset($this->nameserverAddresses[$nameserver])) {
-            return $this->nameserverAddresses[$nameserver];
-        }
-
-        return $this->nameserverAddresses[$nameserver] = $this->resolveNameserver($nameserver);
+        return $this->nameserverAddresses[$nameserver] ??= $this->resolveNameserver($nameserver);
     }
 
     protected function resolveNameserver(string $nameserver): string
