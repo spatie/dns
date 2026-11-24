@@ -4,6 +4,7 @@ namespace Spatie\Dns\Handlers;
 
 use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Spatie\Dns\Records\Record;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -231,7 +232,8 @@ class Dig extends Handler
 
     /**
      * Returns the output of each query, or null when dig failed or did not answer every
-     * query.
+     * query. Symfony stops a process after 60 seconds. One query stays far below that, but
+     * a batch of queries that all time out can reach it. That also counts as a failure.
      *
      * @return array<int, string>|null
      */
@@ -239,9 +241,13 @@ class Dig extends Handler
     {
         $process = new Process($command);
 
-        $process
-            ->enableOutput()
-            ->run();
+        try {
+            $process
+                ->enableOutput()
+                ->run();
+        } catch (ProcessTimedOutException) {
+            return null;
+        }
 
         if (! $process->isSuccessful()) {
             return null;
