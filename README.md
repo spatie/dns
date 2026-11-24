@@ -178,6 +178,28 @@ $results = (new Dns)
     ->getRecords('spatie.be');
 ```
 
+## Querying without starting dig
+
+The dig handler starts one `dig` process for every record type it fetches. When you run many lookups, starting those processes costs more CPU time than the lookups themselves.
+
+The `ReactDns` handler sends the queries from inside PHP instead, so no process is started. It returns the same records as the dig handler, and it supports `useNameserver()`, `setTimeout()`, `setRetries()` and `throwOnErrorResponse()` in the same way. It needs the [react/dns](https://github.com/reactphp/dns) package.
+
+```bash
+composer require react/dns
+```
+
+```php
+use Spatie\Dns\Dns;
+use Spatie\Dns\Handlers\ReactDns;
+use Spatie\Dns\Support\Factory;
+
+$records = (new Dns)
+    ->useHandlers([new ReactDns(new Factory)])
+    ->getRecords('spatie.be');
+```
+
+A nameserver given as a hostname is looked up once, because the handler needs its IP address. Without a nameserver, the handler uses the first nameserver of the system, for example from `/etc/resolv.conf`.
+
 ## Under the hood
 
 We will use [dig](https://wiki.ubuntuusers.de/dig/) to fetch DNS info. If it is not installed on your system, we'll call the native `dns_get_record()` function.
