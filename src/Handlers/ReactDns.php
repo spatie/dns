@@ -91,7 +91,8 @@ class ReactDns extends Handler
 
         $description = "{$domain} {$type} @{$nameserver}";
 
-        $domain = $this->toAscii($domain, $description);
+        // react/dns adds the root dot itself, so a name that already ends in one would end twice.
+        $domain = $this->toAscii(rtrim($domain, '.'), $description);
 
         $response = $this->query(
             new Query($domain, $this->typeCodes[$type], Message::CLASS_IN),

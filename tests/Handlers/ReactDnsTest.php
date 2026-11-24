@@ -24,6 +24,7 @@ it('returns the same records as dig', function (string $domain, string $nameserv
     ['cloudflare.com', 'ns3.cloudflare.com', 'CAA'],
     ['cloudflare.com', 'ns3.cloudflare.com', 'DNSKEY'],
     ['cloudflare.com', 'a.gtld-servers.net', 'DS'],
+    ['cloudflare.com.', 'ns3.cloudflare.com', 'MX'],
     ['spatie.be', 'ns1.openminds.be', 'MX'],
     ['spatie.be', 'ns1.openminds.be', 'TXT'],
     ['münchen.de', 'a.nic.de', 'NS'],
