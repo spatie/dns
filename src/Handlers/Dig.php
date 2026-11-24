@@ -138,13 +138,13 @@ class Dig extends Handler
     }
 
     /**
-     * Fetches several types with two dig processes instead of one process per type. The
-     * first type is fetched on its own, the same way as before. So an unreachable
-     * nameserver fails after one timeout and throws the same exception as before. The
-     * other types are then fetched with one process.
+     * Fetches the first type with its own dig process, and all other types with one shared
+     * process. The first type runs alone so that an unreachable nameserver fails after one
+     * timeout, with the exception that `__invoke()` throws.
      *
-     * @param  array<int, string>  $types
-     * @return Record[]
+     * Fewer than three types gain nothing from a shared process, so each type gets its own.
+     * A subclass that overrides `__invoke()` also gets one process per type, so that its
+     * override runs for every type.
      */
     public function getRecordsForTypes(string $domain, array $types): array
     {
@@ -163,14 +163,9 @@ class Dig extends Handler
     }
 
     /**
-     * dig answers the queries one after another, and `+comments` puts a response header in
-     * front of each answer. The output is split on those headers, and each part is read
-     * the same way as the output of a single query.
-     *
-     * When the output cannot be split into one answer per type, the types are fetched
-     * again one at a time. That path throws the same exceptions as before. This matters
-     * because a query that gets no answer has no header, and dig then carries on with the
-     * next query. Its exit code only reflects the last query.
+     * Fetches several types with one dig process. When the types cannot share one command,
+     * or the output does not hold one answer per type, each type is fetched again with
+     * `__invoke()`. A failure then throws the same exception as a lookup of that type alone.
      *
      * @param  array<int, string>  $types
      * @return Record[]
@@ -201,9 +196,11 @@ class Dig extends Handler
     }
 
     /**
-     * Puts the query of every type behind the options of a single command. The commands
-     * can only be combined when they differ in nothing but the query at the end. A
-     * subclass that builds other commands gets null here and keeps one process per type.
+     * Builds one dig command that asks for every type. dig accepts several queries in one
+     * command, each written as `-q <domain> -t <type>`. This only works when
+     * `buildCommand()` returns the same options for every type, followed by that type's
+     * query. Otherwise this returns null and each type keeps its own process. That keeps a
+     * subclass that overrides `buildCommand()` working.
      *
      * @param  array<int, string>  $types
      * @return array<int, string>|null
@@ -227,8 +224,14 @@ class Dig extends Handler
     }
 
     /**
-     * Returns the output of each query that dig answered, in query order. A process that
-     * runs into Symfony's timeout of 60 seconds returns no answers.
+     * Runs the combined command and returns the output of each query, in query order. The
+     * `+comments` option makes dig print one `;; ->>HEADER<<-` line for every answer, so
+     * the output is split in front of those lines. A query that gets no reply prints no
+     * such line, and dig still runs the next query. That is why the caller compares the
+     * number of answers with the number of types.
+     *
+     * Symfony stops a process after 60 seconds, and a few timeouts in a row can reach that
+     * limit. No answers are returned then, so the caller falls back as well.
      *
      * @return array<int, string>
      */
