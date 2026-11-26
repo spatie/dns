@@ -198,7 +198,7 @@ $records = (new Dns)
     ->getRecords('spatie.be');
 ```
 
-A nameserver given as a hostname is looked up once, because the handler needs its IP address. Without a nameserver, the handler uses the nameservers of the system, for example from `/etc/resolv.conf`, and like dig it asks the next one when a nameserver does not reply. When the system nameservers cannot be found, for example on a Windows version without `wmic`, a `CouldNotFetchDns` exception is thrown, and you pass a nameserver with `useNameserver()` instead. Looking up a Unicode domain name, such as `münchen.de`, needs the `intl` extension.
+Like dig, a nameserver given as a hostname is looked up on every query. Without a nameserver, the handler uses the nameservers of the system, for example from `/etc/resolv.conf`, and like dig it asks the next one when a nameserver does not reply. When the system nameservers cannot be found, for example on a Windows version without `wmic`, a `CouldNotFetchDns` exception is thrown, and you pass a nameserver with `useNameserver()` instead. Looking up a Unicode domain name, such as `münchen.de`, needs the `intl` extension.
 
 ## Under the hood
 

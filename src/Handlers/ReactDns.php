@@ -18,9 +18,7 @@ use Spatie\Dns\Exceptions\CouldNotFetchDns;
 use Throwable;
 
 /**
- * Queries the nameserver from inside PHP with react/dns, so no dig process is started.
- * Each answer is written out as the line dig would print and parsed the same way, so the
- * records are equal to the ones the Dig handler returns.
+ * Writes each answer as the line dig prints for it, so the records match the Dig handler.
  */
 class ReactDns extends Handler
 {
@@ -44,12 +42,7 @@ class ReactDns extends Handler
         'CAA' => 257,
     ];
 
-    /**
-     * The names dig prints for each response code. Codes 11 to 15 have no name, and dig
-     * prints them as RESERVED11 to RESERVED15.
-     *
-     * @var array<int, string>
-     */
+    /** @var array<int, string> */
     protected array $responseStatuses = [
         0 => 'NOERROR',
         1 => 'FORMERR',
@@ -71,14 +64,6 @@ class ReactDns extends Handler
      * @var array<int, string>
      */
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
-
-    /**
-     * Holds the IP addresses of each nameserver hostname this handler has used, so a
-     * hostname is only looked up once.
-     *
-     * @var array<string, array<int, string>>
-     */
-    protected array $resolvedNameservers = [];
 
     public function __invoke(string $domain, int $flag, string $type): array
     {
@@ -107,9 +92,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * Requires the react/dns version this handler is tested with. An application can have an
-     * older one locked, because require-dev does not apply there. Versions before 1.5 can run
-     * out of memory on a malformed reply.
+     * Older react/dns versions have no recursion limit in the parser.
      */
     public function canHandle(): bool
     {
@@ -121,8 +104,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * Asks each nameserver in turn until one answers, the way dig tries each system
-     * nameserver. An error status is an answer too, so like dig it does not move on then.
+     * Like dig, an error status is an answer, so the next nameserver is not asked then.
      *
      * @param  array<int, string>  $nameservers
      */
@@ -146,11 +128,8 @@ class ReactDns extends Handler
     }
 
     /**
-     * Runs a private event loop until the query has an answer or has failed. A private loop
-     * cannot start or stop timers that the application put on the global loop.
-     *
-     * The loop is not stopped when the answer arrives. It runs until it is empty, so react/dns
-     * can still close the TCP connection it opens for an answer that was too large for UDP.
+     * A private loop leaves the application's global loop alone. It runs until it is empty,
+     * so react/dns can still close the TCP connection of an answer too large for UDP.
      */
     protected function queryNameserver(Query $query, string $nameserver, int $tries): Message|Throwable
     {
@@ -184,8 +163,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * Converts a Unicode domain name to its punycode form, the way dig does before it sends
-     * the query. react/dns would send the UTF-8 bytes as they are.
+     * react/dns would send a Unicode name as raw UTF-8, dig sends punycode.
      */
     protected function toAscii(string $domain, string $description): string
     {
@@ -207,8 +185,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * The retry executor wraps the last timeout in an exception of its own, whose message
-     * repeats the query. The timeout is the actual reason.
+     * RetryExecutor wraps the last timeout in an exception of its own.
      */
     protected function failureReason(Throwable $error): string
     {
@@ -219,12 +196,7 @@ class ReactDns extends Handler
         return $error->getMessage();
     }
 
-    /**
-     * Returns the IP addresses to send the query to, in order. dig accepts a hostname, but
-     * react/dns needs an IP address.
-     *
-     * @return array<int, string>
-     */
+    /** @return array<int, string> */
     protected function nameserverAddresses(): array
     {
         $nameserver = (string) $this->nameserver;
@@ -233,15 +205,10 @@ class ReactDns extends Handler
             return $this->systemNameservers();
         }
 
-        return $this->resolvedNameservers[$nameserver] ??= $this->resolveNameserver($nameserver);
+        return $this->resolveNameserver($nameserver);
     }
 
-    /**
-     * Reads the system nameservers on every lookup, like dig, so a change to them is used
-     * straight away.
-     *
-     * @return array<int, string>
-     */
+    /** @return array<int, string> */
     protected function systemNameservers(): array
     {
         $nameservers = Config::loadSystemConfigBlocking()->nameservers;
@@ -261,8 +228,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * Returns every IPv4 address of a hostname, so the next one is asked when the first
-     * does not reply, like dig does.
+     * react/dns needs an IP address. Like dig, the hostname is looked up on every query.
      *
      * @return array<int, string>
      */
@@ -291,8 +257,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * Writes each record of the requested type as the line dig prints for it. The Dig
-     * handler reads both the answer and the authority section, so this does too.
+     * The Dig handler reads the authority section too.
      *
      * @return array<int, string>
      */
@@ -342,17 +307,14 @@ class ReactDns extends Handler
         };
     }
 
-    /**
-     * react/dns leaves the trailing dot of the root label off, dig prints it.
-     */
     protected function formatName(string $name): string
     {
         return rtrim($name, '.').'.';
     }
 
     /**
-     * Quotes the string the way dig does. A quote or a backslash gets a backslash in front,
-     * and a byte that is not printable ASCII is written as a backslash and three digits.
+     * Escapes the string the way dig does, with a backslash and three digits for any byte
+     * that is not printable ASCII.
      */
     protected function formatCharacterString(string $value): string
     {
@@ -366,8 +328,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * react/dns does not decode DS records and returns the raw bytes. They hold a 2 byte key
-     * tag, a 1 byte algorithm, a 1 byte digest type and the digest.
+     * react/dns returns DS records undecoded: key tag, algorithm, digest type, digest.
      */
     protected function formatDs(string $data): ?string
     {
@@ -383,8 +344,7 @@ class ReactDns extends Handler
     }
 
     /**
-     * react/dns does not decode DNSKEY records and returns the raw bytes. They hold 2 bytes
-     * of flags, a 1 byte protocol, a 1 byte algorithm and the public key.
+     * react/dns returns DNSKEY records undecoded: flags, protocol, algorithm, public key.
      */
     protected function formatDnskey(string $data): ?string
     {
