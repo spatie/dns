@@ -2,6 +2,18 @@
 
 All notable changes to `dns` will be documented in this file
 
+## 2.10.1 - 2026-11-26
+
+### Improvements
+
+- Cache successful dig availability checks per executable path to avoid starting a version-check process before every lookup.
+- Preserve native PHP fallback when a previously working dig binary stops working. Custom handler order remains respected, and query errors from a working dig still throw.
+- Add regression coverage for the working-to-broken transition, custom fallback, and query failures.
+
+Thanks to @mattiasgeniar for the contribution in #130.
+
+**Full changelog:** https://github.com/spatie/dns/compare/2.10.0...2.10.1
+
 ## 2.10.0 - 2026-10-29
 
 ### New features
