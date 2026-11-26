@@ -20,13 +20,7 @@ class Dig extends Handler
      */
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
 
-    /**
-     * Remembers whether each dig binary passed its check, keyed by its path. The check starts
-     * a process, and `Dns` runs it before every lookup. Only a passed check is trusted. A
-     * failed one runs again on the next lookup, so a dig that recovers is used again.
-     *
-     * @var array<string, bool>
-     */
+    /** @var array<string, bool> */
     protected static array $digIsUsable = [];
 
     public function __invoke(string $domain, int $flag, string $type): array
@@ -40,6 +34,8 @@ class Dig extends Handler
             ->run();
 
         if (! $process->isSuccessful()) {
+            static::$digIsUsable = [];
+
             $command = implode(' ', $command);
 
             throw CouldNotFetchDns::digReturnedWithError($process, $command);

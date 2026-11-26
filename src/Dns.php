@@ -101,11 +101,19 @@ class Dns
 
         $records = [];
 
-        foreach ($types as $flag => $type) {
-            $records = array_merge(
-                $records,
-                $handler($domain, $flag, $type)
-            );
+        try {
+            foreach ($types as $flag => $type) {
+                $records = array_merge(
+                    $records,
+                    $handler($domain, $flag, $type)
+                );
+            }
+        } catch (CouldNotFetchDns $exception) {
+            if ($handler->canHandle()) {
+                throw $exception;
+            }
+
+            return $this->getRecords($domain, $types);
         }
 
         return $records;
