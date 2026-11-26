@@ -99,7 +99,15 @@ class Dns
             ->setRetries($this->retries)
             ->throwOnErrorResponse($this->throwOnErrorResponse);
 
-        return $handler->getRecordsForTypes($domain, $types);
+        try {
+            return $handler->getRecordsForTypes($domain, $types);
+        } catch (CouldNotFetchDns $exception) {
+            if ($handler->canHandle()) {
+                throw $exception;
+            }
+
+            return $this->getRecords($domain, $types);
+        }
     }
 
     /**

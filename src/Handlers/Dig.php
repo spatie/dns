@@ -23,6 +23,9 @@ class Dig extends Handler
      */
     protected array $successfulResponseStatuses = ['NOERROR', 'NXDOMAIN'];
 
+    /** @var array<string, bool> */
+    protected static array $digIsUsable = [];
+
     public function __invoke(string $domain, int $flag, string $type): array
     {
         $command = $this->buildCommand($domain, $type);
@@ -34,6 +37,8 @@ class Dig extends Handler
             ->run();
 
         if (! $process->isSuccessful()) {
+            static::$digIsUsable = [];
+
             $command = implode(' ', $command);
 
             throw CouldNotFetchDns::digReturnedWithError($process, $command);
@@ -55,6 +60,10 @@ class Dig extends Handler
             return false;
         }
 
+        if (static::$digIsUsable[$digPath] ?? false) {
+            return true;
+        }
+
         $process = new Process([$digPath, '-v', '2>&1']);
         $process->run();
 
@@ -62,7 +71,7 @@ class Dig extends Handler
             return false;
         }
 
-        return $process->isSuccessful();
+        return static::$digIsUsable[$digPath] = $process->isSuccessful();
     }
 
     protected function buildCommand(string $domain, string $type): array
