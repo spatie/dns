@@ -6,6 +6,7 @@ use Spatie\Dns\Handlers\Dig;
 use Spatie\Dns\Records\Record;
 use Spatie\Dns\Support\Factory;
 use Spatie\Dns\Support\Types;
+use Spatie\Dns\Test\TestClasses\CustomHandler;
 
 it('returns the same records as fetching each type on its own', function () {
     $dig = (new class(new Factory) extends Dig
@@ -141,6 +142,33 @@ it('runs an overridden __invoke() for every type', function () {
     Dns::query()->useHandlers([$dig])->getRecords('spatie.be', ['A', 'NS', 'MX']);
 
     expect($dig->invokedTypes)->toBe(['A', 'NS', 'MX']);
+});
+
+it('falls back to the next handler when dig breaks after the first type', function () {
+    $binDirectory = sys_get_temp_dir().'/spatie-dns-'.uniqid();
+    $originalPath = getenv('PATH');
+
+    mkdir($binDirectory);
+    file_put_contents("{$binDirectory}/dig", implode(PHP_EOL, [
+        '#!/bin/sh',
+        "if [ -e {$binDirectory}/broken ]; then exit 1; fi",
+        'if [ "$1" = -v ]; then exit 0; fi',
+        "touch {$binDirectory}/broken",
+    ]));
+    chmod("{$binDirectory}/dig", 0755);
+    putenv("PATH={$binDirectory}:{$originalPath}");
+
+    try {
+        $records = Dns::query()
+            ->useHandlers([new Dig(new Factory), new CustomHandler])
+            ->getRecords('example.invalid', ['A', 'NS', 'MX']);
+    } finally {
+        putenv("PATH={$originalPath}");
+        array_map('unlink', glob("{$binDirectory}/*"));
+        rmdir($binDirectory);
+    }
+
+    expect($records)->toBe(['custom-handler-results-A', 'custom-handler-results-NS', 'custom-handler-results-MX']);
 });
 
 it('fails after a single timeout when the nameserver does not answer', function () {
