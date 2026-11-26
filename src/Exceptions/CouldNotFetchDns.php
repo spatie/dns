@@ -55,6 +55,29 @@ class CouldNotFetchDns extends RuntimeException
         );
     }
 
+    public static function nameserverReturnedErrorResponse(string $responseStatus, string $query): self
+    {
+        return new static(
+            "DNS query `{$query}` received response status {$responseStatus} from the nameserver",
+            responseStatus: $responseStatus,
+        );
+    }
+
+    public static function queryFailed(string $query, string $reason, ?Throwable $previous = null): self
+    {
+        return new static("DNS query `{$query}` failed: {$reason}", previous: $previous);
+    }
+
+    public static function nameserverNotFound(string $nameserver): self
+    {
+        return new static("Could not find the IP address of nameserver `{$nameserver}`");
+    }
+
+    public static function noSystemNameserver(): self
+    {
+        return new static('Could not find the nameservers of this system. Pass one with `useNameserver()`.');
+    }
+
     protected static function digExitCodeReason(?int $exitCode): ?string
     {
         return match ($exitCode) {

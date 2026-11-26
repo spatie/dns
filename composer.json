@@ -35,7 +35,12 @@
     },
     "require-dev": {
         "laravel/pint": "^1.32.1",
-        "pestphp/pest": "^5.3"
+        "pestphp/pest": "^5.3",
+        "react/dns": "^1.14",
+        "react/event-loop": "^1.5"
+    },
+    "suggest": {
+        "react/dns": "Needed for the ReactDns handler, which queries nameservers without starting a dig process"
     },
     "config": {
         "sort-packages": true,

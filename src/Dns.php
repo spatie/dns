@@ -77,7 +77,7 @@ class Dns
     /**
      * Makes `getRecords()` throw a `CouldNotFetchDns` exception when the nameserver answers
      * with an error status, such as REFUSED or SERVFAIL, instead of returning no records.
-     * Only the dig handler can read the response status.
+     * Only the dig and ReactDns handlers can read the response status.
      */
     public function throwOnErrorResponse(): self
     {

@@ -49,7 +49,7 @@ composer require spatie/dns
 
 The class can get these record types: `A`, `AAAA`, `CNAME`, `NS`, `PTR`, `SOA`, `MX`, `SRV`, `TXT`, `DS`, `DNSKEY`, `CAA`, `NAPTR`.
 
-`DS` and `DNSKEY` require [dig](#under-the-hood) and must be requested explicitly; they are not included in the default query, `DNS_ALL`, or `'*'`. The native PHP handler throws a `CouldNotFetchDns` exception when either type is requested.
+`DS` and `DNSKEY` require [dig](#under-the-hood) or the [`ReactDns` handler](#querying-without-starting-dig) and must be requested explicitly; they are not included in the default query, `DNS_ALL`, or `'*'`. The native PHP handler throws a `CouldNotFetchDns` exception when either type is requested.
 
 ```php
 use Spatie\Dns\Dns;
@@ -146,7 +146,7 @@ try {
 
 When you query several record types at once, one error response makes the whole call throw.
 
-Only the dig handler can read the response status. The native `dns_get_record()` handler already throws a `CouldNotFetchDns` exception when a lookup fails, with or without this option, and `responseStatus` is then `null`.
+The dig and `ReactDns` handlers can read the response status. The native `dns_get_record()` handler already throws a `CouldNotFetchDns` exception when a lookup fails, with or without this option, and `responseStatus` is then `null`.
 
 ## Guessing a record
 
@@ -177,6 +177,28 @@ $results = (new Dns)
     ->useHandlers([new YourCustomHandler()])
     ->getRecords('spatie.be');
 ```
+
+## Querying without starting dig
+
+The dig handler starts a `dig` process to fetch records. When you run many lookups, starting those processes costs more CPU time than the lookups themselves.
+
+The `ReactDns` handler sends the queries from inside PHP instead, so no process is started. It returns the same records as the dig handler, and it supports `useNameserver()`, `setTimeout()`, `setRetries()` and `throwOnErrorResponse()` in the same way. It needs the [react/dns](https://github.com/reactphp/dns) package.
+
+```bash
+composer require react/dns:^1.14
+```
+
+```php
+use Spatie\Dns\Dns;
+use Spatie\Dns\Handlers\ReactDns;
+use Spatie\Dns\Support\Factory;
+
+$records = (new Dns)
+    ->useHandlers([new ReactDns(new Factory)])
+    ->getRecords('spatie.be');
+```
+
+Like dig, a nameserver given as a hostname is looked up on every query. Without a nameserver, the handler uses the nameservers of the system, for example from `/etc/resolv.conf`, and like dig it asks the next one when a nameserver does not reply. When the system nameservers cannot be found, for example on a Windows version without `wmic`, a `CouldNotFetchDns` exception is thrown, and you pass a nameserver with `useNameserver()` instead. Looking up a Unicode domain name, such as `münchen.de`, needs the `intl` extension.
 
 ## Under the hood
 
